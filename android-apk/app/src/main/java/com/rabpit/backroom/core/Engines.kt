@@ -24,6 +24,11 @@ private fun removeItem(inventory: InventoryState, itemId: String, quantity: Int)
   return inventory.copy(items = items)
 }
 
+private fun restoreCounter(value: Long?, criticalMinutes: Long, percentPoints: Int): Long? {
+  if (value == null || percentPoints <= 0) return value
+  return max(0L, value - criticalMinutes * percentPoints.toLong() / 100L)
+}
+
 private fun useCatalogItem(
   state: GameState,
   source: InventoryState,
