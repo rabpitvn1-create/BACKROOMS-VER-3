@@ -27,7 +27,8 @@ class CommandResolver(
       GameIntent.USE_ITEM -> item?.let { itemCommand(commandId, turnId, actor, target, source, ItemCommand.Operation.USE, it, quantity) }
       GameIntent.TRANSFER_ITEM -> item?.let { itemCommand(commandId, turnId, actor, target, source, ItemCommand.Operation.TRANSFER, it, quantity) }
       GameIntent.EQUIP_ITEM -> item?.let { itemCommand(commandId, turnId, actor, target, source, ItemCommand.Operation.EQUIP, it, quantity, "weapon") }
-      GameIntent.UNEQUIP_ITEM -> item?.let { itemCommand(commandId, turnId, actor, target, source, ItemCommand.Operation.UNEQUIP, it, quantity, "weapon") }      GameIntent.PARTY_JOIN_REQUEST -> target?.let { PartyCommand(commandId, turnId, actor, it, source, PartyCommand.Operation.ADD) }
+      GameIntent.UNEQUIP_ITEM -> item?.let { itemCommand(commandId, turnId, actor, target, source, ItemCommand.Operation.UNEQUIP, it, quantity, "weapon") }
+      GameIntent.PARTY_JOIN_REQUEST -> target?.let { PartyCommand(commandId, turnId, actor, it, source, PartyCommand.Operation.ADD) }
       GameIntent.PARTY_REMOVE -> target?.let { PartyCommand(commandId, turnId, actor, it, source, PartyCommand.Operation.REMOVE) }
       GameIntent.PARTY_FOLLOW -> target?.let { PartyCommand(commandId, turnId, actor, it, source, PartyCommand.Operation.FOLLOW) }
       GameIntent.PARTY_SEPARATE -> target?.let { PartyCommand(commandId, turnId, actor, it, source, PartyCommand.Operation.SEPARATE) }
