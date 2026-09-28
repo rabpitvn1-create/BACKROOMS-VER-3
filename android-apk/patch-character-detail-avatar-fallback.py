@@ -39,6 +39,12 @@ runpy.run_path(str(ROOT / "patch-startup-survival.py"), run_name="__main__")
 runpy.run_path(str(ROOT / "patch-local-entity-overlay.py"), run_name="__main__")
 runpy.run_path(str(ROOT / "patch-jane-killer.py"), run_name="__main__")
 runpy.run_path(str(ROOT / "patch-three-action-runtime-ui.py"), run_name="__main__")
+
+typed_v3_engines = (ROOT / "app/src/main/java/com/rabpit/backroom/core/Engines.kt").read_text(encoding="utf-8")
+if "EquipmentRules.occupiedSlots" in typed_v3_engines:
+    runpy.run_path(str(ROOT / "patch-entity-overlay-runtime-hotfix.py"), run_name="__main__")
+    print("Typed V3 gameplay engine detected: skipping MadGod legacy gameplay patch chain.")
+    raise SystemExit(0)
 runpy.run_path(str(ROOT / "patch-madgod-equipment.py"), run_name="__main__")
 runpy.run_path(str(ROOT / "patch-madgod-overwrite-hotfix.py"), run_name="__main__")
 runpy.run_path(str(ROOT / "patch-madgod-runtime-equip.py"), run_name="__main__")
