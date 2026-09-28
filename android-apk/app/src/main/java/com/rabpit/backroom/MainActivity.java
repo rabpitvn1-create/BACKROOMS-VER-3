@@ -375,8 +375,9 @@ public class MainActivity extends Activity {
           JSONObject state = new JSONObject(stateJson);
           String prompt = "Bạn là Game Master của text game Backrooms. Xử lý đúng một lượt và trả DUY NHẤT JSON hợp lệ, không markdown. " +
             "Viết tiếng Việt tự nhiên, đầy đủ ý. Không trả lời bằng câu rỗng. Không thay đổi dữ kiện chưa có căn cứ. Người chơi chỉ điều khiển nhân vật chính hiện tại. " +
+            "Không tự tạo, nhặt, trao, xóa hoặc sửa vật phẩm/Inventory; loot chỉ do Game Core xác nhận. " +
             "State hiện tại: " + state.toString() + "\nHành động: " + action +
-            "\nJSON bắt buộc: {\"reply\":\"phản hồi Game Master\",\"title\":\"giữ nguyên hoặc cập nhật\",\"location\":\"vị trí sau lượt\",\"player\":{},\"party\":[],\"inventory\":[],\"flags\":{}}";
+            "\nJSON bắt buộc: {\"reply\":\"phản hồi Game Master\",\"title\":\"giữ nguyên hoặc cập nhật\",\"location\":\"vị trí sau lượt\",\"player\":{},\"party\":[],\"flags\":{}}";
           JSONObject generated = parseModelJson(generateText(prompt));
           String reply = generated.optString("reply", "").trim();
           if (reply.isEmpty()) throw new Exception("AI trả về phản hồi rỗng, lượt này không được ghi.");
@@ -402,6 +403,18 @@ public class MainActivity extends Activity {
           emit("backroomError", e.getMessage() == null ? "Không thể xử lý lượt." : e.getMessage());
         }
       });
+    }
+
+    @JavascriptInterface public String saveCheckpoint(String stateJson) {
+      return gameCore.saveCheckpoint(stateJson);
+    }
+
+    @JavascriptInterface public String loadCheckpoint() {
+      return gameCore.loadCheckpoint();
+    }
+
+    @JavascriptInterface public void clearCheckpoint() {
+      gameCore.clearCheckpoint();
     }
 
     @JavascriptInterface public void coreUpgrade(String stateJson, String characterId, String stat) {
