@@ -1,5 +1,7 @@
 package com.rabpit.backroom.core
 
+import com.rabpit.backroom.core.gameplay.PokerDiceRules
+
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -74,5 +76,24 @@ class CombatRuntimeTest {
     assertTrue(after!!.opening >= 1)
     assertTrue(after.momentum >= 0)
     assertFalse(after.telegraph.isBlank())
+  }  @Test fun pokerDiceSessionPersistsHoldsAndStopsAfterThreeRerolls() {
+    var state = CombatRuntime.start(GameState.initial(), "hound")
+    val initial = CombatRuntime.dice(state)!!
+    assertEquals(5, initial.values.size)
+    assertTrue(initial.values.all { it in 1..6 })
+
+    state = CombatRuntime.setHold(state, 0, true)
+    val heldValue = CombatRuntime.dice(state)!!.values[0]
+    repeat(4) { state = CombatRuntime.rerollDice(state) }
+    val rerolled = CombatRuntime.dice(state)!!
+    assertEquals(3, rerolled.rerollsUsed)
+    assertEquals(heldValue, rerolled.values[0])
+
+    state = CombatRuntime.finishHand(state)
+    val finalized = CombatRuntime.dice(state)!!
+    assertTrue(finalized.finalized)
+    assertEquals(PokerDiceRules.classify(*finalized.values.toIntArray()), finalized.hand)
   }
+
+
 }

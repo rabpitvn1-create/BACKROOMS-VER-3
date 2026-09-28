@@ -559,6 +559,26 @@ public class MainActivity extends Activity {
           gameCore.processItemAction(stateJson, ownerId, itemId, operation, targetId, quantity)));
     }
 
+    @JavascriptInterface public String combatState(String stateJson) {
+      return gameCore.combatState(stateJson);
+    }
+
+    @JavascriptInterface public void combatHold(String stateJson, int dieIndex, boolean held) {
+      io.execute(() -> emit("backroomCombat", gameCore.combatHold(stateJson, dieIndex, held)));
+    }
+
+    @JavascriptInterface public void combatRoll(String stateJson) {
+      io.execute(() -> emit("backroomCombat", gameCore.combatRoll(stateJson)));
+    }
+
+    @JavascriptInterface public void combatFinish(String stateJson) {
+      io.execute(() -> emit("backroomCombat", gameCore.combatFinish(stateJson)));
+    }
+
+    @JavascriptInterface public void combatResolve(String stateJson) {
+      io.execute(() -> emit("backroomCombat", gameCore.combatResolve(stateJson)));
+    }
+
     @JavascriptInterface public void requestSnapshot(String stateJson) {
       imageIo.execute(() -> requestSnapshotInternal(stateJson));
     }

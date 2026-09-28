@@ -122,10 +122,10 @@ object GameplayCatalog {
 object PokerDiceRules {
   const val MAX_REROLLS = 3
   const val DICE_COUNT = 5
-  enum class Hand(val token: String, val percent: Int) {
-    NO_HAND("[NO HAND]",100), ONE_PAIR("[PAIR]",110), TWO_PAIR("[TWO PAIR]",120),
-    THREE("[TRIPLE]",130), STRAIGHT("[STRAIGHT]",140), FULL_HOUSE("[FULL HOUSE]",150),
-    FOUR("[F.O.A.K]",170), SSF("[SSF]",180), FSF("[FSF]",200)
+  enum class Hand(val token: String) {
+    NO_HAND("[NO HAND]"), ONE_PAIR("[PAIR]"), TWO_PAIR("[TWO PAIR]"),
+    THREE("[TRIPLE]"), STRAIGHT("[STRAIGHT]"), FULL_HOUSE("[FULL HOUSE]"),
+    FOUR("[F.O.A.K]"), SSF("[SSF]"), FSF("[FSF]")
   }
 
   fun classify(vararg dice: Int): Hand {
@@ -170,6 +170,47 @@ object PokerDiceRules {
     ((maxOf(1, damage).toLong() * 150L + 50L) / 100L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
 
   fun effectiveChance(chance: Int, resistance: Int) = (maxOf(0, chance) - maxOf(0, resistance)).coerceIn(0, 100)
+
+  fun basicHandPercent(hand: Hand) = if (hand == Hand.ONE_PAIR) 125 else 100
+
+  fun skillHandPercent(hand: Hand) = when (hand) {
+    Hand.STRAIGHT -> 150
+    Hand.FULL_HOUSE -> 200
+    Hand.FOUR -> 250
+    else -> 100
+  }
+
+  fun ultimateHandPercent(hand: Hand) = if (hand == Hand.FSF) 200 else 100
+
+  fun deterministicDie(seed: Int, sequence: Int, slot: Int): Int {
+    var mixed = (seed.toLong() and 0xffffffffL) * 1_103_515_245L +
+      (sequence + 1L) * 12_345L +
+      (slot + 1L) * 2_654_435_761L
+    mixed = mixed xor (mixed ushr 17)
+    mixed = mixed xor (mixed shl 13)
+    return 1 + Math.floorMod(mixed, 6L).toInt()
+  }
+
+  fun characterProcRoll(seed: Int, sequence: Int, actorId: String, procName: String): Int {
+    val mixed = (seed.toLong() and 0xffffffffL) * 31L +
+      (sequence + 1L) * 131L +
+      (actorId + ":" + procName).hashCode().toLong() * 17L
+    return Math.floorMod(mixed, 100L).toInt()
+  }
+
+  fun entitySkillProcRoll(seed: Int, round: Int, actorIndex: Int, skillIndex: Int): Int {
+    var mixed = (seed.toLong() and 0xffffffffL) * 1_664_525L +
+      maxOf(1, round).toLong() * 1_013_904_223L +
+      (maxOf(0, actorIndex) + 1L) * 2_654_435_761L +
+      (skillIndex + 1L) * 97_531L
+    mixed = mixed xor (mixed ushr 16)
+    mixed = mixed xor (mixed shl 11)
+    return Math.floorMod(mixed, 100L).toInt()
+  }
+
+  fun entitySkillDamage(rawDamage: Int, percent: Int): Int =
+    ((maxOf(1, rawDamage).toLong() * maxOf(0, percent).toLong() + 50L) / 100L)
+      .coerceIn(1L, Int.MAX_VALUE.toLong()).toInt()
 
   private fun scale(base: Int, statPercent: Int, handPercent: Int) =
     ((maxOf(1, base).toLong() * maxOf(0, statPercent) * maxOf(0, handPercent) + 5_000L) / 10_000L)

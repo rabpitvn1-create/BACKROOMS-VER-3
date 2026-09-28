@@ -140,6 +140,58 @@ class GameCoreFacade private constructor(
     return response(true, syncLegacy(legacy, execution.state, false), null, "core_upgrade_committed", "Đã nâng chỉ số.")
   }
 
+  fun combatState(stateJson: String): String {
+    val legacy = JSONObject(stateJson)
+    val state = loadOrMigrate(legacy)
+    return JSONObject().apply {
+      put("handled", CombatRuntime.active(state) != null)
+      put("state", syncLegacy(legacy, state, false))
+      CombatRuntime.toJson(state)?.let { put("combat", it) }
+    }.toString()
+  }
+
+  fun combatHold(stateJson: String, dieIndex: Int, held: Boolean): String =
+    mutateCombat(stateJson) { CombatRuntime.setHold(it, dieIndex, held) }
+
+  fun combatRoll(stateJson: String): String =
+    mutateCombat(stateJson, CombatRuntime::rerollDice)
+
+  fun combatFinish(stateJson: String): String =
+    mutateCombat(stateJson, CombatRuntime::finishHand)
+
+  fun combatResolve(stateJson: String): String {
+    val legacy = JSONObject(stateJson)
+    val state = loadOrMigrate(legacy)
+    return try {
+      val resolution = CombatRuntime.resolveFinalizedHand(state)
+      repository.save(resolution.state)
+      JSONObject().apply {
+        put("handled", resolution.handled)
+        put("state", syncLegacy(legacy, resolution.state, false))
+        put("reply", resolution.reply)
+        CombatRuntime.toJson(resolution.state)?.let { put("combat", it) }
+      }.toString()
+    } catch (error: Exception) {
+      response(false, syncLegacy(legacy, state, false), error.message ?: "combat_resolve_failed", "combat_resolve_rejected")
+    }
+  }
+
+  private fun mutateCombat(stateJson: String, mutation: (GameState) -> GameState): String {
+    val legacy = JSONObject(stateJson)
+    val state = loadOrMigrate(legacy)
+    return try {
+      val next = mutation(state)
+      repository.save(next)
+      JSONObject().apply {
+        put("handled", true)
+        put("state", syncLegacy(legacy, next, false))
+        CombatRuntime.toJson(next)?.let { put("combat", it) }
+      }.toString()
+    } catch (error: Exception) {
+      response(false, syncLegacy(legacy, state, false), error.message ?: "combat_action_failed", "combat_action_rejected")
+    }
+  }
+
   fun clear() = repository.clear()
   override fun close() = Unit
 
@@ -323,6 +375,7 @@ class GameCoreFacade private constructor(
       put("streak", state.levelRuntime.route.streak)
       put("exitAvailable", state.levelRuntime.route.exitAvailable)
     })
+    CombatRuntime.toJson(state)?.let { output.put("combat", it) }
     val kaiInventory = state.inventories[KAI_ID]?.items?.values.orEmpty()
     output.put("inventory", JSONArray().apply { kaiInventory.forEach { stack -> put(JSONObject().apply {
       put("id", stack.itemId); put("name", stack.name); put("quantity", stack.quantity)
