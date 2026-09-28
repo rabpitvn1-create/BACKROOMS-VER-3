@@ -292,7 +292,11 @@ public class MainActivity extends Activity {
     return body.toString();
   }
 
-  private String geminiText(String prompt) throws Exception {
+  private String geminiJson(String prompt, JSONObject config) throws Exception {
+    JSONObject part = new JSONObject().put("text", prompt);
+    JSONObject contents = new JSONObject().put("role", "user").put("parts", new JSONArray().put(part));
+    JSONObject body = new JSONObject().put("contents", new JSONArray().put(contents))
+        .put("generationConfig", config);
     Exception last = null;
     String[] keys = geminiKeys();
     boolean configured = false;
@@ -301,12 +305,6 @@ public class MainActivity extends Activity {
       if (key == null || key.trim().isEmpty()) continue;
       configured = true;
       try {
-        JSONObject part = new JSONObject().put("text", prompt);
-        JSONObject contents = new JSONObject().put("role", "user").put("parts", new JSONArray().put(part));
-        JSONObject config = new JSONObject()
-            .put("responseMimeType", "application/json")
-            .put("thinkingConfig", new JSONObject().put("thinkingLevel", "low"));
-        JSONObject body = new JSONObject().put("contents", new JSONArray().put(contents)).put("generationConfig", config);
         String output = geminiResponseText(postJson(
             "https://generativelanguage.googleapis.com/v1beta/models/" + GEMINI_MODEL + ":generateContent",
             key, "x-goog-api-key", body));
@@ -315,12 +313,17 @@ public class MainActivity extends Activity {
       } catch (Exception error) {
         last = error;
         int status = error instanceof HttpError ? ((HttpError)error).status : 0;
-        if (!ProviderRetryPolicy.shouldRotateGeminiKey(status, error.getMessage())) throw error;
         if (keyIndex < keys.length - 1) sleepBeforeNextGeminiKey(keyIndex, status);
       }
     }
     if (!configured) throw new Exception("Không có Gemini API key trong APK.");
     throw last != null ? last : new Exception("Tất cả Gemini API key đều không khả dụng.");
+  }
+
+  private String geminiText(String prompt) throws Exception {
+    JSONObject config = new JSONObject().put("responseMimeType", "application/json")
+        .put("thinkingConfig", new JSONObject().put("thinkingLevel", "low"));
+    return geminiJson(prompt, config);
   }
 
   private String geminiResponseText(String raw) throws Exception {
@@ -364,24 +367,22 @@ public class MainActivity extends Activity {
         .put("required", new JSONArray().put("branches"));
   }
 
-  /** Exactly one physical Gemini request; failures leave the normal turn path untouched. */
+  /** Each configured Gemini key is tried before Haiku for the three-branch prefetch. */
   private JSONObject geminiBranchBatch(String prompt) throws Exception {
-    String key = "";
-    for (String configured : geminiKeys()) if (configured != null && !configured.trim().isEmpty()) {
-      key = configured;
-      break;
-    }
-    if (key.isEmpty()) throw new Exception("Không có Gemini API key trong APK.");
     JSONObject config = new JSONObject().put("responseMimeType", "application/json")
         .put("responseSchema", branchSchema()).put("maxOutputTokens", 8192)
         .put("thinkingConfig", new JSONObject().put("thinkingLevel", "low"));
-    JSONObject body = new JSONObject().put("contents", new JSONArray().put(
-        new JSONObject().put("role", "user").put("parts", new JSONArray().put(
-            new JSONObject().put("text", prompt)))))
-        .put("generationConfig", config);
-    return parseModelJson(geminiResponseText(postJson(
-        "https://generativelanguage.googleapis.com/v1beta/models/" + GEMINI_MODEL + ":generateContent",
-        key, "x-goog-api-key", body)));
+    try {
+      return parseModelJson(geminiJson(prompt, config));
+    } catch (Exception geminiError) {
+      Log.w(TAG, "All Gemini keys failed for branch prefetch; falling back to Haiku.");
+      try {
+        return parseModelJson(haikuText(prompt, 8192));
+      } catch (Exception haikuError) {
+        throw new Exception("Gemini: " + providerErrorSummary(geminiError)
+            + " | Haiku: " + providerErrorSummary(haikuError));
+      }
+    }
   }
 
   private boolean haikuConfigured() {
@@ -448,10 +449,10 @@ public class MainActivity extends Activity {
     return body.toString();
   }
 
-  private String haikuAnthropicText(String prompt) throws Exception {
+  private String haikuAnthropicText(String prompt, int maxTokens) throws Exception {
     JSONObject body = new JSONObject()
         .put("model", haikuModel())
-        .put("max_tokens", 2048)
+        .put("max_tokens", maxTokens)
         .put("temperature", 0.6)
         .put("messages", new JSONArray().put(
             new JSONObject().put("role", "user").put("content", prompt)));
@@ -472,11 +473,11 @@ public class MainActivity extends Activity {
     return text.toString();
   }
 
-  private String haikuOpenAiText(String prompt) throws Exception {
+  private String haikuOpenAiText(String prompt, int maxTokens) throws Exception {
     JSONObject body = new JSONObject()
         .put("model", haikuModel())
         .put("temperature", 0.6)
-        .put("max_tokens", 2048)
+        .put("max_tokens", maxTokens)
         .put("messages", new JSONArray().put(
             new JSONObject().put("role", "user").put("content", prompt)));
     JSONObject result = new JSONObject(postJsonHaiku(haikuEndpoint("/chat/completions"), body, false));
@@ -509,19 +510,19 @@ public class MainActivity extends Activity {
     return status == 400 || status == 404 || status == 405 || status == 415 || status == 422;
   }
 
-  private String haikuTextOnce(String prompt) throws Exception {
+  private String haikuTextOnce(String prompt, int maxTokens) throws Exception {
     String base = haikuBaseUrl();
     String output;
     if (base.endsWith("/chat/completions")) {
-      output = haikuOpenAiText(prompt);
+      output = haikuOpenAiText(prompt, maxTokens);
     } else if (base.endsWith("/messages") || base.contains("api.anthropic.com")) {
-      output = haikuAnthropicText(prompt);
+      output = haikuAnthropicText(prompt, maxTokens);
     } else {
       try {
-        output = haikuOpenAiText(prompt);
+        output = haikuOpenAiText(prompt, maxTokens);
       } catch (Exception openAiError) {
         if (!protocolMismatch(openAiError)) throw openAiError;
-        output = haikuAnthropicText(prompt);
+        output = haikuAnthropicText(prompt, maxTokens);
       }
     }
     parseModelJson(output);
@@ -529,11 +530,15 @@ public class MainActivity extends Activity {
   }
 
   private String haikuText(String prompt) throws Exception {
+    return haikuText(prompt, 2048);
+  }
+
+  private String haikuText(String prompt, int maxTokens) throws Exception {
     if (!haikuConfigured()) throw new Exception("HAIKU_API chưa được cấu hình.");
     Exception last = null;
     for (int attempt = 0; attempt < 2; attempt++) {
       try {
-        return haikuTextOnce(prompt);
+        return haikuTextOnce(prompt, maxTokens);
       } catch (Exception error) {
         last = error;
         int status = error instanceof HttpError ? ((HttpError)error).status : 0;

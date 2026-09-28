@@ -22,10 +22,4 @@ public final class ProviderRetryPolicy {
         || httpStatus == 500 || httpStatus == 502 || httpStatus == 503 || httpStatus == 504;
   }
 
-  public static boolean shouldRotateGeminiKey(int httpStatus, String message) {
-    if (isContentOrJsonError(httpStatus, message)) return false;
-    if (httpStatus == 0) return true;
-    return httpStatus == 401 || httpStatus == 403 || httpStatus == 408 || httpStatus == 429
-        || httpStatus == 500 || httpStatus == 502 || httpStatus == 503 || httpStatus == 504;
-  }
 }
