@@ -64,6 +64,15 @@ class GameCoreFacade private constructor(
   }
 
   fun currentCoreState(): String = GameStateCodec.encode(repository.load())
+  fun levelSnapshotDescriptor(turn: Int): String {
+    val key = repository.load().levelRuntime.key
+    return JSONObject().apply {
+      put("levelKey", key)
+      levelGraph.node(key)?.parentLevel?.let { put("level", it) }
+      levelGraph.snapshotPath(key, turn)?.let { put("path", it) }
+    }.toString()
+  }
+
   fun processExplore(stateJson: String, action: String): String {
     val ui = JSONObject(stateJson)
     val state = loadState(ui)
