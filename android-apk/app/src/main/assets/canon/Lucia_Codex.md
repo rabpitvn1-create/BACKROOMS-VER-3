@@ -1,7 +1,7 @@
 # Lucia Lục / Hứa Thuý Mai
-<!-- canon: core=true; aliases=Lucia,Lucia Lục,Hứa Thuý Mai,Hứa Thúy Mai -->
 
 ## Identity
+<!-- canon: core=true; aliases=Lucia,Lucia Lục,Hứa Thuý Mai,Hứa Thúy Mai -->
 Lucia Lục là callsign của Hứa Thuý Mai, một nữ quân nhân trẻ người Việt Nam gốc Hoa. Cô là con người được huấn luyện tốt theo vai trò tactical riflewoman, không phải tu sĩ hay nhân vật siêu nhiên.
 
 **HARD LOCK:** Lucia Lục / Hứa Thuý Mai và Lục Trầm là hai nhân vật khác nhau. Runtime id của Lucia là `lucia`; runtime id của Lục Trầm là `luc_tram`. Không alias, rename, merge hoặc chuyển canon, trang bị, quan hệ hay xưng hô giữa hai người.
