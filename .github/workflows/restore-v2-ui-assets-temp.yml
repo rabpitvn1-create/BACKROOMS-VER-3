@@ -1,0 +1,50 @@
+name: Restore V2 UI Assets Temp
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/restore-v2-ui-assets-temp.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  restore-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore V2 UI assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          V2_SHA=dfc22b595c219e44a964e04b95ca0de7254ece7e
+          BASE="https://raw.githubusercontent.com/rabpitvn1-create/BACKROOMsV2/$V2_SHA/android-apk/app/src/main/assets"
+          mkdir -p android-apk/app/src/main/assets/fonts android-apk/app/src/main/assets/hud android-apk/app/src/main/assets/avatars android-apk/app/src/main/assets/entity
+          curl -fsSL "$BASE/chest_overlay.png" -o android-apk/app/src/main/assets/chest_overlay.png
+          curl -fsSL "$BASE/luctram_overlay.png" -o android-apk/app/src/main/assets/luctram_overlay.png
+          curl -fsSL "$BASE/avatars/luctram_avatar.png" -o android-apk/app/src/main/assets/avatars/luctram_avatar.png
+          for f in Play-Bold.ttf Play-Regular.ttf PretendardStd-Bold.woff2 PretendardStd-ExtraBold.woff2 PretendardStd-Regular.woff2 OFL-Play.txt OFL-Pretendard.txt; do
+            curl -fsSL "$BASE/fonts/$f" -o "android-apk/app/src/main/assets/fonts/$f"
+          done
+          for f in player_action_backrooms.png player_action_backrooms.generated.json; do
+            curl -fsSL "$BASE/hud/$f" -o "android-apk/app/src/main/assets/hud/$f"
+          done
+          for f in async_rifleman biological_pipeline cable_mimic clump copx deathmoth diep_minh duller false_puddle hostile_faceling hotel_corpse_lure hound jane_the_killer jeff_the_killer paintings predatory_window skin-stealer slenderman smiler tam_ma_cao_minh the_beast_of_level_5 wretch; do
+            curl -fsSL "$BASE/entity/$f.webp" -o "android-apk/app/src/main/assets/entity/$f.webp"
+          done
+          rm -f android-apk/app/src/main/assets/kai_snapshot_overlay.png android-apk/app/src/main/assets/kai_snapshot_overlay.webp
+          find android-apk/app/src/main/assets/entity -maxdepth 1 -type f -name '*.png' -delete
+      - name: Commit restored V2 assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add android-apk/app/src/main/assets
+          git diff --cached --quiet && exit 0
+          git commit -m 'Restore V2 UI visual assets'
+          git pull --rebase origin main
+          git push origin HEAD:main
