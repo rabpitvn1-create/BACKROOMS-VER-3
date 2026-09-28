@@ -11,5 +11,7 @@ class EntityPortContractTest {
     assertEquals(3.5, entity.autoSpawnRatePercent, 0.0)
     assertEquals(setOf(0, 1, 2, 3, 4, 5, 6), entity.levels)
     assertEquals(3, entity.skills.size)
+    assertEquals(3, GameplayCatalog.entity("jane_the_killer")!!.skills.size)
+    assertEquals(3, GameplayCatalog.entity("slenderman")!!.skills.size)
   }
 }

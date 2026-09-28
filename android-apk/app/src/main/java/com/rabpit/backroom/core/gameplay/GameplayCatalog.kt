@@ -64,8 +64,8 @@ object GameplayCatalog {
     EntityDefinition("async_rifleman","ASYNC Rifleman",180,20,3.0,true,levels=(0..6).toSet(),skills=es(Triple("Controlled Burst",110,32),Triple("Cover Fire",115,32),Triple("Crossfire Burst",120,28))),
     EntityDefinition("copx","CopX",260,22,3.0,true,levels=(0..6).toSet(),skills=es(Triple("Static Burst",110,30),Triple("Servo Pivot",115,25),Triple("Last Directive",120,20))),
     EntityDefinition("tam_ma_cao_minh","Tâm Ma Cao Minh",300,30,4.0,true,true,(0..6).toSet(),es(Triple("Tâm Ma Trảm",120,35),Triple("Huyết Ảnh Phản Kích",115,40),Triple("Ma Hổ Phệ",110,45))),
-    EntityDefinition("jane_the_killer","Jane",270,20),
-    EntityDefinition("slenderman","Slenderman",360,23),
+    EntityDefinition("jane_the_killer","Jane",270,20,skills=es(Triple("Stalking Strike",110,33),Triple("Close-Range Slash",115,27),Triple("Sudden Lunge",120,25))),
+    EntityDefinition("slenderman","Slenderman",360,23,skills=es(Triple("Tendril Strike",110,31),Triple("Tendril Sweep",115,26),Triple("Looming Grasp",120,21))),
     EntityDefinition("diep_minh","Diệp Minh",1200,42,3.5,true,levels=(0..6).toSet(),skills=es(Triple("Golden Sword Slash",110,32),Triple("Demonic Claw",115,32),Triple("Sword-Claw Assault",120,21)))
   ).associateBy { it.key }
 

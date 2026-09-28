@@ -53,3 +53,15 @@ Một phụ nữ có làn da trắng nhợt, tóc đen dài, vùng quanh mắt p
 
 ## Slenderman
 Một hình người cao vượt mức bình thường, mặc bộ âu phục đen với cà vạt đỏ. Đầu trắng nhẵn hoàn toàn không có khuôn mặt, tay chân dài bất thường, các ngón tay thon dài như móng và nhiều xúc tu đen mọc ra từ phía sau lưng.
+
+## ASYNC Rifleman
+Nhân sự ASYNC mặc bộ hazmat vàng bẩn phủ kín cơ thể, mũ trùm kín với kính che mặt đen lớn, găng tay và ủng đen. Trên thân có dây đai, ba lô và cụm thiết bị bảo hộ/tác chiến; tay áo mang dấu ASYNC Research Institute, tổng thể là một đơn vị tác chiến trong trang bị chống nhiễm bẩn.
+
+## CopX
+Một robot an ninh hình người với lớp giáp trắng ngà cũ kỹ bị ăn mòn và rỉ sét, nhiều khe giáp để lộ servo, dây cáp và khớp máy tối màu. Đầu có khe visor hẹp; cánh tay phải giữ súng ngắn theo tư thế cứng nhắc, toàn thân mang dấu vết xuống cấp nặng.
+
+## Tâm Ma Cao Minh
+Một nam nhân tóc đen dài trong bộ giáp đen-đỏ cầu kỳ với nhiều mảng giáp sắc, chi tiết đỏ phát sáng và khí tức ma tính. Hắn mang đại kiếm đen-đỏ kích thước lớn; bên cạnh là một mãnh hổ bọc giáp tối màu với đôi mắt đỏ sáng, cả hai bị bao quanh bởi ma khí đỏ-đen.
+
+## Diệp Minh
+Nam tử trẻ tóc đen trong pháp giáp đen-vàng; nửa phải còn hình người, nửa trái dị hóa thành ma thể đen-đỏ với hồng quang, tua nhánh và vuốt. Tay phải cầm trường kiếm tỏa kim quang; quanh thân xuất hiện phù vàng chữ đỏ cùng họa tiết âm dương/bát quái.

@@ -28,9 +28,7 @@ object CombatRuntime {
     val key: String,
     val displayName: String,
     val maxHp: Int,
-    val attack: Int,
-    val armor: Int,
-    val aggression: Int
+    val attack: Int
   )
 
   data class Snapshot(
@@ -38,6 +36,8 @@ object CombatRuntime {
     val entityKey: String,
     val entityName: String,
     val phase: Phase,
+    val round: Int,
+    val actorIndex: Int,
     val playerHp: Int,
     val playerMaxHp: Int,
     val entityHp: Int,
@@ -63,23 +63,10 @@ object CombatRuntime {
     val escaped: Boolean = false
   )
 
-  private data class Tuning(val armor: Int, val aggression: Int)
-
-  private val tuning = mapOf(
-    "hound" to Tuning(2,8), "clump" to Tuning(5,7), "duller" to Tuning(3,6),
-    "deathmoth" to Tuning(1,7), "hostile_faceling" to Tuning(2,7), "false_puddle" to Tuning(4,5),
-    "paintings" to Tuning(1,5), "smiler" to Tuning(2,9), "skin-stealer" to Tuning(4,8),
-    "predatory_window" to Tuning(6,6), "biological_pipeline" to Tuning(7,7), "wretch" to Tuning(2,8),
-    "cable_mimic" to Tuning(5,8), "the_beast_of_level_5" to Tuning(8,9),
-    "hotel_corpse_lure" to Tuning(5,7), "jeff_the_killer" to Tuning(4,9),
-    "jane_the_killer" to Tuning(4,9), "slenderman" to Tuning(8,10)
-  )
-
   private fun profileFor(state: GameState, entityKey: String): Profile? {
     val entity = GameplayCatalog.entity(entityKey) ?: return null
     val (maxHp, damage) = GameplayCatalog.entityStats(entity, state.levelRuntime.stageIndex)
-    val combatTuning = tuning[entity.key] ?: Tuning(3, 7)
-    return Profile(entity.key, entity.name, maxHp, damage, combatTuning.armor, combatTuning.aggression)
+    return Profile(entity.key, entity.name, maxHp, damage)
   }
 
   fun active(state: GameState): Snapshot? = decode(state)?.takeIf { it.phase == Phase.ACTIVE }
@@ -87,15 +74,20 @@ object CombatRuntime {
   fun start(state: GameState, entityKey: String): GameState {
     if (active(state) != null) return state
     val profile = profileFor(state, entityKey) ?: return state
-    val projected = CharacterStatRules.project(state, state.party.leaderId)
-    val playerMax = projected?.maxHp ?: state.metadata[PLAYER_MAX_HP]?.toIntOrNull()?.coerceAtLeast(1) ?: 50
-    val playerHp = projected?.currentHp ?: state.metadata[PLAYER_HP]?.toIntOrNull()?.coerceIn(0, playerMax) ?: playerMax
+    val participants = combatParticipantIds(state)
+    val actorIndex = firstLivingActorIndex(state, participants)
+    if (actorIndex < 0) return state
+    val projected = CharacterStatRules.project(state, participants[actorIndex])
+    val playerMax = projected?.maxHp ?: 50
+    val playerHp = projected?.currentHp ?: playerMax
     val seed = stableSeed(entityKey, state.turn.currentTurnId, state.time.elapsedSubjectiveMinutes)
     val snapshot = Snapshot(
       encounterId = "${state.turn.currentTurnId}:${entityKey}:${abs(seed)}",
       entityKey = entityKey,
       entityName = profile.displayName,
       phase = Phase.ACTIVE,
+      round = 1,
+      actorIndex = actorIndex,
       playerHp = playerHp,
       playerMaxHp = playerMax,
       entityHp = profile.maxHp,
@@ -166,6 +158,9 @@ object CombatRuntime {
     val profile = profileFor(state, current.entityKey) ?: return Resolution(clear(state), handled = false)
     val intent = classify(actionKind, action)
     var c = current.copy(eventCounter = current.eventCounter + 1)
+    val actorId = currentActorId(state, c)
+    val actorName = state.characters[actorId]?.name ?: actorId
+    val finalizedHand = dice(state)?.takeIf { it.finalized }?.let { PokerDiceRules.fromV2Name(it.hand) }
     val log = mutableListOf<String>()
 
     when (intent) {
@@ -175,7 +170,7 @@ object CombatRuntime {
           opening = min(3, c.opening + 1),
           momentum = min(3, c.momentum + 1)
         )
-        log += "Cao Minh đọc được nhịp tấn công của ${c.entityName}; sơ hở tăng lên."
+        log += "$actorName đọc được nhịp tấn công của ${c.entityName}; sơ hở tăng lên."
       }
       Intent.EVADE -> {
         val goodCounter = c.telegraph in setOf("LUNGE", "GRAB", "RUSH")
@@ -186,7 +181,7 @@ object CombatRuntime {
           escapeProgress = min(100, c.escapeProgress + if (goodCounter) 18 else 10),
           cover = if (c.cover == Cover.EXPOSED) Cover.PARTIAL else c.cover
         )
-        log += if (goodCounter) "Cao Minh né đúng telegraph, cướp thế chủ động." else "Cao Minh đổi góc và giảm áp lực trực diện."
+        log += if (goodCounter) "$actorName né đúng telegraph, cướp thế chủ động." else "$actorName đổi góc và giảm áp lực trực diện."
       }
       Intent.MOVE -> {
         val nextRange = when (c.range) {
@@ -200,24 +195,22 @@ object CombatRuntime {
           escapeProgress = min(100, c.escapeProgress + 15),
           momentum = min(3, c.momentum + 1)
         )
-        log += "Cao Minh tái định vị, kéo giãn khoảng cách và tìm vật che chắn."
+        log += "$actorName tái định vị, kéo giãn khoảng cách và tìm vật che chắn."
       }
       Intent.GUARD -> {
         c = c.copy(cover = Cover.HARD, momentum = min(3, c.momentum + 1), opening = min(3, c.opening + 1))
-        log += "Cao Minh khóa tư thế phòng thủ và ép ${c.entityName} phải lộ hướng tấn công."
+        log += "$actorName khóa tư thế phòng thủ và ép ${c.entityName} phải lộ hướng tấn công."
       }
       Intent.ESCAPE -> {
         val gain = 20 + c.momentum.coerceAtLeast(0) * 5 + when (c.cover) { Cover.HARD -> 15; Cover.PARTIAL -> 8; Cover.EXPOSED -> 0 }
         c = c.copy(escapeProgress = min(100, c.escapeProgress + gain), momentum = min(3, c.momentum + 1))
-        log += "Cao Minh dồn ưu thế vào đường thoát (${c.escapeProgress}%)."
+        log += "$actorName dồn ưu thế vào đường thoát (${c.escapeProgress}%)."
       }
       Intent.ATTACK -> {
-        val finalizedDice = dice(state)?.takeIf { it.finalized }
-        if (finalizedDice != null) {
-          val actorId = state.party.leaderId
+        if (finalizedHand != null) {
           val stats = CharacterStatRules.project(state, actorId)
-          val hand = PokerDiceRules.fromV2Name(finalizedDice.hand)
-          val baseAttack = state.characters[actorId]?.metadata?.get("baseAttack")?.toIntOrNull()?.coerceAtLeast(1) ?: 30
+          val hand = finalizedHand
+          val baseAttack = actorBaseAttack(state, actorId)
           val str = stats?.stats?.get(com.rabpit.backroom.core.gameplay.CharacterStat.STR)?.effective ?: 5
           val skl = stats?.stats?.get(com.rabpit.backroom.core.gameplay.CharacterStat.SKL)?.effective ?: 5
           val skills = GameplayCatalog.activeSkills(actorId)
@@ -251,7 +244,7 @@ object CombatRuntime {
               }
             }
           }
-          val damage = max(0, rawDamage - if (rawDamage > 0) profile.armor else 0)
+          val damage = max(0, rawDamage)
           val hp = max(0, c.entityHp - damage)
           c = c.copy(
             entityHp = hp,
@@ -268,7 +261,7 @@ object CombatRuntime {
           if (roll < hitChance) {
             val variance = 4 + roll(c.copy(eventCounter = c.eventCounter + 17), 9)
             val base = 18 + variance + c.opening * 7 + max(0, c.momentum) * 3
-            val damage = max(1, base - profile.armor)
+            val damage = max(1, base)
             val hp = max(0, c.entityHp - damage)
             c = c.copy(
               entityHp = hp,
@@ -299,30 +292,70 @@ object CombatRuntime {
     if (c.escapeProgress >= 100) {
       val persisted = encode(state, c.copy(phase = Phase.RESOLVED))
       val cleared = clearCombatOnly(persisted)
-      return Resolution(cleared, true, log.joinToString(" ") + " Cao Minh cắt được truy đuổi và thoát khỏi encounter.", escaped = true)
+      return Resolution(cleared, true, log.joinToString(" ") + " $actorName cắt được truy đuổi và thoát khỏi encounter.", escaped = true)
     }
 
-    // Enemy response. READ/guard/evasion reduce expected incoming damage; attacking blindly is riskier.
-    val incomingRoll = roll(c.copy(eventCounter = c.eventCounter + 31), 100)
-    val defense = when (intent) { Intent.EVADE -> 34; Intent.GUARD -> 30; Intent.MOVE -> 18; Intent.READ -> 12; else -> 0 } +
-      when (c.cover) { Cover.HARD -> 22; Cover.PARTIAL -> 10; Cover.EXPOSED -> 0 } + max(0, c.momentum) * 4
-    val enemyChance = (profile.aggression * 8 - defense + max(0, -c.momentum) * 7).coerceIn(8, 88)
-    if (incomingRoll < enemyChance) {
-      val damage = max(1, profile.attack + roll(c.copy(eventCounter = c.eventCounter + 47), 7) - when (c.cover) { Cover.HARD -> 8; Cover.PARTIAL -> 4; Cover.EXPOSED -> 0 })
-      val hp = max(0, c.playerHp - damage)
-      c = c.copy(playerHp = hp, momentum = max(-3, c.momentum - 1))
-      log += "${c.entityName} phản công: Cao Minh -$damage HP (${c.playerHp}/${c.playerMaxHp})."
-    } else {
-      log += "${c.entityName} không xuyên được thế phòng thủ/di chuyển của Cao Minh."
+    var next = state
+    val actorStats = CharacterStatRules.project(next, actorId)
+    if (actorStats != null) {
+      val evadeResponse = finalizedHand == PokerDiceRules.Hand.TWO_PAIR || intent == Intent.EVADE
+      if (evadeResponse) {
+        log += "${c.entityName} tấn công $actorName nhưng $actorName né được."
+      } else {
+        val evasionChance = PokerDiceRules.effectiveChance(actorStats.combat.evasionPercent, 0)
+        val evasionRoll = PokerDiceRules.entitySkillProcRoll(diceSeed(c.seed), c.round, c.actorIndex, 1000)
+        if (evasionRoll < evasionChance) {
+          log += "${c.entityName} tấn công $actorName nhưng $actorName né được nhờ Evasion."
+        } else {
+          val criticalChance = PokerDiceRules.effectiveChance(5, actorStats.combat.resCriticalPercent)
+          val critical = PokerDiceRules.entitySkillProcRoll(diceSeed(c.seed), c.round, c.actorIndex, 1001) < criticalChance
+          val def = actorStats.stats[com.rabpit.backroom.core.gameplay.CharacterStat.DEF]?.effective ?: 5
+          var hp = actorStats.currentHp
+          val triggered = mutableListOf<String>()
+          GameplayCatalog.entity(c.entityKey)?.skills.orEmpty().forEachIndexed { index, skill ->
+            val procRoll = PokerDiceRules.entitySkillProcRoll(diceSeed(c.seed), c.round, c.actorIndex, index)
+            if (procRoll < skill.procPercent) {
+              triggered += skill.name
+              var incoming = PokerDiceRules.entitySkillDamage(profile.attack, skill.damagePercent)
+              if (critical) incoming = PokerDiceRules.criticalDamage(incoming)
+              hp = max(0, hp - PokerDiceRules.defendedIncomingDamage(incoming, def))
+            }
+          }
+          if (triggered.isEmpty()) {
+            var incoming = profile.attack
+            if (critical) incoming = PokerDiceRules.criticalDamage(incoming)
+            hp = max(0, hp - PokerDiceRules.defendedIncomingDamage(incoming, def))
+          }
+          val dealt = max(0, actorStats.currentHp - hp)
+          next = CharacterProgressionRules.setCurrentHp(next, actorId, hp)
+          if (actorId != next.party.leaderId && hp <= 0) {
+            next = CharacterProgressionRules.markCompanionDown(next, actorId)
+          }
+          c = c.copy(playerHp = hp, playerMaxHp = actorStats.maxHp, momentum = max(-3, c.momentum - 1))
+          val actionName = if (triggered.isEmpty()) "tấn công" else "dùng " + triggered.joinToString(" + ")
+          log += "${c.entityName}${if (critical) " [CRITICAL]" else ""} $actionName, $actorName -$dealt HP [$hp/${actorStats.maxHp} HP]."
+        }
+      }
     }
 
+    val participants = combatParticipantIds(next)
+    val nextIndex = nextLivingActorIndex(next, participants, c.actorIndex)
+    if (nextIndex >= 0) {
+      val nextRound = c.round + if (nextIndex <= c.actorIndex) 1 else 0
+      val nextStats = CharacterStatRules.project(next, participants[nextIndex])
+      c = c.copy(
+        round = nextRound,
+        actorIndex = nextIndex,
+        playerHp = nextStats?.currentHp ?: c.playerHp,
+        playerMaxHp = nextStats?.maxHp ?: c.playerMaxHp
+      )
+    }
     c = c.copy(
       telegraph = telegraphFor(profile, c.seed, c.eventCounter),
       telegraphRevealed = false,
       opening = max(0, c.opening - if (intent == Intent.READ) 0 else 1)
     )
-    var next = encode(state, c)
-    next = CharacterProgressionRules.setCurrentHp(next, next.party.leaderId, c.playerHp)
+    next = encode(next, c)
     return Resolution(next, true, log.joinToString(" "))
   }
 
@@ -331,6 +364,22 @@ object CombatRuntime {
     put("encounterId", c.encounterId)
     put("entityKey", c.entityKey)
     put("entityName", c.entityName)
+    put("round", c.round)
+    put("actorIndex", c.actorIndex)
+    val participants = combatParticipantIds(state)
+    val actorId = currentActorId(state, c)
+    put("currentActor", state.characters[actorId]?.name ?: actorId)
+    put("participants", org.json.JSONArray().apply {
+      participants.forEach { id ->
+        val stats = CharacterStatRules.project(state, id)
+        put(JSONObject().apply {
+          put("id", id)
+          put("name", state.characters[id]?.name ?: id)
+          put("hp", stats?.currentHp ?: 0)
+          put("maxHp", stats?.maxHp ?: 1)
+        })
+      }
+    })
     put("playerHp", c.playerHp); put("playerMaxHp", c.playerMaxHp)
     put("entityHp", c.entityHp); put("entityMaxHp", c.entityMaxHp)
     put("entityCondition", c.entityCondition.name)
@@ -362,6 +411,8 @@ object CombatRuntime {
     metadata["${PREFIX}entityKey"] = c.entityKey
     metadata["${PREFIX}entityName"] = c.entityName
     metadata["${PREFIX}phase"] = c.phase.name
+    metadata["${PREFIX}round"] = c.round.toString()
+    metadata["${PREFIX}actorIndex"] = c.actorIndex.toString()
     metadata[PLAYER_HP] = c.playerHp.toString()
     metadata[PLAYER_MAX_HP] = c.playerMaxHp.toString()
     metadata["${PREFIX}entityHp"] = c.entityHp.toString()
@@ -386,14 +437,19 @@ object CombatRuntime {
     val profile = profileFor(state, key) ?: return null
     val maxHp = m["${PREFIX}entityMaxHp"]?.toIntOrNull()?.coerceAtLeast(1) ?: profile.maxHp
     val hp = m["${PREFIX}entityHp"]?.toIntOrNull()?.coerceIn(0, maxHp) ?: maxHp
-    val projected = CharacterStatRules.project(state, state.party.leaderId)
-    val playerMax = m[PLAYER_MAX_HP]?.toIntOrNull()?.coerceAtLeast(1) ?: projected?.maxHp ?: 50
+    val participants = combatParticipantIds(state)
+    val storedIndex = m["${PREFIX}actorIndex"]?.toIntOrNull()?.coerceAtLeast(0) ?: 0
+    val actorIndex = if (storedIndex in participants.indices) storedIndex else firstLivingActorIndex(state, participants).coerceAtLeast(0)
+    val projected = participants.getOrNull(actorIndex)?.let { CharacterStatRules.project(state, it) }
+    val playerMax = projected?.maxHp ?: m[PLAYER_MAX_HP]?.toIntOrNull()?.coerceAtLeast(1) ?: 50
     return Snapshot(
       encounterId = m["${PREFIX}encounterId"].orEmpty(),
       entityKey = key,
       entityName = m["${PREFIX}entityName"] ?: profile.displayName,
       phase = enumOr(Phase.ACTIVE, m["${PREFIX}phase"]),
-      playerHp = m[PLAYER_HP]?.toIntOrNull()?.coerceIn(0, playerMax) ?: projected?.currentHp ?: playerMax,
+      round = m["${PREFIX}round"]?.toIntOrNull()?.coerceAtLeast(1) ?: 1,
+      actorIndex = actorIndex,
+      playerHp = projected?.currentHp ?: m[PLAYER_HP]?.toIntOrNull()?.coerceIn(0, playerMax) ?: playerMax,
       playerMaxHp = playerMax,
       entityHp = hp,
       entityMaxHp = maxHp,
@@ -456,6 +512,43 @@ object CombatRuntime {
     state.copy(metadata = state.metadata + ("${PREFIX}rngSequence" to sequence.coerceAtLeast(0).toString()))
 
   private fun diceSeed(seed: Long): Int = (seed xor (seed ushr 32)).toInt().let { if (it == Int.MIN_VALUE) 1 else kotlin.math.abs(it) }
+
+  private fun combatParticipantIds(state: GameState): List<String> {
+    val ids = linkedSetOf<String>()
+    fun add(id: String) {
+      val character = state.characters[id] ?: return
+      if (character.presence == CharacterPresence.ACTIVE) ids += id
+    }
+    add(state.party.leaderId)
+    state.party.memberIds.forEach { add(it) }
+    return ids.take(4)
+  }
+
+  private fun firstLivingActorIndex(state: GameState, participants: List<String>): Int =
+    participants.indexOfFirst { CharacterStatRules.project(state, it)?.currentHp?.let { hp -> hp > 0 } == true }
+
+  private fun currentActorId(state: GameState, c: Snapshot): String {
+    val participants = combatParticipantIds(state)
+    return participants.getOrNull(c.actorIndex) ?: state.party.leaderId
+  }
+
+  private fun nextLivingActorIndex(state: GameState, participants: List<String>, current: Int): Int {
+    if (participants.isEmpty()) return -1
+    for (step in 1..participants.size) {
+      val candidate = Math.floorMod(current + step, participants.size)
+      if ((CharacterStatRules.project(state, participants[candidate])?.currentHp ?: 0) > 0) return candidate
+    }
+    return -1
+  }
+
+  private fun actorBaseAttack(state: GameState, actorId: String): Int =
+    state.characters[actorId]?.metadata?.get("baseAttack")?.toIntOrNull()?.coerceAtLeast(1)
+      ?: when (actorId) {
+        "cao_minh" -> 30
+        "syvial" -> 32
+        "iris" -> 28
+        else -> 24
+      }
 
   private fun clearCombatOnly(state: GameState): GameState {
     val preservedHp = state.metadata[PLAYER_HP]

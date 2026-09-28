@@ -1,5 +1,6 @@
 package com.rabpit.backroom.core
 
+import com.rabpit.backroom.core.gameplay.GameplayCatalog
 import com.rabpit.backroom.core.gameplay.PokerDiceRules
 
 import org.junit.Assert.assertEquals
@@ -123,4 +124,34 @@ class CombatRuntimeTest {
     assertEquals(3, json.getInt("maxRerolls"))
     assertEquals(finalized.hand, json.getString("hand"))
   }
+  @Test fun combatCyclesPartyActorsAndProjectsOverlayParticipants() {
+    val base = GameState.initial()
+    val iris = CharacterState("iris", "Iris", metadata = mapOf("baseAttack" to "28"))
+    val partyState = base.copy(
+      characters = base.characters + ("iris" to iris),
+      party = PartyState(leaderId = PLAYER_ID, memberIds = listOf(PLAYER_ID, "iris"))
+    )
+    val started = CombatRuntime.start(partyState, "hound")
+    val before = CombatRuntime.toJson(started)!!
+    assertEquals("Cao Minh", before.getString("currentActor"))
+    assertEquals(0, before.getInt("actorIndex"))
+    assertEquals(2, before.getJSONArray("participants").length())
+
+    val resolved = CombatRuntime.resolve(started, "EXECUTE", "đánh Hound")
+    val after = CombatRuntime.toJson(resolved.state)!!
+    assertEquals("Iris", after.getString("currentActor"))
+    assertEquals(1, after.getInt("actorIndex"))
+  }
+
+  @Test fun entityResponseUsesV2IndependentSkillPool() {
+    val skillNames = GameplayCatalog.entity("hound")!!.skills.map { it.name }
+    var observed = false
+    repeat(64) { index ->
+      val base = GameState.initial().copy(turn = TurnState(currentTurnId = "TURN_${index + 1}"))
+      val result = CombatRuntime.resolve(CombatRuntime.start(base, "hound"), "EXECUTE", "đánh Hound")
+      if (skillNames.any(result.reply::contains)) observed = true
+    }
+    assertTrue("At least one deterministic Hound response should proc a V2 Entity skill", observed)
+  }
+
 }
