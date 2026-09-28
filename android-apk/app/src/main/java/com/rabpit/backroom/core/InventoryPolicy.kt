@@ -6,7 +6,7 @@ data class InventoryProfile(val maxTypes: Int, val maxPerType: Int)
 
 object InventoryPolicy {
   val LEADER = InventoryProfile(maxTypes = 9, maxPerType = 999)
-  val SPECIAL = InventoryProfile(maxTypes = 4, maxPerType = 20)
+  val SPECIAL = InventoryProfile(maxTypes = 6, maxPerType = 20)
   val NORMAL = InventoryProfile(maxTypes = 2, maxPerType = 2)
 
   fun profileFor(state: GameState, characterId: String): InventoryProfile =
