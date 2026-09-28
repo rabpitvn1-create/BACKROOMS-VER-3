@@ -39,6 +39,8 @@ class GameCoreFacade private constructor(
       return response(true, result, "player_pickup_unavailable", "validation_rejected", reply)
     }
 
+    if (isExplorerAction(action)) return processExplorerTurn(ui, pending.state, action, turnId)
+
     if (interpreted.candidates.any { it.intent == GameIntent.NO_ACTION || it.confidence != IntentConfidence.HIGH }) {
       return response(false, ui, null, "fallback_required")
     }
@@ -86,6 +88,49 @@ class GameCoreFacade private constructor(
       put("state", syncUiState(ui, resolution.state, false))
       CombatRuntime.toJson(resolution.state)?.let { put("combat", it) }
     }.toString()
+  }
+
+  private fun isExplorerAction(action: String): Boolean {
+    val text = action.trim().lowercase()
+    return text.startsWith("quan sát kỹ khu vực xung quanh") ||
+      text.startsWith("kiểm tra các lối đi hoặc điểm bất thường") ||
+      text.startsWith("tiếp tục khám phá") || text.startsWith("đi qua lối ra") ||
+      text == "__loot:open_chest"
+  }
+
+  private fun processExplorerTurn(ui: JSONObject, pending: GameState, action: String, turnId: String): String {
+    val resolution = if (action.trim() == "__loot:open_chest") ExplorationRuntime.openChest(pending)
+      else ExplorationRuntime.resolve(pending, action, levelGraph)
+    val explored = if (resolution.outcome == ExplorationOutcome.LEVEL_TRANSITION) {
+      resolution.state.copy(world = resolution.state.world +
+        ("location" to "Level ${resolution.state.levelRuntime.key}"))
+    } else resolution.state
+    val committed = TurnCoordinator.commit(explored, listOf(timeAdvanceCommand(turnId, action)))
+    if (committed.error != null) {
+      val rejected = TurnCoordinator.reject(pending, committed.error)
+      repository.save(rejected.state)
+      val result = syncUiState(ui, rejected.state, incrementTurn = true)
+      appendLog(result, action, validationReply(committed.error))
+      return response(true, result, committed.error, "validation_rejected")
+    }
+    repository.save(committed.state)
+    val result = syncUiState(ui, committed.state, incrementTurn = true)
+    val route = committed.state.levelRuntime.route
+    val reply = when (resolution.outcome) {
+      ExplorationOutcome.LEVEL_TRANSITION -> "Bạn đi qua lối ra và đến Level ${committed.state.levelRuntime.key}. Chuỗi khám phá tiếp tục ở chặng mới."
+      ExplorationOutcome.EXIT_AVAILABLE -> "Bạn nhận ra lối ra của chặng này. Có thể đi qua để đến chặng kế tiếp."
+      ExplorationOutcome.ROUTE_PROGRESS -> "Bạn lần theo dấu vết trong không gian. Tiến độ tìm lối ra: ${route.streak}/6."
+      ExplorationOutcome.ROUTE_RESET -> "Lối đi vòng lại điểm ban đầu. Tiến độ tìm lối ra bắt đầu lại."
+      ExplorationOutcome.CHEST -> if (action.trim() == "__loot:open_chest")
+        "Bạn mở Rương và nhận vật phẩm cùng ${resolution.coreReward} Core."
+        else "Bạn phát hiện một Rương khi khám phá. Có thể mở Rương trước khi đi tiếp."
+      ExplorationOutcome.ENTITY -> "Một thực thể xuất hiện trên đường khám phá."
+      ExplorationOutcome.NONE -> if (action.trim() == "__loot:open_chest")
+        "Không có Rương để mở." else "Bạn tiếp tục khảo sát Level ${committed.state.levelRuntime.key}."
+    }
+    appendLog(result, if (action.trim() == "__loot:open_chest") "Mở Rương" else action, reply)
+    logger.log(PipelineLogEvent("EXPLORER_COMMIT", turnId = turnId, details = mapOf("outcome" to resolution.outcome.name)))
+    return response(true, result, null, "explorer_committed", reply)
   }
 
   fun openChest(stateJson: String): String {
