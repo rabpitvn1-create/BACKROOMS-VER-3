@@ -1,0 +1,5 @@
+Backroom 1.1.66
+
+- Adds 16 Hui's Family Levels between Backrooms Level 0 and Level 1, with their lore and three distinct snapshots per level.
+- Adds 16 roaming Hui's Family bosses to the shared Entity roster, each with a 3% encounter rate, distinct combat profile and matching overlay.
+- Removes the former Level 0 sublevels from the active route and updates stage-based tests for the new progression.
