@@ -122,11 +122,20 @@ object GameplayCatalog {
 object PokerDiceRules {
   const val MAX_REROLLS = 3
   const val DICE_COUNT = 5
-  enum class Hand(val token: String) {
-    NO_HAND("[NO HAND]"), ONE_PAIR("[PAIR]"), TWO_PAIR("[TWO PAIR]"),
-    THREE("[TRIPLE]"), STRAIGHT("[STRAIGHT]"), FULL_HOUSE("[FULL HOUSE]"),
-    FOUR("[F.O.A.K]"), SSF("[SSF]"), FSF("[FSF]")
+  enum class Hand(val v2Name: String, val token: String) {
+    NO_HAND("NO HAND", "[NO HAND]"),
+    ONE_PAIR("ONE PAIR", "[PAIR]"),
+    TWO_PAIR("TWO PAIR", "[TWO PAIR]"),
+    THREE("THREE OF A KIND", "[TRIPLE]"),
+    STRAIGHT("STRAIGHT", "[STRAIGHT]"),
+    FULL_HOUSE("FULL HOUSE", "[FULL HOUSE]"),
+    FOUR("FOUR OF A KIND", "[F.O.A.K]"),
+    SSF("SSF", "[SSF]"),
+    FSF("FSF", "[FSF]")
   }
+
+  fun fromV2Name(raw: String?): Hand =
+    Hand.entries.firstOrNull { it.v2Name == raw } ?: Hand.NO_HAND
 
   fun classify(vararg dice: Int): Hand {
     if (dice.size != DICE_COUNT || dice.any { it !in 1..6 }) return Hand.NO_HAND
