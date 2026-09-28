@@ -5,7 +5,7 @@ object CommandValidator {
     if (command.commandId.isBlank()) return ValidationResult(false, "command_id_required")
     if (command.actorId !in state.characters) return ValidationResult(false, "actor_unknown")
     if (command.turnId != null && command.turnId != state.turn.currentTurnId) return ValidationResult(false, "turn_id_mismatch")
-    if (command is ValidatedLegacyStateCommand && !command.validatedByGameEngine) return ValidationResult(false, "engine_validation_required")
+    if (command is ValidatedStateCommand && !command.validatedByGameEngine) return ValidationResult(false, "engine_validation_required")
 
     // Player-facing pickup commands never create ownership. Inventory acquisition is authoritative
     // only when emitted by validated story/drop progression (GEMINI) or deterministic SYSTEM code.
@@ -14,16 +14,7 @@ object CommandValidator {
       return ValidationResult(false, "player_pickup_unavailable")
     }
 
-    // Restore remains a narrative capability. It must never mutate authoritative gameplay state.
-    if (command is OmnivaultCommand && command.operation == OmnivaultCommand.Operation.RESTORE) {
-      return ValidationResult(false, "restore_narrative_only")
-    }
-
-    val itemName = when (command) {
-      is ItemCommand -> command.itemName
-      is OmnivaultCommand -> command.itemName
-      else -> null
-    }
+    val itemName = (command as? ItemCommand)?.itemName
     if (itemName != null && ItemContentRules.hasForbiddenPreciseAmount(itemName)) return ValidationResult(false, "precise_content_amount_forbidden")
     return ValidationResult(true)
   }
@@ -38,30 +29,25 @@ object StateReducer {
     if (!validation.valid) return ExecutionResult(state, false, validation = validation)
     val result = when (command) {
       is ItemCommand -> InventoryEngine.execute(state, command)
-      is OmnivaultCommand -> OmnivaultEngine.execute(state, command)
       is PartyCommand -> PartyEngine.execute(state, command)
       is StatusCommand -> StatusEngine.execute(state, command)
       is StatUpgradeCommand -> ProgressionEngine.execute(state, command)
       is TimeAdvanceCommand -> TimeEngine.execute(state, command)
       is PhysiologyCommand -> PhysiologyEngine.execute(state, command)
       is QueryCommand -> ExecutionResult(state, applied = false)
-      is ValidatedLegacyStateCommand -> {
+      is ValidatedStateCommand -> {
         val worldPatch = mapOfNotNull(
           "location" to command.location,
           "title" to command.title,
           "levelJson" to command.levelJson,
           "flagsJson" to command.flagsJson
         )
-        val metadataPatch = mapOfNotNull("legacyPlayerJson" to command.playerJson)
+        val metadataPatch = mapOfNotNull("playerJson" to command.playerJson)
         changed(state.copy(world = state.world + worldPatch, metadata = state.metadata + metadataPatch), "validated_world_state")
       }
     }
     if (!result.applied) return result
-    val rememberedItemId = when (command) {
-      is ItemCommand -> rememberedItemAfter(state, result.state, command)
-      is OmnivaultCommand -> command.itemId
-      else -> null
-    }
+    val rememberedItemId = (command as? ItemCommand)?.let { rememberedItemAfter(state, result.state, it) }
     val nextMetadata = if (rememberedItemId != null) result.state.metadata + ("lastReferencedItemId" to rememberedItemId) else result.state.metadata
     return result.copy(state = result.state.copy(
       metadata = nextMetadata,
