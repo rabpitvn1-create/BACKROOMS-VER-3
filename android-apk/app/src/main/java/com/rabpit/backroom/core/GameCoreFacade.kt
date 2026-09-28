@@ -233,7 +233,7 @@ class GameCoreFacade private constructor(
     val pending = TurnCoordinator.createPending(core, turnId, action)
     if (pending.error != null) return response(false, before, pending.error, "pending_rejected")
     val commands = mutableListOf<GameCommand>()
-    val current = pending.state.inventories[KAI_ID]?.items.orEmpty()
+    val current = pending.state.inventories[PLAYER_ID]?.items.orEmpty()
     val actionIntents = rules.interpretSync(action, contextFor(pending.state)).candidates.map { it.intent }.toSet()
     val inventoryLocked = isDirectPlayerPickupAction(action) || GameIntent.PICKUP_ITEM in actionIntents
 
@@ -265,7 +265,7 @@ class GameCoreFacade private constructor(
       if (desired == old) return@forEachIndexed
       val stack = desiredById[id] ?: current.getValue(id)
       commands += ItemCommand(
-        "$turnId:GEMINI:INV:$index", turnId, KAI_ID, source = CommandSource.GEMINI,
+        "$turnId:GEMINI:INV:$index", turnId, PLAYER_ID, source = CommandSource.GEMINI,
         operation = if (desired > old) ItemCommand.Operation.PICKUP else ItemCommand.Operation.DROP,
         itemId = id, itemName = stack.name, quantity = kotlin.math.abs(desired - old), metadata = stack.metadata
       )
@@ -278,15 +278,15 @@ class GameCoreFacade private constructor(
       val id = member.optString("id").ifBlank { member.optString("name").trim().lowercase() }
       if (id.isNotBlank()) desiredParty[id] = member
     }
-    val currentFollowers = pending.state.party.memberIds.filter { it != KAI_ID }.toSet()
+    val currentFollowers = pending.state.party.memberIds.filter { it != PLAYER_ID }.toSet()
     (currentFollowers - desiredParty.keys).sorted().forEachIndexed { index, id ->
-      commands += PartyCommand("$turnId:GEMINI:PARTY_REMOVE:$index", turnId, KAI_ID, id, CommandSource.GEMINI, PartyCommand.Operation.REMOVE)
+      commands += PartyCommand("$turnId:GEMINI:PARTY_REMOVE:$index", turnId, PLAYER_ID, id, CommandSource.GEMINI, PartyCommand.Operation.REMOVE)
     }
     (desiredParty.keys - currentFollowers).sorted().forEachIndexed { index, id ->
       val member = desiredParty.getValue(id)
       val known = pending.state.characters[id]
       commands += PartyCommand(
-        "$turnId:GEMINI:PARTY_ADD:$index", turnId, KAI_ID, id, CommandSource.GEMINI, PartyCommand.Operation.ADD,
+        "$turnId:GEMINI:PARTY_ADD:$index", turnId, PLAYER_ID, id, CommandSource.GEMINI, PartyCommand.Operation.ADD,
         consentConfirmed = member.optBoolean("joinConfirmed", false) && known?.metadata?.get("joinEligible") == "true",
         targetPresent = member.optBoolean("present", false) && known?.presence == CharacterPresence.ACTIVE
       )
@@ -347,7 +347,7 @@ class GameCoreFacade private constructor(
   private fun timeAdvanceCommand(turnId: String, action: String): TimeAdvanceCommand = TimeAdvanceCommand(
     commandId = "$turnId:SYSTEM:TIME",
     turnId = turnId,
-    actorId = KAI_ID,
+    actorId = PLAYER_ID,
     source = CommandSource.SYSTEM,
     minutes = TimeCostPolicy.estimateMinutes(action),
     reason = "player_action"
@@ -406,12 +406,12 @@ class GameCoreFacade private constructor(
     })
     output.put("chestPresent", ExplorationRuntime.chestPresent(state))
     CombatRuntime.toJson(state)?.let { output.put("combat", it) }
-    val kaiInventory = state.inventories[KAI_ID]?.items?.values.orEmpty()
-    output.put("inventory", JSONArray().apply { kaiInventory.forEach { stack -> put(JSONObject().apply {
+    val playerInventory = state.inventories[PLAYER_ID]?.items?.values.orEmpty()
+    output.put("inventory", JSONArray().apply { playerInventory.forEach { stack -> put(JSONObject().apply {
       put("id", stack.itemId); put("name", stack.name); put("quantity", stack.quantity)
       stack.condition?.let { put("state", it) }; put("metadata", JSONObject(stack.metadata))
     }) } })
-    output.put("party", JSONArray().apply { state.party.memberIds.filter { it != KAI_ID }.forEach { id ->
+    output.put("party", JSONArray().apply { state.party.memberIds.filter { it != PLAYER_ID }.forEach { id ->
       state.characters[id]?.let { character -> put(JSONObject().apply {
         put("id", character.id); put("name", character.name); character.avatarRef?.let { put("avatar", it) }
         put("presence", character.presence.name)
@@ -438,7 +438,7 @@ class GameCoreFacade private constructor(
 
   private fun eventReply(events: List<String>): String = when (events.lastOrNull { it != "time_advanced" }) {
     "inventory_pickup" -> "Inventory đã được cập nhật bởi một sự kiện vật phẩm hợp lệ."
-    "inventory_remove" -> "Vật phẩm đã được loại khỏi Inventory theo hành động của Kai."
+    "inventory_remove" -> "Vật phẩm đã được loại khỏi Inventory theo hành động của Cao Minh."
     "inventory_transfer" -> "Vật phẩm đã được chuyển giao."
     "item_equipped" -> "Vật phẩm đã được trang bị."
     "item_unequipped" -> "Vật phẩm đã được tháo khỏi trang bị."

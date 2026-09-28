@@ -83,7 +83,7 @@ data class QueryCommand(
 data class ValidatedStateCommand(
   override val commandId: String,
   override val turnId: String?,
-  override val actorId: String = KAI_ID,
+  override val actorId: String = PLAYER_ID,
   override val targetId: String? = null,
   override val source: CommandSource,
   val location: String? = null,

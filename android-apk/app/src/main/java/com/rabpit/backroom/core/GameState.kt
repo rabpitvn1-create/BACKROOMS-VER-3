@@ -5,7 +5,7 @@ import com.rabpit.backroom.core.gameplay.CoreResourceState
 import com.rabpit.backroom.core.gameplay.LevelRuntimeState
 
 const val CURRENT_SAVE_VERSION = 4
-const val KAI_ID = "kai"
+const val PLAYER_ID = "cao_minh"
 enum class CharacterPresence { ACTIVE, SEPARATED, MISSING, DEAD }
 enum class CommandSource { RULE, GEMINI, UI, SYSTEM }
 enum class PendingTurnStatus { CREATED, INTERPRETING, VALIDATING, EXECUTING, COMMITTED, FAILED }
@@ -68,7 +68,7 @@ data class CharacterState(
   val progression: CharacterProgressionState = CharacterProgressionState()
 )
 
-data class PartyState(val leaderId: String = KAI_ID, val memberIds: List<String> = listOf(KAI_ID), val maxMembers: Int = 4)
+data class PartyState(val leaderId: String = PLAYER_ID, val memberIds: List<String> = listOf(PLAYER_ID), val maxMembers: Int = 4)
 
 data class PendingTurn(
   val turnId: String,
@@ -108,14 +108,14 @@ data class GameState(
   companion object {
     fun initial(): GameState = GameState(
       characters = mapOf(
-        KAI_ID to CharacterState(
-          KAI_ID,
-          "Player",
+        PLAYER_ID to CharacterState(
+          PLAYER_ID,
+          "Cao Minh",
           physiology = PhysiologyState.freshRunBaseline()
         )
       ),
-      inventories = mapOf(KAI_ID to InventoryState(KAI_ID)),
-      equipment = mapOf(KAI_ID to EquipmentState(KAI_ID))
+      inventories = mapOf(PLAYER_ID to InventoryState(PLAYER_ID)),
+      equipment = mapOf(PLAYER_ID to EquipmentState(PLAYER_ID))
     )
   }
 }
