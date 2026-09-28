@@ -6,7 +6,7 @@ import org.junit.Test
 class PhysiologyItemEffectTest {
   private fun stateWithPhysiology(): GameState {
     val base = GameState.initial()
-    val kai = base.characters.getValue(KAI_ID).copy(
+    val kai = base.characters.getValue(PLAYER_ID).copy(
       physiology = PhysiologyState(
         minutesSinceFood = 240L,
         minutesSinceWater = 90L,
@@ -16,7 +16,7 @@ class PhysiologyItemEffectTest {
         thermalState = "normal"
       )
     )
-    return base.copy(characters = base.characters + (KAI_ID to kai))
+    return base.copy(characters = base.characters + (PLAYER_ID to kai))
   }
 
   private fun grant(
@@ -30,7 +30,7 @@ class PhysiologyItemEffectTest {
       ItemCommand(
         commandId = "grant-$id",
         turnId = "TURN_1",
-        actorId = KAI_ID,
+        actorId = PLAYER_ID,
         source = CommandSource.SYSTEM,
         operation = ItemCommand.Operation.PICKUP,
         itemId = id,
@@ -47,7 +47,7 @@ class PhysiologyItemEffectTest {
     ItemCommand(
       commandId = commandId,
       turnId = "TURN_1",
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       source = CommandSource.RULE,
       operation = ItemCommand.Operation.USE,
       itemId = itemId,
@@ -66,7 +66,7 @@ class PhysiologyItemEffectTest {
     val result = use(granted, "use-water", "water-bottle:full")
 
     assertTrue(result.applied)
-    val physiology = result.state.characters.getValue(KAI_ID).physiology
+    val physiology = result.state.characters.getValue(PLAYER_ID).physiology
     assertEquals(240L, physiology.minutesSinceFood)
     assertEquals(0L, physiology.minutesSinceWater)
     assertEquals(720L, physiology.minutesAwake)
@@ -84,7 +84,7 @@ class PhysiologyItemEffectTest {
     val result = use(granted, "use-food", "food-container:full")
 
     assertTrue(result.applied)
-    val physiology = result.state.characters.getValue(KAI_ID).physiology
+    val physiology = result.state.characters.getValue(PLAYER_ID).physiology
     assertEquals(0L, physiology.minutesSinceFood)
     assertEquals(90L, physiology.minutesSinceWater)
     assertEquals(720L, physiology.minutesAwake)
@@ -105,22 +105,22 @@ class PhysiologyItemEffectTest {
     val result = use(granted, "use-ration", "ration-gel")
 
     assertTrue(result.applied)
-    val physiology = result.state.characters.getValue(KAI_ID).physiology
+    val physiology = result.state.characters.getValue(PLAYER_ID).physiology
     assertEquals(0L, physiology.minutesSinceFood)
     assertEquals(0L, physiology.minutesSinceWater)
-    assertFalse(result.state.inventories.getValue(KAI_ID).items.containsKey("ration-gel"))
+    assertFalse(result.state.inventories.getValue(PLAYER_ID).items.containsKey("ration-gel"))
     assertTrue("physiology_water_recorded" in result.events)
     assertTrue("physiology_food_recorded" in result.events)
   }
 
   @Test fun untaggedItemDoesNotMutatePhysiology() {
     val granted = grant(stateWithPhysiology(), "tool", "Small tool", emptyMap())
-    val before = granted.characters.getValue(KAI_ID).physiology
+    val before = granted.characters.getValue(PLAYER_ID).physiology
 
     val result = use(granted, "use-tool", "tool")
 
     assertTrue(result.applied)
-    assertEquals(before, result.state.characters.getValue(KAI_ID).physiology)
+    assertEquals(before, result.state.characters.getValue(PLAYER_ID).physiology)
   }
 
   @Test fun invalidEffectRejectsUseWithoutInventoryOrPhysiologyMutation() {
@@ -166,7 +166,7 @@ class PhysiologyItemEffectTest {
     val command = ItemCommand(
       commandId = "same-use",
       turnId = "TURN_1",
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       source = CommandSource.RULE,
       operation = ItemCommand.Operation.USE,
       itemId = "water-bottle:full",
@@ -175,7 +175,7 @@ class PhysiologyItemEffectTest {
 
     val first = StateReducer.execute(granted, command)
     assertTrue(first.applied)
-    assertEquals(0L, first.state.characters.getValue(KAI_ID).physiology.minutesSinceWater)
+    assertEquals(0L, first.state.characters.getValue(PLAYER_ID).physiology.minutesSinceWater)
 
     val second = StateReducer.execute(first.state, command)
     assertFalse(second.applied)
