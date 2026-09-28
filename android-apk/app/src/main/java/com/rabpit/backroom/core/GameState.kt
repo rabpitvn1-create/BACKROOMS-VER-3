@@ -4,7 +4,7 @@ import com.rabpit.backroom.core.gameplay.CharacterProgressionState
 import com.rabpit.backroom.core.gameplay.CoreResourceState
 import com.rabpit.backroom.core.gameplay.LevelRuntimeState
 
-const val CURRENT_SAVE_VERSION = 4
+const val CURRENT_SAVE_VERSION = 5
 const val PLAYER_ID = "cao_minh"
 enum class CharacterPresence { ACTIVE, SEPARATED, MISSING, DEAD }
 enum class CommandSource { RULE, GEMINI, UI, SYSTEM }
@@ -109,12 +109,25 @@ data class GameState(
     fun initial(): GameState = GameState(
       characters = mapOf(
         PLAYER_ID to CharacterState(
-          PLAYER_ID,
-          "Cao Minh",
-          physiology = PhysiologyState.freshRunBaseline()
+          id = PLAYER_ID,
+          name = "Cao Minh",
+          avatarRef = "file:///android_asset/avatars/cao_minh_avatar.jpg",
+          healthState = "Ổn định",
+          physiology = PhysiologyState.freshRunBaseline(),
+          metadata = mapOf(
+            "canonId" to "CAO-MINH-VAN-GIOI-MA-TON-CODEX-20260920-R15",
+            "role" to "Vạn Giới Ma Tôn",
+            "baseAttack" to "30"
+          )
         )
       ),
-      inventories = mapOf(PLAYER_ID to InventoryState(PLAYER_ID)),
+      inventories = mapOf(
+        PLAYER_ID to InventoryState(PLAYER_ID, mapOf(
+          "huyết-ma-kiếm" to ItemStack("huyết-ma-kiếm", "Huyết Ma Kiếm"),
+          "huyết-ma-chiến-khải" to ItemStack("huyết-ma-chiến-khải", "Huyết Ma Chiến Khải"),
+          "vạn-tàng-giới" to ItemStack("vạn-tàng-giới", "Vạn Tàng Giới")
+        ))
+      ),
       equipment = mapOf(PLAYER_ID to EquipmentState(PLAYER_ID))
     )
   }
