@@ -6,6 +6,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -137,5 +141,32 @@ public class NarrationGuardTest {
     } catch (IllegalArgumentException expected) {
       assertTrue(expected.getMessage().contains("Narration validation failed"));
     }
+  }
+
+  @Test public void levelZeroKnowledgeAndCommittedRouteResetStayInNarrativeContract() throws Exception {
+    Path knowledge = Paths.get("src/main/assets/knowledge/level_knowledge.json");
+    if (!Files.isRegularFile(knowledge)) knowledge = Paths.get("app/src/main/assets/knowledge/level_knowledge.json");
+    LevelCore level = LevelCore.withKnowledge(
+        Files.readString(knowledge, StandardCharsets.UTF_8), bound -> 0);
+    JSONObject state = new JSONObject().put("turn", 1).put("currentLevelKey", "0")
+        .put("currentLevel", 0).put("location", LevelCore.LEVEL_ZERO_START_LOCATION);
+    level.normalizeState(state);
+    state.put("turn", 2);
+    level.rollRouteForExplorerAction(state, "Đi theo hành lang", bound -> 20);
+    state.put("turn", 3);
+    level.rollRouteForExplorerAction(state, "Đi theo hành lang", bound -> 150);
+
+    String context = level.promptContext(state, "Đi theo hành lang");
+    assertTrue(context.contains("LEVEL KNOWLEDGE BUNDLE"));
+    assertTrue(context.contains("OUTCOME THIS TURN: RESET"));
+    assertTrue(context.contains("giấy dán tường"));
+    assertFalse(NarrationGuard.validate(narration(
+        "Lối đi vòng lại điểm ban đầu. Tiến độ tìm lối ra bắt đầu lại."), state,
+        "Đi theo hành lang").isEmpty());
+    assertTrue(NarrationGuard.validate(narration(
+        "Qua vài khúc ngoặt, Cao Minh lại thấy vệt ố cạnh chân tường. "
+            + "Dãy tường vàng quen thuộc hiện ra dưới tiếng đèn rền đều.",
+        "Kiểm tra vệt ố", "Lắng nghe phía lối rẽ tối", "Đánh dấu chỗ giao nhau"),
+        state, "Đi theo hành lang").isEmpty());
   }
 }
