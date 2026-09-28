@@ -554,7 +554,6 @@
       "key": "diep_minh",
       "name": "Diệp Minh",
       "asset": "entity/diep_minh.webp",
-      "autoSpawn": true,
       "canonRefs": [
         "DIEP-MINH-VIS-01",
         "DIEP-MINH-CAO-REL-01",
