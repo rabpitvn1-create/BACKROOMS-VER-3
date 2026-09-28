@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "syncedAt": "2026-09-27",
+  "syncedAt": "2026-09-28",
   "authority": "Google Drive / 02_CHARACTERS + scoped USER_RETCON android-apk/DIEP_MINH_CANON.md + explicit USER_RETCON Đại Đạo Ma Tôn (2026-09-27) + explicit USER_RETCON Ma Tôn (+99 Stats) (2026-09-27)",
   "instruction": "Google Drive character canon is authoritative except where a newer explicit USER_RETCON is committed as current canon. DIEP_MINH_CANON.md supersedes only the old OPEN Cao Minh ↔ Diệp Minh edge. The primary protagonist is Cao Minh / Vạn Giới Ma Tôn R15 under canonical runtime id `cao_minh`. The retired `kai` player id/identity is not current runtime canon. KNOWLEDGE_LOCK is backstage knowledge only; remaining OPEN/UNKNOWN fields stay unresolved. Gameplay projection values are internal mechanics and must not be turned into cultivation lore, energy limits or dialogue terminology.",
   "characters": {
@@ -141,6 +141,24 @@
       "equipment": "Tịch Quang Kiếm is Lục Trầm's bonded double-edged longsword: long, straight, silver, precise and relatively narrow compared with Cao Minh's Huyết Ma Kiếm; it can be recalled by sword intent within valid perception range but does not regenerate infinitely. Thiên Cơ Bạch Kim Kiếm Khải is a high-grade Thiên Kiếm Môn artifact armor in ivory/silver, charcoal and restrained gold; it improves impact resistance, movement and force distribution. Mechanical-looking joints are cultivation-artifact design, not AI, electronics, reactor, servos, hidden guns, missiles or HUD.",
       "visual": "R01 visual lock: young adult female swordswoman; tall, balanced and agile silhouette; very long thick black hair in a high ponytail; gold sword-crown accessory; reddish-brown eyes; full-body white/black/gold segmented sword armor; layered waist armor and long split battle-cloth panels; silver Tịch Quang longsword with gold-black multi-layer guard. No helmet. Do not add energy wings, halo, mask, guns, strong neon glow or change the primary white-black-gold palette. Exact height, weight and measurements remain OPEN. Avatar uses avatars/luctram_avatar.png and combat overlay uses luctram_overlay.png.",
       "relationship": "Before Backrooms Lục Trầm repeatedly hunted Cao Minh and considered him a sworn enemy. The Táng Kiếm Cốc truth is backstage knowledge and must not be handed to her automatically. Cao Minh calls her 'Lục tiên tử' with a teasing edge; she uses 'Cao Minh' when serious and 'ma đầu' when angry. Do not switch to anh/em automatically. Do not resolve their hostility with one rescue, one argument or instant romance."
+    },
+    "lucia": {
+      "name": "Hứa Thuý Mai / Lucia Lục",
+      "source": "02_CHARACTERS/Lucia_Codex.docx",
+      "driveId": "1pv5gvg51oHqNtcCaz5xbjUie5xvxDM6wKCvlAlKFiUQ",
+      "revision": "R03",
+      "aliases": [
+        "lucia",
+        "lucia lục",
+        "hứa thuý mai",
+        "hứa thúy mai",
+        "thúy mai",
+        "thuý mai"
+      ],
+      "runtime": "Lucia Lục is the callsign of Hứa Thuý Mai, a trained young Vietnamese tactical riflewoman. She is a separate character from Lục Trầm: runtime ids are `lucia` and `luc_tram` and must never be aliased or merged. CharacterEncounterCore exclusively owns spawn/join. Lucia has a 10% first-contact candidate only on original Level 0 (`currentLevelKey = 0`), never on 0.1+ or later Levels. Relationship/address with Cao Minh remain OPEN until live campaign continuity establishes them.",
+      "equipment": "Default runtime equipment: personalized M4A1, combat dagger and military navigation watch. Do not substitute Lục Trầm's Tịch Quang or Thiên Cơ Bạch Kim Kiếm Khải.",
+      "gameplay": "V3 Core owns HP/stats/progression. Poker Dice preserves Lucia's M4A1 Joint Attack at 150% damage, five firearm proc slots (Toxic Burst, Armor-Piercing Burst, Concussive Burst, Rending Burst, Corrosive Burst), and Too Young To Die as a 60-shot Ultimate using the runtime current-DMG +15% bonus-per-hit rule. These are gameplay projections, not supernatural lore.",
+      "visual": "R03 visual lock: young female face, long black hair in a high ponytail, warm brown eyes, modern camouflage/tactical kit, no helmet, personalized M4A1. Avatar uses avatars/lucia_avatar.jpg."
     }
   }
 }
