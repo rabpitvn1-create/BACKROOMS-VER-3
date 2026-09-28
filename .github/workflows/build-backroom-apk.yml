@@ -33,27 +33,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Sync Lục Trầm v2 visual assets
-        run: |
-          set -euo pipefail
-          curl --fail --location --retry 3 \
-            'https://raw.githubusercontent.com/rabpitvn1-create/BACKROOMsV2/7f9cb2b95b0cae2f817e6cad3539fe3babe50092/android-apk/app/src/main/assets/avatars/luctram_avatar.png' \
-            --output android-apk/app/src/main/assets/avatars/luctram_avatar.png
-          curl --fail --location --retry 3 \
-            'https://raw.githubusercontent.com/rabpitvn1-create/BACKROOMsV2/7f9cb2b95b0cae2f817e6cad3539fe3babe50092/android-apk/app/src/main/assets/luctram_overlay.png' \
-            --output android-apk/app/src/main/assets/luctram_overlay.png
-          test "$(git hash-object android-apk/app/src/main/assets/avatars/luctram_avatar.png)" = '245bc90508328b9b6d4315d3df82457737c177d2'
-          test "$(git hash-object android-apk/app/src/main/assets/luctram_overlay.png)" = '27d9f2a33c810264f50e92c9ce213e98cd4b2d5e'
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add android-apk/app/src/main/assets/avatars/luctram_avatar.png android-apk/app/src/main/assets/luctram_overlay.png
-          if git diff --cached --quiet; then
-            echo 'Lục Trầm v2 visual assets already current.'
-          else
-            git commit -m 'Port Lục Trầm v2 visual assets'
-            git push origin HEAD:"${GITHUB_REF_NAME}"
-          fi
-
       - name: Verify release version and provider baseline
         run: |
           set -euo pipefail
