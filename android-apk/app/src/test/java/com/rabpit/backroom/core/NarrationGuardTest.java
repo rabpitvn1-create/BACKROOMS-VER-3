@@ -147,7 +147,7 @@ public class NarrationGuardTest {
     Path knowledge = Paths.get("src/main/assets/knowledge/level_knowledge.json");
     if (!Files.isRegularFile(knowledge)) knowledge = Paths.get("app/src/main/assets/knowledge/level_knowledge.json");
     LevelCore level = LevelCore.withKnowledge(
-        Files.readString(knowledge, StandardCharsets.UTF_8), bound -> 0);
+        new String(Files.readAllBytes(knowledge), StandardCharsets.UTF_8), bound -> 0);
     JSONObject state = new JSONObject().put("turn", 1).put("currentLevelKey", "0")
         .put("currentLevel", 0).put("location", LevelCore.LEVEL_ZERO_START_LOCATION);
     level.normalizeState(state);
