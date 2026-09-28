@@ -1,12 +1,14 @@
 package com.rabpit.backroom.core
 
 import android.content.Context
+import com.rabpit.backroom.core.gameplay.LevelGraph
 import org.json.JSONArray
 import org.json.JSONObject
 
 class GameCoreFacade private constructor(
   private val repository: SaveRepository,
-  private val logger: GamePipelineLogger
+  private val logger: GamePipelineLogger,
+  private val levelGraph: LevelGraph
 ) : AutoCloseable {
   private val rules = RuleIntentInterpreter()
   private val resolver = CommandResolver()
@@ -68,6 +70,35 @@ class GameCoreFacade private constructor(
   }
 
   fun currentCoreState(): String = GameStateCodec.encode(repository.load())
+  fun processExplore(stateJson: String, action: String): String {
+    val legacy = JSONObject(stateJson)
+    val state = loadOrMigrate(legacy)
+    val resolution = ExplorationRuntime.resolve(state, action, levelGraph)
+    repository.save(resolution.state)
+    return JSONObject().apply {
+      put("handled", true)
+      put("outcome", resolution.outcome.name)
+      resolution.payloadKey?.let { put("payloadKey", it) }
+      if (resolution.coreReward > 0) put("coreReward", resolution.coreReward)
+      put("state", syncLegacy(legacy, resolution.state, false))
+      CombatRuntime.toJson(resolution.state)?.let { put("combat", it) }
+    }.toString()
+  }
+
+  fun openChest(stateJson: String): String {
+    val legacy = JSONObject(stateJson)
+    val state = loadOrMigrate(legacy)
+    val resolution = ExplorationRuntime.openChest(state)
+    repository.save(resolution.state)
+    return JSONObject().apply {
+      put("handled", resolution.outcome == ExplorationOutcome.CHEST)
+      put("outcome", resolution.outcome.name)
+      resolution.payloadKey?.let { put("itemId", it) }
+      if (resolution.coreReward > 0) put("coreReward", resolution.coreReward)
+      put("state", syncLegacy(legacy, resolution.state, false))
+    }.toString()
+  }
+
 
   fun processItemAction(
     stateJson: String,
@@ -374,7 +405,9 @@ class GameCoreFacade private constructor(
       put("stageIndex", state.levelRuntime.stageIndex)
       put("streak", state.levelRuntime.route.streak)
       put("exitAvailable", state.levelRuntime.route.exitAvailable)
+      put("lastResult", state.levelRuntime.route.lastResult.name)
     })
+    output.put("chestPresent", ExplorationRuntime.chestPresent(state))
     CombatRuntime.toJson(state)?.let { output.put("combat", it) }
     val kaiInventory = state.inventories[KAI_ID]?.items?.values.orEmpty()
     output.put("inventory", JSONArray().apply { kaiInventory.forEach { stack -> put(JSONObject().apply {
@@ -436,7 +469,9 @@ class GameCoreFacade private constructor(
 
   companion object {
     @JvmStatic fun create(context: Context, debugLogging: Boolean = false): GameCoreFacade = GameCoreFacade(
-      SharedPreferencesSaveRepository(context.applicationContext), AndroidGamePipelineLogger(debugLogging)
+      SharedPreferencesSaveRepository(context.applicationContext),
+      AndroidGamePipelineLogger(debugLogging),
+      LevelGraph.load(context.applicationContext)
     )
   }
 }

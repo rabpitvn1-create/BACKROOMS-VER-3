@@ -280,7 +280,8 @@ object CombatRuntime {
 
     if (c.entityHp <= 0) {
       val persisted = encode(state, c.copy(phase = Phase.RESOLVED, entityCondition = EntityCondition.DESTROYED))
-      val cleared = clearCombatOnly(persisted)
+      val rewarded = ExplorationRuntime.entityVictoryRewards(persisted, c.entityKey)
+      val cleared = clearCombatOnly(rewarded)
       return Resolution(cleared, true, log.joinToString(" ") + " ${c.entityName} đã bị tiêu diệt.", entityDestroyed = true)
     }
     if (c.escapeProgress >= 100) {

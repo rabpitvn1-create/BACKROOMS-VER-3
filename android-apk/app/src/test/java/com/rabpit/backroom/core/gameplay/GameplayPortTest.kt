@@ -2,6 +2,8 @@ package com.rabpit.backroom.core.gameplay
 
 import com.rabpit.backroom.core.GameState
 import com.rabpit.backroom.core.GameStateCodec
+import com.rabpit.backroom.core.ExplorationOutcome
+import com.rabpit.backroom.core.ExplorationRuntime
 import com.rabpit.backroom.core.ItemCommand
 import com.rabpit.backroom.core.CharacterState
 import com.rabpit.backroom.core.CommandSource
@@ -173,5 +175,40 @@ class GameplayPortTest {
     assertEquals(50, plainStats.maxHp)
     assertEquals(50, plainStats.currentHp)
   }
+  @Test fun scopedRngAndExplorationAreDeterministicWithoutCanon() {
+    val a = GameplayRng("TURN_9", 3)
+    val b = GameplayRng("TURN_9", 3)
+    assertEquals(a.nextInt(GameplayRng.Scope.ROUTE, 100), b.nextInt(GameplayRng.Scope.ROUTE, 100))
+    assertEquals(a.nextInt(GameplayRng.Scope.SITUATION_SELECTION, 10_000), b.nextInt(GameplayRng.Scope.SITUATION_SELECTION, 10_000))
+
+    val graph = LevelGraph.fromText("""{"schemaVersion":1,"nodes":[
+      {"key":"0","parentLevel":0,"stageIndex":0},
+      {"key":"0.1","parentLevel":0,"stageIndex":1}
+    ],"edges":[{"from":"0","to":"0.1"}]}""")
+    val base = GameState.initial()
+    assertEquals(
+      ExplorationRuntime.resolve(base, "đi tiếp", graph),
+      ExplorationRuntime.resolve(base, "đi tiếp", graph)
+    )
+
+    val unlocked = base.copy(levelRuntime = base.levelRuntime.copy(
+      route = base.levelRuntime.route.copy(streak = 6, exitAvailable = true)
+    ))
+    val moved = ExplorationRuntime.resolve(unlocked, "đi qua", graph)
+    assertEquals(ExplorationOutcome.LEVEL_TRANSITION, moved.outcome)
+    assertEquals("0.1", moved.state.levelRuntime.key)
+    assertEquals(1, moved.state.coreResource.quantity)
+  }
+
+  @Test fun chestOpeningGrantsCatalogItemAndCoreThenClearsChest() {
+    val state = GameState.initial().copy(metadata = GameState.initial().metadata + ("loot.chestPresent" to "true"))
+    val opened = ExplorationRuntime.openChest(state)
+    assertEquals(ExplorationOutcome.CHEST, opened.outcome)
+    assertEquals(1, opened.coreReward)
+    assertFalse(ExplorationRuntime.chestPresent(opened.state))
+    assertEquals(1, opened.state.inventories.getValue(KAI_ID).items.values.sumOf { it.quantity })
+    assertEquals(1, opened.state.coreResource.quantity)
+  }
+
 
 }

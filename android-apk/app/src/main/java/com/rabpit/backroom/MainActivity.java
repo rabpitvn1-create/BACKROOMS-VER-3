@@ -579,6 +579,14 @@ public class MainActivity extends Activity {
       io.execute(() -> emit("backroomCombat", gameCore.combatResolve(stateJson)));
     }
 
+    @JavascriptInterface public void exploreGameplay(String stateJson, String action) {
+      io.execute(() -> emit("backroomGameplay", gameCore.processExplore(stateJson, action)));
+    }
+
+    @JavascriptInterface public void openChest(String stateJson) {
+      io.execute(() -> emit("backroomGameplay", gameCore.openChest(stateJson)));
+    }
+
     @JavascriptInterface public void requestSnapshot(String stateJson) {
       imageIo.execute(() -> requestSnapshotInternal(stateJson));
     }
