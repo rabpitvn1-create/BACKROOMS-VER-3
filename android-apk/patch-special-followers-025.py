@@ -14,7 +14,7 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
 
 
 # 1) An Nhien remains a Level-0-origin character, but encounter is no longer mandatory or Level-0-only.
-canon_path = CORE / "AnNhienCanon.kt"
+canon_path = CORE / "legacy/character/AnNhienCanon.kt"
 canon = canon_path.read_text(encoding="utf-8")
 canon = replace_once(
     canon,
