@@ -111,7 +111,14 @@ class CombatRuntimeTest {
     assertTrue(finalized.finalized)
     assertEquals(PokerDiceRules.classify(*finalized.values.toIntArray()).v2Name, finalized.hand)
 
-    val json = CombatRuntime.toJson(state)!!.getJSONObject("dice")
+    val combat = CombatRuntime.toJson(state)!!
+    assertTrue(combat.has("rngSequence"))
+    assertFalse(combat.has("dice"))
+    val json = combat.getJSONObject("diceState")
+    assertEquals(
+      setOf("values", "held", "hasRolled", "rerollsUsed", "maxRerolls", "finalized", "resolved", "hand"),
+      json.keys().asSequence().toSet()
+    )
     assertTrue(json.getBoolean("hasRolled"))
     assertEquals(3, json.getInt("maxRerolls"))
     assertEquals(finalized.hand, json.getString("hand"))
