@@ -192,7 +192,6 @@ object InventoryEngine {
         ))
         changed(EquipmentRules.preserveMissingHp(state, unequipped, command.actorId), "item_unequipped")
       }
-      ItemCommand.Operation.STORE, ItemCommand.Operation.WITHDRAW -> invalid(state, "use_omnivault_command")
     }
   }
 }
