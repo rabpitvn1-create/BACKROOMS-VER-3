@@ -12,7 +12,7 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
 
 
 # 1) Keep the cheat code and authoritative mutation beside An Nhien's canonical runtime definition.
-canon_path = CORE / "AnNhienCanon.kt"
+canon_path = CORE / "legacy/character/AnNhienCanon.kt"
 canon = canon_path.read_text(encoding="utf-8")
 canon = replace_once(
     canon,

@@ -68,6 +68,15 @@ data class StatusCommand(
   enum class Operation { APPLY, REMOVE, UPDATE, QUERY }
 }
 
+data class StatUpgradeCommand(
+  override val commandId: String,
+  override val turnId: String?,
+  override val actorId: String,
+  override val targetId: String = actorId,
+  override val source: CommandSource,
+  val stat: String
+) : GameCommand
+
 data class TimeAdvanceCommand(
   override val commandId: String,
   override val turnId: String?,

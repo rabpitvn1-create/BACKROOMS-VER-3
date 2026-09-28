@@ -2,6 +2,13 @@ package com.rabpit.backroom.core.gameplay
 
 import com.rabpit.backroom.core.GameState
 import com.rabpit.backroom.core.GameStateCodec
+import com.rabpit.backroom.core.ItemCommand
+import com.rabpit.backroom.core.CharacterState
+import com.rabpit.backroom.core.CommandSource
+import com.rabpit.backroom.core.PartyCommand
+import com.rabpit.backroom.core.PartyEngine
+import com.rabpit.backroom.core.StateReducer
+import com.rabpit.backroom.core.StatUpgradeCommand
 import com.rabpit.backroom.core.KAI_ID
 import org.junit.Assert.*
 import org.junit.Test
@@ -44,5 +51,65 @@ class GameplayPortTest {
     ],"edges":[{"from":"0","to":"0.1"}]}""")
     assertTrue(graph.allows("0", "0.1"))
     assertFalse(graph.allows("0.1", "0"))
+  @Test fun reducerOwnsUpgradeSharedConsumableAndJoinSurvivalBaseline() {
+    val iris = CharacterState("iris", "Iris", progression = CharacterProgressionState(currentHp = 10))
+    var state = GameState.initial().copy(
+      characters = GameState.initial().characters + ("iris" to iris),
+      coreResource = CoreResourceState(quantity = 1)
+    )
+
+    val joined = PartyEngine.execute(state, PartyCommand(
+      commandId = "join-iris",
+      turnId = state.turn.currentTurnId,
+      actorId = KAI_ID,
+      targetId = "iris",
+      source = CommandSource.SYSTEM,
+      operation = PartyCommand.Operation.ADD,
+      consentConfirmed = true,
+      targetPresent = true
+    ))
+    assertTrue(joined.applied)
+    state = joined.state
+    assertEquals(0L, state.characters.getValue("iris").physiology.minutesSinceFood)
+    assertEquals(0L, state.characters.getValue("iris").physiology.minutesSinceWater)
+
+    val granted = StateReducer.execute(state, ItemCommand(
+      commandId = "grant-kit",
+      turnId = state.turn.currentTurnId,
+      actorId = KAI_ID,
+      source = CommandSource.SYSTEM,
+      operation = ItemCommand.Operation.PICKUP,
+      itemId = "first-aid-kit",
+      itemName = "Túi Sơ Cứu"
+    ))
+    assertTrue(granted.applied)
+    state = granted.state
+
+    val shared = StateReducer.execute(state, ItemCommand(
+      commandId = "share-kit",
+      turnId = state.turn.currentTurnId,
+      actorId = KAI_ID,
+      targetId = "iris",
+      source = CommandSource.UI,
+      operation = ItemCommand.Operation.USE,
+      itemId = "first-aid-kit",
+      itemName = "Túi Sơ Cứu"
+    ))
+    assertTrue(shared.applied)
+    assertEquals(45, shared.state.characters.getValue("iris").progression.currentHp)
+    assertFalse(shared.state.inventories.getValue(KAI_ID).items.containsKey("first-aid-kit"))
+
+    val upgraded = StateReducer.execute(shared.state, StatUpgradeCommand(
+      commandId = "upgrade-vit",
+      turnId = shared.state.turn.currentTurnId,
+      actorId = KAI_ID,
+      source = CommandSource.UI,
+      stat = "VIT"
+    ))
+    assertTrue(upgraded.applied)
+    assertEquals(6, upgraded.state.characters.getValue(KAI_ID).progression.stats.vit)
+    assertEquals(0, upgraded.state.coreResource.quantity)
+  }
+
   }
 }

@@ -549,6 +549,16 @@ public class MainActivity extends Activity {
       });
     }
 
+    @JavascriptInterface public void coreUpgrade(String stateJson, String characterId, String stat) {
+      io.execute(() -> emit("backroomCoreUpgrade", gameCore.processCoreUpgrade(stateJson, characterId, stat)));
+    }
+
+    @JavascriptInterface public void itemAction(String stateJson, String ownerId, String itemId,
+                                                String operation, String targetId, int quantity) {
+      io.execute(() -> emit("backroomItemAction",
+          gameCore.processItemAction(stateJson, ownerId, itemId, operation, targetId, quantity)));
+    }
+
     @JavascriptInterface public void requestSnapshot(String stateJson) {
       imageIo.execute(() -> requestSnapshotInternal(stateJson));
     }

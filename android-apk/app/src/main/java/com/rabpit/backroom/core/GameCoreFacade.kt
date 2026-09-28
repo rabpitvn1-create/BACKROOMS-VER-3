@@ -68,6 +68,78 @@ class GameCoreFacade private constructor(
   }
 
   fun currentCoreState(): String = GameStateCodec.encode(repository.load())
+
+  fun processItemAction(
+    stateJson: String,
+    ownerId: String,
+    itemId: String,
+    operation: String,
+    targetId: String,
+    quantity: Int
+  ): String {
+    val legacy = JSONObject(stateJson)
+    val state = loadOrMigrate(legacy)
+    if (CombatRuntime.active(state) != null) {
+      return response(false, syncLegacy(legacy, state, false), "combat_locked", "item_action_rejected")
+    }
+    val actorId = resolveCharacterId(state, ownerId) ?: state.party.leaderId
+    val inventory = state.inventories[actorId] ?: InventoryState(actorId)
+    val stack = inventory.items[itemId]
+      ?: inventory.items.values.firstOrNull { it.itemId == itemId || it.archetypeId == itemId || it.name.equals(itemId, true) }
+      ?: return response(false, syncLegacy(legacy, state, false), "item_not_owned", "item_action_rejected")
+    val op = operation.trim().lowercase()
+    val target = when (op) {
+      "share" -> resolveCharacterId(state, targetId)
+        ?: return response(false, syncLegacy(legacy, state, false), "target_unknown", "item_action_rejected")
+      "use" -> actorId
+      else -> null
+    }
+    val commandOperation = when (op) {
+      "use", "share" -> ItemCommand.Operation.USE
+      "discard", "drop" -> ItemCommand.Operation.DROP
+      else -> return response(false, syncLegacy(legacy, state, false), "item_action_invalid", "item_action_rejected")
+    }
+    val command = ItemCommand(
+      commandId = nextUiCommandId(state, "ITEM"),
+      turnId = state.turn.currentTurnId,
+      actorId = actorId,
+      targetId = target,
+      source = CommandSource.UI,
+      operation = commandOperation,
+      itemId = stack.itemId,
+      itemName = stack.name,
+      quantity = quantity.coerceAtLeast(1).coerceAtMost(stack.quantity)
+    )
+    val execution = StateReducer.execute(state, command)
+    if (!execution.applied) {
+      val reason = execution.validation.reason ?: "item_action_rejected"
+      return response(false, syncLegacy(legacy, state, false), reason, "item_action_rejected")
+    }
+    repository.save(execution.state)
+    return response(true, syncLegacy(legacy, execution.state, false), null, "item_action_committed", eventReply(execution.events))
+  }
+
+  fun processCoreUpgrade(stateJson: String, characterId: String, stat: String): String {
+    val legacy = JSONObject(stateJson)
+    val state = loadOrMigrate(legacy)
+    val targetId = resolveCharacterId(state, characterId)
+      ?: return response(false, syncLegacy(legacy, state, false), "target_unknown", "core_upgrade_rejected")
+    val execution = StateReducer.execute(state, StatUpgradeCommand(
+      commandId = nextUiCommandId(state, "STAT"),
+      turnId = state.turn.currentTurnId,
+      actorId = state.party.leaderId,
+      targetId = targetId,
+      source = CommandSource.UI,
+      stat = stat
+    ))
+    if (!execution.applied) {
+      val reason = execution.validation.reason ?: "core_upgrade_rejected"
+      return response(false, syncLegacy(legacy, state, false), reason, "core_upgrade_rejected")
+    }
+    repository.save(execution.state)
+    return response(true, syncLegacy(legacy, execution.state, false), null, "core_upgrade_committed", "Đã nâng chỉ số.")
+  }
+
   fun clear() = repository.clear()
   override fun close() = Unit
 
@@ -200,6 +272,27 @@ class GameCoreFacade private constructor(
     reason = "player_action"
   )
 
+  private fun resolveCharacterId(state: GameState, raw: String?): String? {
+    val value = raw.orEmpty().trim()
+    if (value.isBlank()) return null
+    state.characters[value]?.let { return it.id }
+    val normalized = value.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), "_").trim('_')
+    if (normalized in setOf("cao_minh", "kai", "twilight")) return state.party.leaderId
+    return state.characters.values.firstOrNull { character ->
+      character.id.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), "_").trim('_') == normalized ||
+        character.name.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), "_").trim('_') == normalized
+    }?.id
+  }
+
+  private fun nextUiCommandId(state: GameState, kind: String): String {
+    var sequence = state.turn.executedCommandIds.size
+    var id: String
+    do {
+      id = "${state.turn.currentTurnId}:UI:$kind:${sequence++}"
+    } while (id in state.turn.executedCommandIds)
+    return id
+  }
+
   private fun stableItemId(name: String): String = name.lowercase()
     .replace(Regex("[^\\p{L}\\p{N}]+"), "-").trim('-').ifBlank { "item-${name.hashCode().toUInt()}" }
 
@@ -220,6 +313,16 @@ class GameCoreFacade private constructor(
       state.time.lastAdvanceReason?.let { put("lastAdvanceReason", it) }
     })
     output.put("partyDetails", CharacterDetailJson.encodeParty(CharacterDetailProjector.projectParty(state)))
+    output.put("coreResource", JSONObject().apply {
+      put("quantity", state.coreResource.quantity)
+      put("highestRewardedStageIndex", state.coreResource.highestRewardedStageIndex)
+    })
+    output.put("levelRuntime", JSONObject().apply {
+      put("key", state.levelRuntime.key)
+      put("stageIndex", state.levelRuntime.stageIndex)
+      put("streak", state.levelRuntime.route.streak)
+      put("exitAvailable", state.levelRuntime.route.exitAvailable)
+    })
     val kaiInventory = state.inventories[KAI_ID]?.items?.values.orEmpty()
     output.put("inventory", JSONArray().apply { kaiInventory.forEach { stack -> put(JSONObject().apply {
       put("id", stack.itemId); put("name", stack.name); put("quantity", stack.quantity)
@@ -256,6 +359,8 @@ class GameCoreFacade private constructor(
     "inventory_transfer" -> "Vật phẩm đã được chuyển giao."
     "item_equipped" -> "Vật phẩm đã được trang bị."
     "item_unequipped" -> "Vật phẩm đã được tháo khỏi trang bị."
+    "item_consumed", "hp_restored", "physiology_food_restored", "physiology_water_restored" -> "Vật phẩm đã được sử dụng."
+    "character_stat_upgraded" -> "Chỉ số nhân vật đã được nâng."
     "omnivault_stored" -> "Vật phẩm đã được cất vào Omnivault."
     "omnivault_withdrawn" -> "Vật phẩm đã được lấy ra khỏi Omnivault."
     "omnivault_scanned" -> "Omnivault đã ghi mẫu vào scan slot và đánh dấu bản gốc."

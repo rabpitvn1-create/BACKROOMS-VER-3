@@ -41,6 +41,7 @@ object StateReducer {
       is OmnivaultCommand -> OmnivaultEngine.execute(state, command)
       is PartyCommand -> PartyEngine.execute(state, command)
       is StatusCommand -> StatusEngine.execute(state, command)
+      is StatUpgradeCommand -> ProgressionEngine.execute(state, command)
       is TimeAdvanceCommand -> TimeEngine.execute(state, command)
       is PhysiologyCommand -> PhysiologyEngine.execute(state, command)
       is QueryCommand -> ExecutionResult(state, applied = false)

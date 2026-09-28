@@ -1,6 +1,7 @@
 package com.rabpit.backroom.core
 
 import com.rabpit.backroom.core.gameplay.CharacterProgressionRules
+import com.rabpit.backroom.core.gameplay.CharacterStat
 import com.rabpit.backroom.core.gameplay.CharacterStatRules
 import com.rabpit.backroom.core.gameplay.GameplayCatalog
 import kotlin.math.max
@@ -73,14 +74,15 @@ private fun useCatalogItem(
   command: ItemCommand,
   item: com.rabpit.backroom.core.gameplay.GameplayItem
 ): ExecutionResult {
-  val projection = CharacterStatRules.project(state, command.actorId)
-  if (item.effect.hp > 0 && command.actorId != state.party.leaderId && (projection?.currentHp ?: 0) <= 0) {
+  val targetId = command.targetId ?: command.actorId
+  val projection = CharacterStatRules.project(state, targetId) ?: return invalid(state, "target_unknown")
+  if (item.effect.hp > 0 && targetId != state.party.leaderId && projection.currentHp <= 0) {
     return invalid(state, "companion_downed")
   }
   val nextInventory = removeItem(source, command.itemId, command.quantity)
     ?: return invalid(state, "insufficient_item_quantity")
   var next = state.copy(inventories = state.inventories + (command.actorId to nextInventory))
-  val character = next.characters[command.actorId] ?: return invalid(state, "actor_unknown")
+  val character = next.characters[targetId] ?: return invalid(state, "target_unknown")
   val factor = command.quantity.coerceAtLeast(1)
   val physiology = character.physiology.copy(
     minutesSinceFood = restoreCounter(
@@ -94,12 +96,12 @@ private fun useCatalogItem(
       item.effect.thirst * factor
     )
   )
-  next = next.copy(characters = next.characters + (command.actorId to character.copy(physiology = physiology)))
+  next = next.copy(characters = next.characters + (targetId to character.copy(physiology = physiology)))
   val events = mutableListOf("item_consumed")
   if (item.effect.hunger > 0) events += "physiology_food_restored"
   if (item.effect.thirst > 0) events += "physiology_water_restored"
   if (item.effect.hp > 0) {
-    val healed = CharacterProgressionRules.heal(next, command.actorId, item.effect.hp * factor)
+    val healed = CharacterProgressionRules.heal(next, targetId, item.effect.hp * factor)
     next = healed.first
     if (healed.second > 0) events += "hp_restored"
   }
@@ -194,7 +196,15 @@ object PartyEngine {
       if (!command.consentConfirmed) return invalid(state, "join_not_confirmed")
       if (command.targetId in state.party.memberIds) return invalid(state, "already_in_party")
       if (state.party.memberIds.size >= state.party.maxMembers) return invalid(state, "party_full")
-      changed(state.copy(party = state.party.copy(memberIds = state.party.memberIds + command.targetId)), "party_member_added")
+      val character = state.characters.getValue(command.targetId)
+      val physiology = character.physiology
+      val joined = if (physiology.minutesSinceFood == null && physiology.minutesSinceWater == null && physiology.minutesAwake == null) {
+        character.copy(physiology = PhysiologyState.freshRunBaseline())
+      } else character
+      changed(state.copy(
+        party = state.party.copy(memberIds = state.party.memberIds + command.targetId),
+        characters = state.characters + (command.targetId to joined)
+      ), "party_member_added")
     }
     PartyCommand.Operation.REMOVE -> {
       if (command.targetId == state.party.leaderId) return invalid(state, "cannot_remove_leader")
@@ -210,6 +220,24 @@ object PartyEngine {
       changed(state.copy(characters = state.characters + (command.targetId to character.copy(presence = CharacterPresence.SEPARATED))), "party_member_separated")
     }
     PartyCommand.Operation.FOLLOW, PartyCommand.Operation.QUERY -> ExecutionResult(state, applied = false)
+  }
+}
+
+object ProgressionEngine {
+  fun execute(state: GameState, command: StatUpgradeCommand): ExecutionResult {
+    if (CombatRuntime.active(state) != null) return invalid(state, "combat_locked")
+    val character = state.characters[command.targetId] ?: return invalid(state, "target_unknown")
+    val stat = runCatching { CharacterStat.valueOf(command.stat.trim().uppercase()) }.getOrNull()
+      ?: return invalid(state, "stat_invalid")
+    val cost = CharacterProgressionRules.upgradeCost(character.progression.stats.value(stat))
+    if (state.coreResource.quantity < cost) return invalid(state, "insufficient_core")
+    return try {
+      changed(CharacterProgressionRules.upgrade(state, command.targetId, stat.name).state, "character_stat_upgraded")
+    } catch (_: IllegalArgumentException) {
+      invalid(state, "stat_invalid")
+    } catch (_: IllegalStateException) {
+      invalid(state, "core_upgrade_rejected")
+    }
   }
 }
 
