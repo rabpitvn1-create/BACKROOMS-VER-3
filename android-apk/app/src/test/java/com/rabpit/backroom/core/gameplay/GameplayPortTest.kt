@@ -24,6 +24,20 @@ class GameplayPortTest {
     assertEquals(150, CharacterProgressionRules.scaledCoreReward(100, 1))
     assertEquals(225, CharacterProgressionRules.scaledCoreReward(100, 2))
 
+    val initialCaoMinh = GameState.initial()
+    assertEquals(5, initialCaoMinh.saveVersion)
+    assertEquals("Cao Minh", initialCaoMinh.characters.getValue(PLAYER_ID).name)
+    assertEquals("file:///android_asset/avatars/cao_minh_avatar.jpg", initialCaoMinh.characters.getValue(PLAYER_ID).avatarRef)
+    assertEquals(
+      setOf("Huyết Ma Kiếm", "Huyết Ma Chiến Khải", "Vạn Tàng Giới"),
+      initialCaoMinh.inventories.getValue(PLAYER_ID).items.values.map { it.name }.toSet()
+    )
+    assertEquals(
+      listOf("Huyết Ma Tứ Liên", "Ma Tâm Trấn Hồn", "Huyết Ảnh Ma Độn"),
+      GameplayCatalog.activeSkills("cao_minh").map { it.name }
+    )
+    assertEquals("Huyết Ma Nhị Thập Tứ Trảm", GameplayCatalog.ultimate("cao_minh")!!.name)
+
     val state = GameState.initial().copy(coreResource = CoreResourceState(quantity = 1))
     val upgraded = CharacterProgressionRules.upgrade(state, PLAYER_ID, "VIT").state
     assertEquals(6, upgraded.characters.getValue(PLAYER_ID).progression.stats.vit)
