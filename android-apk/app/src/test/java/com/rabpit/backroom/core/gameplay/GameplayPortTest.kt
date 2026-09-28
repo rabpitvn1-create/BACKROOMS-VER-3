@@ -224,11 +224,12 @@ class GameplayPortTest {
 
   @Test fun chestOpeningGrantsCatalogItemAndCoreThenClearsChest() {
     val state = GameState.initial().copy(metadata = GameState.initial().metadata + ("loot.chestPresent" to "true"))
+    val initialItems = state.inventories.getValue(PLAYER_ID).items.values.sumOf { it.quantity }
     val opened = ExplorationRuntime.openChest(state)
     assertEquals(ExplorationOutcome.CHEST, opened.outcome)
     assertEquals(1, opened.coreReward)
     assertFalse(ExplorationRuntime.chestPresent(opened.state))
-    assertEquals(1, opened.state.inventories.getValue(PLAYER_ID).items.values.sumOf { it.quantity })
+    assertEquals(initialItems + 1, opened.state.inventories.getValue(PLAYER_ID).items.values.sumOf { it.quantity })
     assertEquals(1, opened.state.coreResource.quantity)
   }
 }
