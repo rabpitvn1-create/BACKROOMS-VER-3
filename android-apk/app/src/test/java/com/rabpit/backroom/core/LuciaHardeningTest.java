@@ -4,11 +4,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -78,6 +80,71 @@ public class LuciaHardeningTest {
         new CanonRetriever(canonFiles).retrieve(levelZero, "Lucia Lục", CanonRetriever.DEFAULT_BUDGET, true);
     assertTrue(packet.promptText().contains(
         "Lucia Lục / Hứa Thuý Mai và Lục Trầm là hai nhân vật khác nhau"));
+  }
+
+  @Test public void luciaHasTwoDiceSkillsAndDiceDrivenUltimate() throws Exception {
+    Field skillsField = CombatChoiceEngine.class.getDeclaredField("SKILLS");
+    skillsField.setAccessible(true);
+    Map<?, ?> pools = (Map<?, ?>) skillsField.get(null);
+    List<?> luciaSkills = (List<?>) pools.get("lucia");
+    assertEquals(2, luciaSkills.size());
+
+    Field nameField = luciaSkills.get(0).getClass().getDeclaredField("name");
+    nameField.setAccessible(true);
+    assertEquals("M4A1 Joint Attack", nameField.get(luciaSkills.get(0)));
+    assertEquals("M4A1 Tactical Burst", nameField.get(luciaSkills.get(1)));
+    assertEquals(5, CombatChoiceEngine.characterProcCount("lucia"));
+
+    JSONObject combatState = state(0, "0");
+    new CharacterEncounterCore().activateEncounterCandidate(combatState, "lucia");
+    CombatChoiceEngine.start(combatState, "diep_minh", 0);
+
+    JSONObject combat = combatState.getJSONObject("combat");
+    JSONObject entity = combat.getJSONObject("entity");
+    entity.put("hp", 100000).put("maxHp", 100000);
+
+    finalizeAs(combatState, 2, 2, 1, 4, 6);
+    CombatChoiceEngine.resolveFinalized(combatState);
+    assertEquals("Lucia Lục", combat.getString("currentActor"));
+
+    JSONObject selectedSkill = combat.getJSONObject("currentSkill");
+    String selectedName = selectedSkill.getString("name");
+    assertTrue("M4A1 Joint Attack".equals(selectedName)
+        || "M4A1 Tactical Burst".equals(selectedName));
+
+    JSONObject currentUltimate = combat.getJSONObject("currentUltimate");
+    assertEquals("Too Young To Die", currentUltimate.getString("name"));
+    assertEquals(60, currentUltimate.getInt("hitCount"));
+    assertEquals(15, currentUltimate.getInt("bonusPercent"));
+
+    entity.put("hp", 100000).put("maxHp", 100000)
+        .put("bleedTurns", 0).put("bleedPercent", 0)
+        .put("poisonTurns", 0).put("poisonPercent", 0)
+        .put("armorBreakTurns", 0).put("armorBreakPercent", 0)
+        .put("accuracyPenaltyTurns", 0).put("accuracyPenalty", 0)
+        .put("stunTurns", 0);
+    JSONObject lucia = combat.getJSONArray("participants").getJSONObject(1);
+    int currentDamage = CombatChoiceEngine.basicDamage(
+        lucia.getInt("baseAttack"), lucia.getInt("STR"), 100);
+    int expected = CombatChoiceEngine.ultimateDamage(currentDamage, 60, 15, 100);
+
+    finalizeAs(combatState, 1, 2, 3, 4, 5);
+    CombatChoiceEngine.resolveFinalized(combatState);
+
+    assertEquals(100000 - expected, entity.getInt("hp"));
+    assertTrue(combatState.getJSONArray("log").getJSONObject(0)
+        .getJSONArray("battleLog").toString().contains("Too Young To Die"));
+  }
+
+  private static void finalizeAs(JSONObject state, int... values) throws Exception {
+    JSONObject dice = state.getJSONObject("combat").getJSONObject("diceState");
+    JSONArray array = new JSONArray();
+    for (int value : values) array.put(value);
+    dice.put("values", array)
+        .put("hasRolled", true)
+        .put("finalized", true)
+        .put("resolved", false)
+        .put("hand", CombatChoiceEngine.classify(values));
   }
 
   private static JSONObject state(int level, String levelKey) throws Exception {
