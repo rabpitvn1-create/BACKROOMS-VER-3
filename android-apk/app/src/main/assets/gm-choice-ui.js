@@ -475,7 +475,7 @@
   var DICE_ROLL_ANIMATION_MS=650;
 
   function diceAsset(value){
-    return 'file:///android_asset/dice/die-'+String(value)+'.svg';
+    return 'file:///android_asset/dice/die-'+String(value)+'.png';
   }
 
   function allHeld(values){
