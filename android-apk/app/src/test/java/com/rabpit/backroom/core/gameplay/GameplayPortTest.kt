@@ -1,18 +1,20 @@
 package com.rabpit.backroom.core.gameplay
 
-import com.rabpit.backroom.core.GameState
-import com.rabpit.backroom.core.GameStateCodec
-import com.rabpit.backroom.core.ExplorationOutcome
-import com.rabpit.backroom.core.ExplorationRuntime
-import com.rabpit.backroom.core.ItemCommand
 import com.rabpit.backroom.core.CharacterState
 import com.rabpit.backroom.core.CommandSource
+import com.rabpit.backroom.core.ExplorationOutcome
+import com.rabpit.backroom.core.ExplorationRuntime
+import com.rabpit.backroom.core.GameState
+import com.rabpit.backroom.core.GameStateCodec
+import com.rabpit.backroom.core.ItemCommand
+import com.rabpit.backroom.core.KAI_ID
 import com.rabpit.backroom.core.PartyCommand
 import com.rabpit.backroom.core.PartyEngine
 import com.rabpit.backroom.core.StateReducer
 import com.rabpit.backroom.core.StatUpgradeCommand
-import com.rabpit.backroom.core.KAI_ID
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GameplayPortTest {
@@ -34,8 +36,8 @@ class GameplayPortTest {
     assertEquals(5, GameplayCatalog.procSkills("cao_minh").size)
     assertEquals(0, GameplayCatalog.procSkills("kai").size)
 
-    assertEquals(PokerDiceRules.Hand.SSF, PokerDiceRules.classify(1,2,3,4,5))
-    assertEquals(PokerDiceRules.Hand.FSF, PokerDiceRules.classify(6,6,6,6,6))
+    assertEquals(PokerDiceRules.Hand.SSF, PokerDiceRules.classify(1, 2, 3, 4, 5))
+    assertEquals(PokerDiceRules.Hand.FSF, PokerDiceRules.classify(6, 6, 6, 6, 6))
     assertEquals(33, PokerDiceRules.basicDamage(30, 6, 100))
 
     var route = LevelRuntimeState()
@@ -53,6 +55,8 @@ class GameplayPortTest {
     ],"edges":[{"from":"0","to":"0.1"}]}""")
     assertTrue(graph.allows("0", "0.1"))
     assertFalse(graph.allows("0.1", "0"))
+  }
+
   @Test fun reducerOwnsUpgradeSharedConsumableAndJoinSurvivalBaseline() {
     val iris = CharacterState("iris", "Iris", progression = CharacterProgressionState(currentHp = 10))
     var state = GameState.initial().copy(
@@ -113,10 +117,9 @@ class GameplayPortTest {
     assertEquals(0, upgraded.state.coreResource.quantity)
   }
 
-  }
   @Test fun equipmentUsesOwnedItemReferencesAndPreservesMissingHp() {
     var state = GameState.initial()
-    val armor = ItemCommand(
+    state = StateReducer.execute(state, ItemCommand(
       commandId = "grant-armor",
       turnId = state.turn.currentTurnId,
       actorId = KAI_ID,
@@ -129,8 +132,8 @@ class GameplayPortTest {
         "bonus.VIT" to "2",
         "bonus.HP" to "20"
       )
-    )
-    state = StateReducer.execute(state, armor).state
+    )).state
+
     val equip = StateReducer.execute(state, ItemCommand(
       commandId = "equip-armor",
       turnId = state.turn.currentTurnId,
@@ -175,11 +178,15 @@ class GameplayPortTest {
     assertEquals(50, plainStats.maxHp)
     assertEquals(50, plainStats.currentHp)
   }
+
   @Test fun scopedRngAndExplorationAreDeterministicWithoutCanon() {
     val a = GameplayRng("TURN_9", 3)
     val b = GameplayRng("TURN_9", 3)
     assertEquals(a.nextInt(GameplayRng.Scope.ROUTE, 100), b.nextInt(GameplayRng.Scope.ROUTE, 100))
-    assertEquals(a.nextInt(GameplayRng.Scope.SITUATION_SELECTION, 10_000), b.nextInt(GameplayRng.Scope.SITUATION_SELECTION, 10_000))
+    assertEquals(
+      a.nextInt(GameplayRng.Scope.SITUATION_SELECTION, 10_000),
+      b.nextInt(GameplayRng.Scope.SITUATION_SELECTION, 10_000)
+    )
 
     val graph = LevelGraph.fromText("""{"schemaVersion":1,"nodes":[
       {"key":"0","parentLevel":0,"stageIndex":0},
@@ -209,6 +216,4 @@ class GameplayPortTest {
     assertEquals(1, opened.state.inventories.getValue(KAI_ID).items.values.sumOf { it.quantity })
     assertEquals(1, opened.state.coreResource.quantity)
   }
-
-
 }

@@ -84,10 +84,16 @@ class CombatRuntimeTest {
 
     state = CombatRuntime.setHold(state, 0, true)
     val heldValue = CombatRuntime.dice(state)!!.values[0]
-    repeat(4) { state = CombatRuntime.rerollDice(state) }
+    repeat(3) {
+      for (index in 1 until PokerDiceRules.DICE_COUNT) {
+        state = CombatRuntime.setHold(state, index, false)
+      }
+      state = CombatRuntime.rerollDice(state)
+    }
     val rerolled = CombatRuntime.dice(state)!!
     assertEquals(3, rerolled.rerollsUsed)
     assertEquals(heldValue, rerolled.values[0])
+    assertEquals(rerolled, CombatRuntime.dice(CombatRuntime.rerollDice(state))!!)
 
     state = CombatRuntime.finishHand(state)
     val finalized = CombatRuntime.dice(state)!!

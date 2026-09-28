@@ -48,7 +48,10 @@ object AnNhienCanon {
         "survivalMultiplier" to SURVIVAL_MULTIPLIER.toString(),
         "lootBonusPoints" to LOOT_BONUS_POINTS.toString(),
         "exitBonusPoints" to EXIT_BONUS_POINTS.toString(),
-        "inventoryProfile" to "an_nhien_food_only"
+        "inventoryProfile" to "an_nhien_food_only",
+        "equipmentLockReason" to "an_nhien_equipment_locked",
+        "partyLockReason" to "an_nhien_follower_locked",
+        "leaderLockReason" to "an_nhien_cannot_lead"
       )
     )
   }
