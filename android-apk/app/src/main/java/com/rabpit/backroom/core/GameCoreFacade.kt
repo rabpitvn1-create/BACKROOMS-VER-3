@@ -14,13 +14,13 @@ class GameCoreFacade private constructor(
   private val resolver = CommandResolver()
 
   /** Fast deterministic pass. Gemini is never called from this method. */
-  fun processRule(legacyStateJson: String, action: String): String {
-    val legacy = JSONObject(legacyStateJson)
-    val state = loadOrMigrate(legacy)
-    val turnId = nextTurnId(legacy, state)
+  fun processRule(uiStateJson: String, action: String): String {
+    val ui = JSONObject(uiStateJson)
+    val state = loadState(ui)
+    val turnId = nextTurnId(ui, state)
     logger.log(PipelineLogEvent("INPUT", turnId = turnId, details = mapOf("length" to action.length.toString())))
     val pending = TurnCoordinator.createPending(state, turnId, action)
-    if (pending.error != null) return response(false, legacy, pending.error, "pending_rejected")
+    if (pending.error != null) return response(false, ui, pending.error, "pending_rejected")
     val context = contextFor(pending.state)
     val ruleResult = rules.interpretSync(action, context)
     val interpreted = IntentResult(
@@ -32,24 +32,18 @@ class GameCoreFacade private constructor(
     // Player text never has authority to manufacture an acquisition event. Reject immediately,
     // do not call Gemini, do not advance the turn, and do not mutate Inventory.
     if (isDirectPlayerPickupAction(action) || interpreted.candidates.any { it.intent == GameIntent.PICKUP_ITEM }) {
-      val result = syncLegacy(legacy, state, incrementTurn = false)
+      val result = syncUiState(ui, state, incrementTurn = false)
       val reply = validationReply("player_pickup_unavailable")
       appendLog(result, action, reply)
       logger.log(PipelineLogEvent("REJECT", turnId = turnId, details = mapOf("reason" to "player_pickup_unavailable")))
       return response(true, result, "player_pickup_unavailable", "validation_rejected", reply)
     }
 
-    // Restore is lore/narrative-only. Route prose to the GM, but authoritative state mutation is
-    // explicitly suppressed again in processValidatedCandidate().
-    if (interpreted.candidates.any { it.intent == GameIntent.OMNIVAULT_RESTORE }) {
-      return response(false, legacy, null, "fallback_required")
-    }
-
     if (interpreted.candidates.any { it.intent == GameIntent.NO_ACTION || it.confidence != IntentConfidence.HIGH }) {
-      return response(false, legacy, null, "fallback_required")
+      return response(false, ui, null, "fallback_required")
     }
     val resolvedCommands = interpreted.candidates.mapIndexedNotNull { index, candidate -> resolver.resolve(candidate, index, turnId, context) }
-    if (resolvedCommands.size != interpreted.candidates.size || resolvedCommands.isEmpty()) return response(false, legacy, null, "resolution_incomplete")
+    if (resolvedCommands.size != interpreted.candidates.size || resolvedCommands.isEmpty()) return response(false, ui, null, "resolution_incomplete")
     val commands = resolvedCommands.toMutableList()
     commands += timeAdvanceCommand(turnId, action)
     commands.forEach { logger.log(PipelineLogEvent("COMMAND", turnId, it.commandId, it.source)) }
@@ -57,12 +51,12 @@ class GameCoreFacade private constructor(
     if (committed.error != null) {
       val rejected = TurnCoordinator.reject(pending.state, committed.error)
       repository.save(rejected.state)
-      val result = syncLegacy(legacy, rejected.state, incrementTurn = true)
+      val result = syncUiState(ui, rejected.state, incrementTurn = true)
       appendLog(result, action, validationReply(committed.error))
       return response(true, result, committed.error, "validation_rejected", validationReply(committed.error))
     }
     repository.save(committed.state)
-    val result = syncLegacy(legacy, committed.state, incrementTurn = true)
+    val result = syncUiState(ui, committed.state, incrementTurn = true)
     val reply = eventReply(committed.execution?.events.orEmpty())
     appendLog(result, action, reply)
     logger.log(PipelineLogEvent("COMMIT", turnId = turnId, details = mapOf("commands" to commands.size.toString())))
@@ -71,8 +65,8 @@ class GameCoreFacade private constructor(
 
   fun currentCoreState(): String = GameStateCodec.encode(repository.load())
   fun processExplore(stateJson: String, action: String): String {
-    val legacy = JSONObject(stateJson)
-    val state = loadOrMigrate(legacy)
+    val ui = JSONObject(stateJson)
+    val state = loadState(ui)
     val resolution = ExplorationRuntime.resolve(state, action, levelGraph)
     repository.save(resolution.state)
     return JSONObject().apply {
@@ -80,14 +74,14 @@ class GameCoreFacade private constructor(
       put("outcome", resolution.outcome.name)
       resolution.payloadKey?.let { put("payloadKey", it) }
       if (resolution.coreReward > 0) put("coreReward", resolution.coreReward)
-      put("state", syncLegacy(legacy, resolution.state, false))
+      put("state", syncUiState(ui, resolution.state, false))
       CombatRuntime.toJson(resolution.state)?.let { put("combat", it) }
     }.toString()
   }
 
   fun openChest(stateJson: String): String {
-    val legacy = JSONObject(stateJson)
-    val state = loadOrMigrate(legacy)
+    val ui = JSONObject(stateJson)
+    val state = loadState(ui)
     val resolution = ExplorationRuntime.openChest(state)
     repository.save(resolution.state)
     return JSONObject().apply {
@@ -95,7 +89,7 @@ class GameCoreFacade private constructor(
       put("outcome", resolution.outcome.name)
       resolution.payloadKey?.let { put("itemId", it) }
       if (resolution.coreReward > 0) put("coreReward", resolution.coreReward)
-      put("state", syncLegacy(legacy, resolution.state, false))
+      put("state", syncUiState(ui, resolution.state, false))
     }.toString()
   }
 
@@ -108,27 +102,27 @@ class GameCoreFacade private constructor(
     targetId: String,
     quantity: Int
   ): String {
-    val legacy = JSONObject(stateJson)
-    val state = loadOrMigrate(legacy)
+    val ui = JSONObject(stateJson)
+    val state = loadState(ui)
     if (CombatRuntime.active(state) != null) {
-      return response(false, syncLegacy(legacy, state, false), "combat_locked", "item_action_rejected")
+      return response(false, syncUiState(ui, state, false), "combat_locked", "item_action_rejected")
     }
     val actorId = resolveCharacterId(state, ownerId) ?: state.party.leaderId
     val inventory = state.inventories[actorId] ?: InventoryState(actorId)
     val stack = inventory.items[itemId]
       ?: inventory.items.values.firstOrNull { it.itemId == itemId || it.archetypeId == itemId || it.name.equals(itemId, true) }
-      ?: return response(false, syncLegacy(legacy, state, false), "item_not_owned", "item_action_rejected")
+      ?: return response(false, syncUiState(ui, state, false), "item_not_owned", "item_action_rejected")
     val op = operation.trim().lowercase()
     val target = when (op) {
       "share" -> resolveCharacterId(state, targetId)
-        ?: return response(false, syncLegacy(legacy, state, false), "target_unknown", "item_action_rejected")
+        ?: return response(false, syncUiState(ui, state, false), "target_unknown", "item_action_rejected")
       "use" -> actorId
       else -> null
     }
     val commandOperation = when (op) {
       "use", "share" -> ItemCommand.Operation.USE
       "discard", "drop" -> ItemCommand.Operation.DROP
-      else -> return response(false, syncLegacy(legacy, state, false), "item_action_invalid", "item_action_rejected")
+      else -> return response(false, syncUiState(ui, state, false), "item_action_invalid", "item_action_rejected")
     }
     val command = ItemCommand(
       commandId = nextUiCommandId(state, "ITEM"),
@@ -144,17 +138,17 @@ class GameCoreFacade private constructor(
     val execution = StateReducer.execute(state, command)
     if (!execution.applied) {
       val reason = execution.validation.reason ?: "item_action_rejected"
-      return response(false, syncLegacy(legacy, state, false), reason, "item_action_rejected")
+      return response(false, syncUiState(ui, state, false), reason, "item_action_rejected")
     }
     repository.save(execution.state)
-    return response(true, syncLegacy(legacy, execution.state, false), null, "item_action_committed", eventReply(execution.events))
+    return response(true, syncUiState(ui, execution.state, false), null, "item_action_committed", eventReply(execution.events))
   }
 
   fun processCoreUpgrade(stateJson: String, characterId: String, stat: String): String {
-    val legacy = JSONObject(stateJson)
-    val state = loadOrMigrate(legacy)
+    val ui = JSONObject(stateJson)
+    val state = loadState(ui)
     val targetId = resolveCharacterId(state, characterId)
-      ?: return response(false, syncLegacy(legacy, state, false), "target_unknown", "core_upgrade_rejected")
+      ?: return response(false, syncUiState(ui, state, false), "target_unknown", "core_upgrade_rejected")
     val execution = StateReducer.execute(state, StatUpgradeCommand(
       commandId = nextUiCommandId(state, "STAT"),
       turnId = state.turn.currentTurnId,
@@ -165,18 +159,18 @@ class GameCoreFacade private constructor(
     ))
     if (!execution.applied) {
       val reason = execution.validation.reason ?: "core_upgrade_rejected"
-      return response(false, syncLegacy(legacy, state, false), reason, "core_upgrade_rejected")
+      return response(false, syncUiState(ui, state, false), reason, "core_upgrade_rejected")
     }
     repository.save(execution.state)
-    return response(true, syncLegacy(legacy, execution.state, false), null, "core_upgrade_committed", "Đã nâng chỉ số.")
+    return response(true, syncUiState(ui, execution.state, false), null, "core_upgrade_committed", "Đã nâng chỉ số.")
   }
 
   fun combatState(stateJson: String): String {
-    val legacy = JSONObject(stateJson)
-    val state = loadOrMigrate(legacy)
+    val ui = JSONObject(stateJson)
+    val state = loadState(ui)
     return JSONObject().apply {
       put("handled", CombatRuntime.active(state) != null)
-      put("state", syncLegacy(legacy, state, false))
+      put("state", syncUiState(ui, state, false))
       CombatRuntime.toJson(state)?.let { put("combat", it) }
     }.toString()
   }
@@ -191,35 +185,35 @@ class GameCoreFacade private constructor(
     mutateCombat(stateJson, CombatRuntime::finishHand)
 
   fun combatResolve(stateJson: String): String {
-    val legacy = JSONObject(stateJson)
-    val state = loadOrMigrate(legacy)
+    val ui = JSONObject(stateJson)
+    val state = loadState(ui)
     return try {
       val resolution = CombatRuntime.resolveFinalizedHand(state)
       repository.save(resolution.state)
       JSONObject().apply {
         put("handled", resolution.handled)
-        put("state", syncLegacy(legacy, resolution.state, false))
+        put("state", syncUiState(ui, resolution.state, false))
         put("reply", resolution.reply)
         CombatRuntime.toJson(resolution.state)?.let { put("combat", it) }
       }.toString()
     } catch (error: Exception) {
-      response(false, syncLegacy(legacy, state, false), error.message ?: "combat_resolve_failed", "combat_resolve_rejected")
+      response(false, syncUiState(ui, state, false), error.message ?: "combat_resolve_failed", "combat_resolve_rejected")
     }
   }
 
   private fun mutateCombat(stateJson: String, mutation: (GameState) -> GameState): String {
-    val legacy = JSONObject(stateJson)
-    val state = loadOrMigrate(legacy)
+    val ui = JSONObject(stateJson)
+    val state = loadState(ui)
     return try {
       val next = mutation(state)
       repository.save(next)
       JSONObject().apply {
         put("handled", true)
-        put("state", syncLegacy(legacy, next, false))
+        put("state", syncUiState(ui, next, false))
         CombatRuntime.toJson(next)?.let { put("combat", it) }
       }.toString()
     } catch (error: Exception) {
-      response(false, syncLegacy(legacy, state, false), error.message ?: "combat_action_failed", "combat_action_rejected")
+      response(false, syncUiState(ui, state, false), error.message ?: "combat_action_failed", "combat_action_rejected")
     }
   }
 
@@ -227,21 +221,21 @@ class GameCoreFacade private constructor(
   override fun close() = Unit
 
   /**
-   * Commits only the gameplay delta already accepted by the legacy canon/dice validator.
+   * Commits only the gameplay delta already accepted by the ui canon/dice validator.
    * Candidate prose/JSON never becomes storage directly: inventory and party are rebuilt
    * from commands and then projected back onto the UI state.
    */
   fun processValidatedCandidate(beforeJson: String, candidateJson: String, action: String): String {
     val before = JSONObject(beforeJson)
     val candidate = JSONObject(candidateJson)
-    val core = loadOrMigrate(before)
+    val core = loadState(before)
     val turnId = nextTurnId(before, core)
     val pending = TurnCoordinator.createPending(core, turnId, action)
     if (pending.error != null) return response(false, before, pending.error, "pending_rejected")
     val commands = mutableListOf<GameCommand>()
     val current = pending.state.inventories[KAI_ID]?.items.orEmpty()
     val actionIntents = rules.interpretSync(action, contextFor(pending.state)).candidates.map { it.intent }.toSet()
-    val inventoryLocked = isDirectPlayerPickupAction(action) || GameIntent.PICKUP_ITEM in actionIntents || GameIntent.OMNIVAULT_RESTORE in actionIntents
+    val inventoryLocked = isDirectPlayerPickupAction(action) || GameIntent.PICKUP_ITEM in actionIntents
 
     val desiredById = mutableMapOf<String, ItemStack>()
     if (inventoryLocked) {
@@ -297,7 +291,7 @@ class GameCoreFacade private constructor(
         targetPresent = member.optBoolean("present", false) && known?.presence == CharacterPresence.ACTIVE
       )
     }
-    commands += ValidatedLegacyStateCommand(
+    commands += ValidatedStateCommand(
       commandId = "$turnId:GEMINI:VALIDATED_STATE", turnId = turnId, source = CommandSource.GEMINI,
       location = candidate.optString("location").takeIf(String::isNotBlank),
       title = candidate.optString("title").takeIf(String::isNotBlank),
@@ -314,35 +308,39 @@ class GameCoreFacade private constructor(
       return response(false, before, committed.error, "gemini_delta_rejected")
     }
     repository.save(committed.state)
-    val synchronized = syncLegacy(candidate, committed.state, incrementTurn = false)
+    val synchronized = syncUiState(candidate, committed.state, incrementTurn = false)
     logger.log(PipelineLogEvent("GEMINI_COMMIT", turnId = turnId, source = CommandSource.GEMINI, details = mapOf("commands" to commands.size.toString(), "inventoryLocked" to inventoryLocked.toString())))
     return response(true, synchronized, null, "gemini_delta_committed")
   }
 
-  private fun loadOrMigrate(legacy: JSONObject): GameState {
+  private fun loadState(ui: JSONObject): GameState {
     if (repository.exists()) return repository.load()
-    val migrated = GameStateCodec.decode(legacy)
+    val migrated = GameStateCodec.decode(ui)
     repository.save(migrated)
     return migrated
   }
 
   private fun contextFor(state: GameState): GameContext {
-    val actors = state.characters.values.associate { it.name.lowercase() to it.id } + mapOf("kai" to KAI_ID, "iris" to "iris", "syvial" to "syvial")
-    val items = (state.inventories.values.flatMap { it.items.values } + state.omnivault.storedItems.values).associate { it.name.lowercase() to it.itemId }
+    val actors = buildMap {
+      state.characters.values.forEach { character ->
+        put(character.id.lowercase(), character.id)
+        put(character.name.lowercase(), character.id)
+      }
+    }
+    val items = state.inventories.values.flatMap { it.items.values }
+      .associate { it.name.lowercase() to it.itemId }
     return GameContext(state, actors, items)
   }
 
   private fun isDirectPlayerPickupAction(action: String): Boolean {
     val text = action.trim()
-    val omnivaultWithdrawal = Regex("(?:lấy|rút|triệu hồi).*(?:ra khỏi|khỏi|từ).*(?:omnivault|nhẫn|kho)", RegexOption.IGNORE_CASE).containsMatchIn(text)
-    if (omnivaultWithdrawal) return false
     val directVerb = Regex("(?:^|\\s)(?:nhặt|lượm|cầm\\s+lên|lấy(?:\\s+lên)?|thu\\s+hồi|tịch\\s+thu|nhận(?:\\s+lấy)?|pick\\s+up|take|receive)(?:\\s|$)", RegexOption.IGNORE_CASE)
     val inventoryAssertion = Regex("(?:thêm|bỏ|đưa).{0,80}(?:vào|trong)\\s+(?:inventory|kho đồ|túi đồ)", RegexOption.IGNORE_CASE)
     return directVerb.containsMatchIn(text) || inventoryAssertion.containsMatchIn(text)
   }
 
-  private fun nextTurnId(legacy: JSONObject, state: GameState): String {
-    val number = legacy.optInt("turn", state.turn.currentTurnId.substringAfterLast('_').toIntOrNull() ?: 1)
+  private fun nextTurnId(ui: JSONObject, state: GameState): String {
+    val number = ui.optInt("turn", state.turn.currentTurnId.substringAfterLast('_').toIntOrNull() ?: 1)
     return "TURN_${number.coerceAtLeast(1)}"
   }
 
@@ -386,8 +384,8 @@ class GameCoreFacade private constructor(
     return result
   }
 
-  private fun syncLegacy(legacy: JSONObject, state: GameState, incrementTurn: Boolean): JSONObject {
-    val output = JSONObject(legacy.toString())
+  private fun syncUiState(ui: JSONObject, state: GameState, incrementTurn: Boolean): JSONObject {
+    val output = JSONObject(ui.toString())
     if (incrementTurn) output.put("turn", output.optInt("turn", 1) + 1)
     output.put("saveVersion", CURRENT_SAVE_VERSION)
     output.put("gameTime", JSONObject().apply {
@@ -447,10 +445,6 @@ class GameCoreFacade private constructor(
     "item_unequipped" -> "Vật phẩm đã được tháo khỏi trang bị."
     "item_consumed", "hp_restored", "physiology_food_restored", "physiology_water_restored" -> "Vật phẩm đã được sử dụng."
     "character_stat_upgraded" -> "Chỉ số nhân vật đã được nâng."
-    "omnivault_stored" -> "Vật phẩm đã được cất vào Omnivault."
-    "omnivault_withdrawn" -> "Vật phẩm đã được lấy ra khỏi Omnivault."
-    "omnivault_scanned" -> "Omnivault đã ghi mẫu vào scan slot và đánh dấu bản gốc."
-    "omnivault_copied" -> "Omnivault đã tạo bản sao từ mẫu còn hiệu lực."
     else -> "Hành động đã được Game State Core xác nhận."
   }
 
@@ -461,7 +455,6 @@ class GameCoreFacade private constructor(
       "insufficient_item_quantity", "item_not_owned" -> "This action is not available."
       "party_full" -> "Party đã đủ tối đa bốn thành viên."
       "join_not_confirmed" -> "Yêu cầu gia nhập chưa đủ điều kiện hoặc chưa được NPC xác nhận."
-      "living_target_forbidden" -> "Omnivault không thể tác động lên sinh vật sống."
       else -> "This action is not available."
     }
     return "[Warning] $message"
