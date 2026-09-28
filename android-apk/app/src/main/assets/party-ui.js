@@ -166,6 +166,8 @@
   function coreCount(){
     var details=state&&state.partyDetails;
     if(details&&Number.isFinite(Number(details.coreCount)))return Math.max(0,Number(details.coreCount));
+    var direct=state&&state.coreResource;
+    if(direct&&Number.isFinite(Number(direct.quantity)))return Math.max(0,Number(direct.quantity));
     var resource=state&&state.characterProgression&&state.characterProgression.coreResource;
     return resource&&Number.isFinite(Number(resource.quantity))?Math.max(0,Number(resource.quantity)):0;
   }
