@@ -20,13 +20,15 @@ Trang bị runtime mặc định đã xác nhận:
 - Đồng hồ định vị quân sự.
 
 Poker Dice presentation:
-- M4A1 Joint Attack: 150% damage.
+- Active Skill 1 — M4A1 Joint Attack: 150% damage.
+- Active Skill 2 — M4A1 Tactical Burst: 175% damage.
+- Core chọn một active skill làm `currentSkill` cho lượt Lucia; các hand Skill dùng skill đó với multiplier Poker Dice hiện hành.
 - Toxic Burst: +25% damage, Trúng độc 2 turn, value 3.
 - Armor-Piercing Burst: +20% damage, Xuyên giáp 2 turn, value 10.
 - Concussive Burst: +15% damage, Choáng 1 turn.
 - Rending Burst: +20% damage, Chảy máu 2 turn, value 3.
 - Corrosive Burst: +20% damage, Trúng độc 2 turn, value 4.
-- Too Young To Die: Ultimate đúng 60 phát, dùng cùng công thức current-DMG + 15% bonus-per-hit của runtime hiện hành.
+- Too Young To Die: Ultimate đúng 60 phát, dùng cùng công thức current-DMG + 15% bonus-per-hit của runtime hiện hành; SSF dùng 100% Ultimate multiplier và FSF dùng 200%.
 
 Các proc/status trên là gameplay projection; không tự biến Lucia thành nhân vật siêu nhiên.
 
