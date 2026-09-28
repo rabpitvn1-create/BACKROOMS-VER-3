@@ -343,7 +343,9 @@ public final class CombatChoiceEngine {
         skill("Spatial Dominion", "", 210, "Mất phương hướng", 2, 25));
 
     skills("lucia",
-        skill("M4A1 Joint Attack", "Phối hợp hỏa lực bằng M4A1 cá nhân hóa.", 150, "", 0, 0));
+        skill("M4A1 Joint Attack", "Phối hợp hỏa lực bằng M4A1 cá nhân hóa.", 150, "", 0, 0),
+        skill("M4A1 Tactical Burst",
+            "Loạt bắn chiến thuật có kiểm soát bằng M4A1 cá nhân hóa.", 175, "", 0, 0));
 
     skills("luc_tram",
         skill("Tịch Quang Hợp Kích",
