@@ -78,9 +78,15 @@ jobs:
           grep -q "launchable-activity: name='com.rabpit.backroom.MainActivity'" <<<"$BADGING"
           "$BUILD_TOOLS/zipalign" -c -P 16 -v 4 Backroom-1.1.64.apk
           unzip -l Backroom-1.1.64.apk | grep -q 'assets/index.html'
-          unzip -l Backroom-1.1.64.apk | grep -q 'assets/entity/hound.png'
-          unzip -l Backroom-1.1.64.apk | grep -q 'assets/entity/slenderman.png'
-          unzip -l Backroom-1.1.64.apk | grep -q 'assets/entity/diep_minh.png'
+          unzip -l Backroom-1.1.64.apk | grep -q 'assets/snapshot-ui.js'
+          unzip -l Backroom-1.1.64.apk | grep -q 'assets/gm-choice-ui.js'
+          unzip -l Backroom-1.1.64.apk | grep -q 'assets/party-ui.js'
+          unzip -l Backroom-1.1.64.apk | grep -q 'assets/chest_overlay.png'
+          unzip -l Backroom-1.1.64.apk | grep -q 'assets/dice/die-1.svg'
+          unzip -l Backroom-1.1.64.apk | grep -q 'assets/dice/die-6.svg'
+          unzip -l Backroom-1.1.64.apk | grep -q 'assets/entity/hound.webp'
+          unzip -l Backroom-1.1.64.apk | grep -q 'assets/entity/slenderman.webp'
+          unzip -l Backroom-1.1.64.apk | grep -q 'assets/entity/diep_minh.webp'
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
