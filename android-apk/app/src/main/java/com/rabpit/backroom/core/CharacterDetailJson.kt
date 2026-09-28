@@ -43,7 +43,6 @@ object CharacterDetailJson {
         put("name", stack.name)
         put("quantity", stack.quantity)
         stack.condition?.let { put("state", it) }
-        put("contentState", stack.contentState.name)
       }) }
     })
     put("equipment", JSONObject(character.equipment))
