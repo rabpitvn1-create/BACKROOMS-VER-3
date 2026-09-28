@@ -191,65 +191,72 @@ text = replace_once(
 )
 path.write_text(text, encoding="utf-8")
 
-# 5) Make her follower/equipment locks authoritative in the existing engines.
+# 5) Legacy-only follower/equipment locks.
+# V3's typed InventoryEngine/PartyEngine deliberately no longer carries character-specific canon locks.
+# Keep this rewrite only for the old engine shape so the release patch chain remains backward compatible
+# without injecting An Nhien legacy rules into the new gameplay architecture.
 path = CORE / "Engines.kt"
 text = path.read_text(encoding="utf-8")
-text = replace_once(
-    text,
-    '''      ItemCommand.Operation.EQUIP -> {
+legacy_equip_anchor = '''      ItemCommand.Operation.EQUIP -> {
         if ((source.items[command.itemId]?.quantity ?: 0) < command.quantity) return invalid(state, "item_not_owned")
-''',
-    '''      ItemCommand.Operation.EQUIP -> {
+'''
+if legacy_equip_anchor in text:
+    text = replace_once(
+        text,
+        legacy_equip_anchor,
+        '''      ItemCommand.Operation.EQUIP -> {
         if (command.actorId == AN_NHIEN_ID) return invalid(state, "an_nhien_equipment_locked")
         if ((source.items[command.itemId]?.quantity ?: 0) < command.quantity) return invalid(state, "item_not_owned")
 ''',
-    "An Nhien equip lock"
-)
-text = replace_once(
-    text,
-    '''      ItemCommand.Operation.UNEQUIP -> {
+        "An Nhien equip lock"
+    )
+    text = replace_once(
+        text,
+        '''      ItemCommand.Operation.UNEQUIP -> {
         val slot = command.slot ?: return invalid(state, "equipment_slot_required")
 ''',
-    '''      ItemCommand.Operation.UNEQUIP -> {
+        '''      ItemCommand.Operation.UNEQUIP -> {
         if (command.actorId == AN_NHIEN_ID) return invalid(state, "an_nhien_equipment_locked")
         val slot = command.slot ?: return invalid(state, "equipment_slot_required")
 ''',
-    "An Nhien unequip lock"
-)
-text = replace_once(
-    text,
-    '''    PartyCommand.Operation.REMOVE -> {
+        "An Nhien unequip lock"
+    )
+    text = replace_once(
+        text,
+        '''    PartyCommand.Operation.REMOVE -> {
       if (command.targetId == state.party.leaderId) return invalid(state, "cannot_remove_leader")
 ''',
-    '''    PartyCommand.Operation.REMOVE -> {
+        '''    PartyCommand.Operation.REMOVE -> {
       if (command.targetId == AN_NHIEN_ID) return invalid(state, "an_nhien_follower_locked")
       if (command.targetId == state.party.leaderId) return invalid(state, "cannot_remove_leader")
 ''',
-    "An Nhien remove lock"
-)
-text = replace_once(
-    text,
-    '''    PartyCommand.Operation.SET_LEADER -> {
+        "An Nhien remove lock"
+    )
+    text = replace_once(
+        text,
+        '''    PartyCommand.Operation.SET_LEADER -> {
       if (command.targetId !in state.party.memberIds) return invalid(state, "leader_not_in_party")
 ''',
-    '''    PartyCommand.Operation.SET_LEADER -> {
+        '''    PartyCommand.Operation.SET_LEADER -> {
       if (command.targetId == AN_NHIEN_ID) return invalid(state, "an_nhien_cannot_lead")
       if (command.targetId !in state.party.memberIds) return invalid(state, "leader_not_in_party")
 ''',
-    "An Nhien leader lock"
-)
-text = replace_once(
-    text,
-    '''    PartyCommand.Operation.SEPARATE -> {
+        "An Nhien leader lock"
+    )
+    text = replace_once(
+        text,
+        '''    PartyCommand.Operation.SEPARATE -> {
       val character = state.characters[command.targetId] ?: return invalid(state, "target_unknown")
 ''',
-    '''    PartyCommand.Operation.SEPARATE -> {
+        '''    PartyCommand.Operation.SEPARATE -> {
       if (command.targetId == AN_NHIEN_ID) return invalid(state, "an_nhien_follower_locked")
       val character = state.characters[command.targetId] ?: return invalid(state, "target_unknown")
 ''',
-    "An Nhien separation lock"
-)
-path.write_text(text, encoding="utf-8")
+        "An Nhien separation lock"
+    )
+    path.write_text(text, encoding="utf-8")
+else:
+    print("Skipping legacy An Nhien engine locks: typed V3 gameplay engine detected.")
 
 # 6) Make the intent/core resolver know her identity; all actual party/inventory mutations still use existing engines.
 path = CORE / "GameCoreFacade.kt"
