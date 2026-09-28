@@ -122,6 +122,10 @@ public final class GameCoreFacade implements AutoCloseable {
       boolean openedChest = false;
       String beforeLevelKey = working.optString("currentLevelKey", String.valueOf(working.optInt("currentLevel", 0)));
 
+      // Resolve every player action against the turn that will be committed and narrated.
+      // TurnRng remains seeded from the unchanged pre-turn state above.
+      incrementTurn(working);
+
       if (itemCore.isOpenChestAction(text)) {
         String itemName = itemCore.openChest(
             working, bound -> turnRng.nextInt(TurnRng.Scope.PLAYER_ACTION, bound));
@@ -143,6 +147,8 @@ public final class GameCoreFacade implements AutoCloseable {
         boolean transitioned = levelCore.applyPlayerTransitionIfRequested(working, text);
         if (transitioned) {
           String nextLevel = working.optString("currentLevelKey", "");
+          replyHint = "Cao Minh đi qua lối ra và đặt chân đến "
+              + working.optString("location", LevelCore.displayName(nextLevel)) + ".";
           JSONArray effects = new JSONArray().put(emergentTurnEngine.threadEffect(
               "LEVEL_ROUTE_SEARCH", new JSONArray().put(beforeLevelKey), "TERMINATE", "RESOLVED"));
           events.put(emergentTurnEngine.event(turnId, events, "LEVEL_TRANSITIONED", "REGIONAL", nextLevel,
@@ -159,7 +165,6 @@ public final class GameCoreFacade implements AutoCloseable {
         }
       }
 
-      incrementTurn(working);
       advanceGameTime(working, text);
       characterProgressionCore.applyExplorerTurnRecovery(working);
       survivalCore.normalizeState(working);
