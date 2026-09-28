@@ -7,15 +7,11 @@ object CommandValidator {
     if (command.turnId != null && command.turnId != state.turn.currentTurnId) return ValidationResult(false, "turn_id_mismatch")
     if (command is ValidatedStateCommand && !command.validatedByGameEngine) return ValidationResult(false, "engine_validation_required")
 
-    // Player-facing pickup commands never create ownership. Inventory acquisition is authoritative
-    // only when emitted by validated story/drop progression (GEMINI) or deterministic SYSTEM code.
+    // V2 authority: loot ownership can only be created by deterministic Core/System code.
     if (command is ItemCommand && command.operation == ItemCommand.Operation.PICKUP &&
-      command.source !in setOf(CommandSource.GEMINI, CommandSource.SYSTEM)) {
+      command.source != CommandSource.SYSTEM) {
       return ValidationResult(false, "player_pickup_unavailable")
     }
-
-    val itemName = (command as? ItemCommand)?.itemName
-    if (itemName != null && ItemContentRules.hasForbiddenPreciseAmount(itemName)) return ValidationResult(false, "precise_content_amount_forbidden")
     return ValidationResult(true)
   }
 }
@@ -55,19 +51,8 @@ object StateReducer {
     ))
   }
 
-  private fun rememberedItemAfter(before: GameState, after: GameState, command: ItemCommand): String {
-    if (command.operation == ItemCommand.Operation.PICKUP) {
-      return ItemContentRules.normalize(ItemStack(command.itemId, command.itemName, command.quantity, metadata = command.metadata)).itemId
-    }
-    if (command.operation == ItemCommand.Operation.USE) {
-      val old = before.inventories[command.actorId]?.items?.get(command.itemId)
-      if (old != null) {
-        val next = ItemContentRules.nextAfterUse(old)
-        if (next != null && after.inventories[command.actorId]?.items?.containsKey(next.itemId) == true) return next.itemId
-      }
-    }
-    return command.itemId
-  }
+  private fun rememberedItemAfter(before: GameState, after: GameState, command: ItemCommand): String =
+    command.itemId
 
   fun executeAll(state: GameState, commands: List<GameCommand>): ExecutionResult {
     var current = state
