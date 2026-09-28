@@ -4,6 +4,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -58,6 +65,16 @@ public class LuciaHardeningTest {
     assertTrue(CombatChoiceEngine.hasAuthoritativeUltimate("luc_tram"));
     assertEquals(5, CombatChoiceEngine.characterProcCount("lucia"));
     assertEquals(5, CombatChoiceEngine.characterProcCount("luc_tram"));
+
+    Path canonPath = Paths.get("src/main/assets/canon/Lucia_Codex.md");
+    if (!Files.isRegularFile(canonPath)) canonPath = Paths.get("app/src/main/assets/canon/Lucia_Codex.md");
+    String canonText = new String(Files.readAllBytes(canonPath), StandardCharsets.UTF_8);
+    Map<String, String> canonFiles = new LinkedHashMap<>();
+    canonFiles.put("Lucia_Codex.md", canonText);
+    CanonRetriever.CanonPacket packet =
+        new CanonRetriever(canonFiles).retrieve(levelZero, "Lucia Lục", CanonRetriever.DEFAULT_BUDGET, true);
+    assertTrue(packet.promptText().contains(
+        "Lucia Lục / Hứa Thuý Mai và Lục Trầm là hai nhân vật khác nhau"));
   }
 
   private static JSONObject state(int level, String levelKey) throws Exception {
