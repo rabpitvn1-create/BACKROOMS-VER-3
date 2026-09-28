@@ -7,7 +7,7 @@ import com.rabpit.backroom.core.ExplorationRuntime
 import com.rabpit.backroom.core.GameState
 import com.rabpit.backroom.core.GameStateCodec
 import com.rabpit.backroom.core.ItemCommand
-import com.rabpit.backroom.core.KAI_ID
+import com.rabpit.backroom.core.PLAYER_ID
 import com.rabpit.backroom.core.PartyCommand
 import com.rabpit.backroom.core.PartyEngine
 import com.rabpit.backroom.core.StateReducer
@@ -25,9 +25,9 @@ class GameplayPortTest {
     assertEquals(225, CharacterProgressionRules.scaledCoreReward(100, 2))
 
     val state = GameState.initial().copy(coreResource = CoreResourceState(quantity = 1))
-    val upgraded = CharacterProgressionRules.upgrade(state, KAI_ID, "VIT").state
-    assertEquals(6, upgraded.characters.getValue(KAI_ID).progression.stats.vit)
-    assertEquals(55, CharacterStatRules.project(upgraded, KAI_ID)!!.maxHp)
+    val upgraded = CharacterProgressionRules.upgrade(state, PLAYER_ID, "VIT").state
+    assertEquals(6, upgraded.characters.getValue(PLAYER_ID).progression.stats.vit)
+    assertEquals(55, CharacterStatRules.project(upgraded, PLAYER_ID)!!.maxHp)
 
     assertEquals(8, GameplayCatalog.chestPool.size)
     assertEquals(35, GameplayCatalog.item("first-aid-kit")!!.effect.hp)
@@ -46,7 +46,7 @@ class GameplayPortTest {
 
     val decoded = GameStateCodec.decode(GameStateCodec.encode(upgraded.copy(levelRuntime = route)))
     assertEquals(upgraded.coreResource, decoded.coreResource)
-    assertEquals(6, decoded.characters.getValue(KAI_ID).progression.stats.vit)
+    assertEquals(6, decoded.characters.getValue(PLAYER_ID).progression.stats.vit)
     assertTrue(decoded.levelRuntime.route.exitAvailable)
 
     val graph = LevelGraph.fromText("""{"schemaVersion":1,"nodes":[
@@ -67,7 +67,7 @@ class GameplayPortTest {
     val joined = PartyEngine.execute(state, PartyCommand(
       commandId = "join-iris",
       turnId = state.turn.currentTurnId,
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       targetId = "iris",
       source = CommandSource.SYSTEM,
       operation = PartyCommand.Operation.ADD,
@@ -82,7 +82,7 @@ class GameplayPortTest {
     val granted = StateReducer.execute(state, ItemCommand(
       commandId = "grant-kit",
       turnId = state.turn.currentTurnId,
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       source = CommandSource.SYSTEM,
       operation = ItemCommand.Operation.PICKUP,
       itemId = "first-aid-kit",
@@ -94,7 +94,7 @@ class GameplayPortTest {
     val shared = StateReducer.execute(state, ItemCommand(
       commandId = "share-kit",
       turnId = state.turn.currentTurnId,
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       targetId = "iris",
       source = CommandSource.UI,
       operation = ItemCommand.Operation.USE,
@@ -103,17 +103,17 @@ class GameplayPortTest {
     ))
     assertTrue(shared.applied)
     assertEquals(45, shared.state.characters.getValue("iris").progression.currentHp)
-    assertFalse(shared.state.inventories.getValue(KAI_ID).items.containsKey("first-aid-kit"))
+    assertFalse(shared.state.inventories.getValue(PLAYER_ID).items.containsKey("first-aid-kit"))
 
     val upgraded = StateReducer.execute(shared.state, StatUpgradeCommand(
       commandId = "upgrade-vit",
       turnId = shared.state.turn.currentTurnId,
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       source = CommandSource.UI,
       stat = "VIT"
     ))
     assertTrue(upgraded.applied)
-    assertEquals(6, upgraded.state.characters.getValue(KAI_ID).progression.stats.vit)
+    assertEquals(6, upgraded.state.characters.getValue(PLAYER_ID).progression.stats.vit)
     assertEquals(0, upgraded.state.coreResource.quantity)
   }
 
@@ -122,7 +122,7 @@ class GameplayPortTest {
     state = StateReducer.execute(state, ItemCommand(
       commandId = "grant-armor",
       turnId = state.turn.currentTurnId,
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       source = CommandSource.SYSTEM,
       operation = ItemCommand.Operation.PICKUP,
       itemId = "field-armor",
@@ -137,7 +137,7 @@ class GameplayPortTest {
     val equip = StateReducer.execute(state, ItemCommand(
       commandId = "equip-armor",
       turnId = state.turn.currentTurnId,
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       source = CommandSource.UI,
       operation = ItemCommand.Operation.EQUIP,
       itemId = "field-armor",
@@ -145,16 +145,16 @@ class GameplayPortTest {
       slot = "armor"
     ))
     assertTrue(equip.applied)
-    val equippedStats = CharacterStatRules.project(equip.state, KAI_ID)!!
+    val equippedStats = CharacterStatRules.project(equip.state, PLAYER_ID)!!
     assertEquals(80, equippedStats.maxHp)
     assertEquals(80, equippedStats.currentHp)
     assertEquals(2, equippedStats.stats.getValue(CharacterStat.VIT).equipmentBonus)
-    assertTrue(equip.state.inventories.getValue(KAI_ID).items.containsKey("field-armor"))
+    assertTrue(equip.state.inventories.getValue(PLAYER_ID).items.containsKey("field-armor"))
 
     val dropEquipped = StateReducer.execute(equip.state, ItemCommand(
       commandId = "drop-equipped",
       turnId = equip.state.turn.currentTurnId,
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       source = CommandSource.UI,
       operation = ItemCommand.Operation.DROP,
       itemId = "field-armor",
@@ -166,7 +166,7 @@ class GameplayPortTest {
     val unequip = StateReducer.execute(equip.state, ItemCommand(
       commandId = "unequip-armor",
       turnId = equip.state.turn.currentTurnId,
-      actorId = KAI_ID,
+      actorId = PLAYER_ID,
       source = CommandSource.UI,
       operation = ItemCommand.Operation.UNEQUIP,
       itemId = "field-armor",
@@ -174,7 +174,7 @@ class GameplayPortTest {
       slot = "armor"
     ))
     assertTrue(unequip.applied)
-    val plainStats = CharacterStatRules.project(unequip.state, KAI_ID)!!
+    val plainStats = CharacterStatRules.project(unequip.state, PLAYER_ID)!!
     assertEquals(50, plainStats.maxHp)
     assertEquals(50, plainStats.currentHp)
   }
@@ -213,7 +213,7 @@ class GameplayPortTest {
     assertEquals(ExplorationOutcome.CHEST, opened.outcome)
     assertEquals(1, opened.coreReward)
     assertFalse(ExplorationRuntime.chestPresent(opened.state))
-    assertEquals(1, opened.state.inventories.getValue(KAI_ID).items.values.sumOf { it.quantity })
+    assertEquals(1, opened.state.inventories.getValue(PLAYER_ID).items.values.sumOf { it.quantity })
     assertEquals(1, opened.state.coreResource.quantity)
   }
 }
