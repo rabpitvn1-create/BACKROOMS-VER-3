@@ -4,5 +4,5 @@ Backroom 1.1.64 Debug
 - Game Master dùng pool 5 Gemini API key làm provider chính.
 - Khi toàn bộ Gemini pool không khả dụng, Game Master fallback sang Haiku qua HAIKU_API_KEY, HAIKU_MODEL và HAIKU_BASE_URL.
 - Haiku hỗ trợ endpoint Anthropic Messages và OpenAI-compatible Chat Completions; HAIKU_BASE_URL bắt buộc HTTPS.
-- Giữ pipeline build APK: train LiteRT intent model, áp dụng runtime patch chain, chạy Kotlin tests, verify APK và phát hành GitHub Release.
+- Đã loại bỏ LiteRT intent classifier và toàn bộ pipeline train/model liên quan; intent không chắc chắn đi thẳng sang GM fallback.
 - Không khôi phục Luna provider.

@@ -39,7 +39,7 @@ object KaiStartingEquipment {
 }
 
 enum class CharacterPresence { ACTIVE, SEPARATED, MISSING, DEAD }
-enum class CommandSource { RULE, LITERT, GEMINI, UI, SYSTEM }
+enum class CommandSource { RULE, GEMINI, UI, SYSTEM }
 enum class PendingTurnStatus { CREATED, INTERPRETING, VALIDATING, EXECUTING, COMMITTED, FAILED }
 
 data class ItemStack(

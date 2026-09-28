@@ -70,7 +70,7 @@ class GameStateCoreTest {
     assertEquals(4, state.party.memberIds.size)
     val full = StateReducer.execute(state, PartyCommand("join-4", "TURN_1", KAI_ID, "p4", CommandSource.UI, PartyCommand.Operation.ADD, true, true))
     assertEquals("party_full", full.validation.reason)
-    val noConsent = StateReducer.execute(base(people[0]), PartyCommand("no-consent", "TURN_1", KAI_ID, "p1", CommandSource.LITERT, PartyCommand.Operation.ADD, false, true))
+    val noConsent = StateReducer.execute(base(people[0]), PartyCommand("no-consent", "TURN_1", KAI_ID, "p1", CommandSource.RULE, PartyCommand.Operation.ADD, false, true))
     assertEquals("join_not_confirmed", noConsent.validation.reason)
   }
 

@@ -60,7 +60,6 @@ class CommandResolver(
 
 class IntentPipeline(
   private val rules: RuleIntentInterpreter,
-  private val localModel: IntentInterpreter,
   private val gemini: IntentInterpreter,
   private val resolver: CommandResolver = CommandResolver()
 ) {
@@ -70,11 +69,6 @@ class IntentPipeline(
     for (candidate in ruleResult.candidates) {
       if (candidate.confidence == IntentConfidence.HIGH || candidate.intent == GameIntent.NO_ACTION) {
         finalCandidates += candidate
-        continue
-      }
-      val local = localModel.interpret(candidate.clause, context).candidates.singleOrNull()
-      if (local != null && local.confidence == IntentConfidence.HIGH) {
-        finalCandidates += local
         continue
       }
       val remote = gemini.interpret(candidate.clause, context).candidates.singleOrNull()

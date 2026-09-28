@@ -6,8 +6,7 @@ import org.json.JSONObject
 
 class GameCoreFacade private constructor(
   private val repository: SaveRepository,
-  private val logger: GamePipelineLogger,
-  private val localModel: LiteRTIntentInterpreter
+  private val logger: GamePipelineLogger
 ) : AutoCloseable {
   private val rules = RuleIntentInterpreter()
   private val resolver = CommandResolver()
@@ -22,11 +21,10 @@ class GameCoreFacade private constructor(
     if (pending.error != null) return response(false, legacy, pending.error, "pending_rejected")
     val context = contextFor(pending.state)
     val ruleResult = rules.interpretSync(action, context)
-    val candidates = ruleResult.candidates.map { candidate ->
-      if (candidate.confidence == IntentConfidence.HIGH || candidate.intent == GameIntent.NO_ACTION) candidate
-      else localModel.interpretSync(candidate.clause, context).candidates.singleOrNull() ?: candidate
-    }
-    val interpreted = IntentResult(candidates, candidates.any { it.confidence != IntentConfidence.HIGH && it.intent != GameIntent.NO_ACTION })
+    val interpreted = IntentResult(
+      ruleResult.candidates,
+      ruleResult.candidates.any { it.confidence != IntentConfidence.HIGH && it.intent != GameIntent.NO_ACTION }
+    )
     interpreted.candidates.forEach { logger.log(PipelineLogEvent("INTENT", turnId = turnId, source = it.source, intent = it.intent, confidence = it.score)) }
 
     // Player text never has authority to manufacture an acquisition event. Reject immediately,
@@ -71,7 +69,7 @@ class GameCoreFacade private constructor(
 
   fun currentCoreState(): String = GameStateCodec.encode(repository.load())
   fun clear() = repository.clear()
-  override fun close() = localModel.close()
+  override fun close() = Unit
 
   /**
    * Commits only the gameplay delta already accepted by the legacy canon/dice validator.
@@ -280,7 +278,7 @@ class GameCoreFacade private constructor(
 
   companion object {
     @JvmStatic fun create(context: Context, debugLogging: Boolean = false): GameCoreFacade = GameCoreFacade(
-      SharedPreferencesSaveRepository(context.applicationContext), AndroidGamePipelineLogger(debugLogging), LiteRTIntentInterpreter(context.applicationContext)
+      SharedPreferencesSaveRepository(context.applicationContext), AndroidGamePipelineLogger(debugLogging)
     )
   }
 }
