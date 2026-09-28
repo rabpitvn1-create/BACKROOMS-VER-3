@@ -4,7 +4,7 @@ import com.rabpit.backroom.core.gameplay.CharacterProgressionState
 import com.rabpit.backroom.core.gameplay.CoreResourceState
 import com.rabpit.backroom.core.gameplay.LevelRuntimeState
 
-const val CURRENT_SAVE_VERSION = 6
+const val CURRENT_SAVE_VERSION = 7
 const val PLAYER_ID = "cao_minh"
 enum class CharacterPresence { ACTIVE, SEPARATED, MISSING, DEAD }
 enum class CommandSource { RULE, GEMINI, UI, SYSTEM }
@@ -15,9 +15,7 @@ data class ItemStack(
   val name: String,
   val quantity: Int = 1,
   val condition: String? = null,
-  val metadata: Map<String, String> = emptyMap(),
-  val archetypeId: String = itemId,
-  val contentState: ContentState = ContentState.NONE
+  val metadata: Map<String, String> = emptyMap()
 )
 
 data class InventoryState(val ownerId: String, val items: Map<String, ItemStack> = emptyMap())
