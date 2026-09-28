@@ -77,5 +77,21 @@ object CharacterDetailJson {
         put("resEvasionPercent", projection.combat.resEvasionPercent)
       })
     }
+    if (character.id == PLAYER_ID) {
+      put("passives", JSONArray()
+        .put(JSONObject()
+          .put("name", "Đại Đạo Ma Tôn")
+          .put("description", "Sau mỗi lượt combat của Cao Minh: hồi 10% Max HP, cộng dồn +20% Attack và +20% Critical trong trận. Đồng đội nhận +50% Critical.")
+          .put("healMaxHpPercent", 10)
+          .put("attackPerTurnPercent", 20)
+          .put("criticalPerTurnPercent", 20)
+          .put("allyCriticalBonusPercent", 50))
+        .put(JSONObject()
+          .put("name", "Ma Tôn")
+          .put("description", "Tất cả Stats nhận +99 điểm dưới dạng bonus riêng. Bonus không cộng vào stat gốc, không làm tăng giá nâng Core và được hiển thị theo dạng 5 (+99).")
+          .put("allStatsBonus", 99)
+          .put("separateFromBaseStats", true)))
+    }
+
   }
 }
