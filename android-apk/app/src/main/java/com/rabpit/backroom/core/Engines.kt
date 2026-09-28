@@ -120,8 +120,6 @@ private fun useItem(state: GameState, source: InventoryState, command: ItemComma
   if (owned.contentState == ContentState.FULL || owned.contentState == ContentState.LOW) {
     val nextVariant = ItemContentRules.nextAfterUse(owned) ?: return invalid(state, "item_content_empty")
     var nextInventory = removeItem(source, command.itemId, command.quantity) ?: return invalid(state, "insufficient_item_quantity")
-    val validation = InventoryPolicy.validateAddition(state, command.actorId, nextInventory, nextVariant, command.quantity)
-    if (validation != null) return invalid(state, validation)
     nextInventory = addItem(nextInventory, nextVariant.copy(quantity = command.quantity))
     val inventoryResult = changed(
       state.copy(inventories = state.inventories + (command.actorId to nextInventory)),
@@ -149,8 +147,6 @@ object InventoryEngine {
     ))
     return when (command.operation) {
       ItemCommand.Operation.PICKUP -> {
-        val validation = InventoryPolicy.validateAddition(state, command.actorId, source, item, command.quantity)
-        if (validation != null) return invalid(state, validation)
         changed(state.copy(inventories = state.inventories + (command.actorId to addItem(source, item))), "inventory_pickup")
       }
       ItemCommand.Operation.DROP -> {
@@ -167,8 +163,6 @@ object InventoryEngine {
         if (EquipmentRules.isEquipped(state, command.actorId, command.itemId)) return invalid(state, "item_equipped")
         val transferred = ItemContentRules.normalize(owned).copy(quantity = command.quantity)
         val targetInventory = state.inventories[targetId] ?: InventoryState(targetId)
-        val validation = InventoryPolicy.validateAddition(state, targetId, targetInventory, transferred, command.quantity)
-        if (validation != null) return invalid(state, validation)
         val from = removeItem(source, command.itemId, command.quantity) ?: return invalid(state, "insufficient_item_quantity")
         val to = addItem(targetInventory, transferred)
         changed(state.copy(inventories = state.inventories + (command.actorId to from) + (targetId to to)), "inventory_transfer")
