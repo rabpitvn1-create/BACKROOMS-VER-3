@@ -1,0 +1,77 @@
+{
+  "version": 10,
+  "source": "User-provided Google Drive snapshot set",
+  "sourceFolder": "https://drive.google.com/drive/folders/1QsapoDnhAH69j0EIgdVQb7jV6sKc_IZe",
+  "importedAt": "2026-09-28",
+  "root": "level_snapshots/drive",
+  "selectionPolicy": "turn_based_rotation_for_main_levels",
+  "dimensions": {
+    "width": 351,
+    "height": 250,
+    "format": "webp"
+  },
+  "levels": {
+    "0": {
+      "visualType": "scene",
+      "assets": [
+        "level_0/01.webp",
+        "level_0/02.webp",
+        "level_0/03.webp",
+        "level_0/04.webp",
+        "level_0/05.webp",
+        "level_0/06.webp",
+        "level_0/07.webp",
+        "level_0/08.webp"
+      ]
+    },
+    "1": {
+      "visualType": "scene",
+      "assets": [
+        "level_1/01.webp",
+        "level_1/02.webp",
+        "level_1/03.webp"
+      ]
+    },
+    "2": {
+      "visualType": "scene",
+      "assets": [
+        "level_2/01.webp",
+        "level_2/02.webp",
+        "level_2/03.webp"
+      ]
+    },
+    "3": {
+      "visualType": "scene",
+      "assets": [
+        "level_3/01.webp",
+        "level_3/02.webp",
+        "level_3/03.webp"
+      ]
+    },
+    "4": {
+      "visualType": "scene",
+      "assets": [
+        "level_4/01.webp",
+        "level_4/02.webp",
+        "level_4/03.webp"
+      ]
+    },
+    "5": {
+      "visualType": "scene",
+      "assets": [
+        "level_5/01.webp",
+        "level_5/02.webp",
+        "level_5/03.webp"
+      ]
+    },
+    "6": {
+      "visualType": "scene",
+      "assets": [
+        "level_6/01.webp",
+        "level_6/02.webp",
+        "level_6/03.webp"
+      ]
+    }
+  },
+  "dimensionPolicy": "legacy_set_351x250; newer_level_0_expansions_keep_source_native_dimensions"
+}
