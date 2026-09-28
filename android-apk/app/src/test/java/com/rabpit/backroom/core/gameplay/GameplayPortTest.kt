@@ -25,7 +25,7 @@ class GameplayPortTest {
     assertEquals(225, CharacterProgressionRules.scaledCoreReward(100, 2))
 
     val initialCaoMinh = GameState.initial()
-    assertEquals(5, initialCaoMinh.saveVersion)
+    assertEquals(6, initialCaoMinh.saveVersion)
     assertEquals("Cao Minh", initialCaoMinh.characters.getValue(PLAYER_ID).name)
     assertEquals("file:///android_asset/avatars/cao_minh_avatar.jpg", initialCaoMinh.characters.getValue(PLAYER_ID).avatarRef)
     assertEquals(

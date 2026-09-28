@@ -1,0 +1,6 @@
+Backroom 1.1.65
+
+- Forces a new Android package version so the stale 1.1.64 Kai shell cannot be reused.
+- Cao Minh is the startup protagonist for header, status, inventory, party, avatar and stats.
+- Keeps the restored V2 Chest, Poker Dice, Core, Party, Avatar and Stats UI as authoritative.
+- Save schema is bumped to 6; incompatible legacy runtime state resets to the Cao Minh baseline.

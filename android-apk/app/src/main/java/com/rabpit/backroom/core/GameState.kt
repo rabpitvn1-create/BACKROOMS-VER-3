@@ -4,7 +4,7 @@ import com.rabpit.backroom.core.gameplay.CharacterProgressionState
 import com.rabpit.backroom.core.gameplay.CoreResourceState
 import com.rabpit.backroom.core.gameplay.LevelRuntimeState
 
-const val CURRENT_SAVE_VERSION = 5
+const val CURRENT_SAVE_VERSION = 6
 const val PLAYER_ID = "cao_minh"
 enum class CharacterPresence { ACTIVE, SEPARATED, MISSING, DEAD }
 enum class CommandSource { RULE, GEMINI, UI, SYSTEM }
