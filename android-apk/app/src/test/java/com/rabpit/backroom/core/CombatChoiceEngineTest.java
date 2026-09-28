@@ -15,6 +15,24 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CombatChoiceEngineTest {
+  @Test public void allHuisBossesHaveDistinctBossScaleProfilesAndSkills() throws Exception {
+    int[] hp = {520, 560, 610, 670, 730, 590, 640, 700, 580, 770, 830, 870, 720, 910, 790, 1100};
+    int[] damage = {29, 32, 35, 37, 40, 34, 36, 38, 33, 43, 45, 47, 41, 49, 44, 54};
+    java.util.Set<String> profiles = new java.util.HashSet<>();
+    for (int i = 0; i < 16; i++) {
+      String key = String.format(java.util.Locale.ROOT, "huis_boss_%02d", i + 1);
+      JSONObject state = combatState(new JSONArray()).put("currentLevelKey", "hua_1900_" + i);
+      CombatChoiceEngine.start(state, key, 0);
+      JSONObject entity = state.getJSONObject("combat").getJSONObject("entity");
+      assertEquals(hp[i], entity.getInt("baseHp"));
+      assertEquals(damage[i], entity.getInt("baseDamage"));
+      assertTrue(entity.getInt("hp") >= hp[i]);
+      assertEquals(3, CombatChoiceEngine.entitySkillCount(key));
+      assertTrue(profiles.add(hp[i] + ":" + damage[i]));
+    }
+    assertEquals(16, profiles.size());
+  }
+
   @Test public void participantUsesSameEffectiveStatsAsPartyProjection() throws Exception {
     JSONObject state = combatState(new JSONArray())
         .put("gameTime", new JSONObject().put("elapsedSubjectiveMinutes", 12L * 60L));
@@ -90,24 +108,24 @@ public class CombatChoiceEngineTest {
     assertEquals(50, syvial.getInt("daiDaoMaTonAllyCriticalBonusPercent"));
   }
 
-  @Test public void defeatAtSublevelPreservesRouteAndQueuesLocalRestart() throws Exception {
+  @Test public void defeatAtHuisLevelPreservesRouteAndQueuesLocalRestart() throws Exception {
     JSONObject state = combatState(new JSONArray())
-        .put("currentLevel", 0).put("currentLevelKey", "0.1")
-        .put("location", "Level 0.1 / hành lang sâu");
-    JSONObject route = new JSONObject().put("levelKey", "0.1").put("streak", 4);
+        .put("currentLevel", 0).put("currentLevelKey", "hua_1900_0")
+        .put("location", "Hui's Family Level 1 / hành lang sâu");
+    JSONObject route = new JSONObject().put("levelKey", "hua_1900_0").put("streak", 4);
     state.put("levelRoute", route);
     JSONObject combat = new JSONObject().put("active", false).put("outcome", "defeat");
     state.put("combat", combat);
 
     CombatChoiceEngine.normalizeTerminalEncounter(state);
-    assertEquals("0.1", state.getString("currentLevelKey"));
-    assertEquals(LevelCore.defaultLocation("0.1"), state.getString("location"));
+    assertEquals("hua_1900_0", state.getString("currentLevelKey"));
+    assertEquals(LevelCore.defaultLocation("hua_1900_0"), state.getString("location"));
     assertEquals(4, state.getJSONObject("levelRoute").getInt("streak"));
     assertEquals("Backrooms nuốt chửng lấy bạn khi bạn ngã xuống.",
         state.getJSONArray("log").getJSONObject(state.getJSONArray("log").length() - 1).getString("text"));
     JSONObject resolvedCombat = state.getJSONObject("combat");
-    assertEquals("Level 0.1 / hành lang sâu", resolvedCombat.getString("deathRestartAnchorLocation"));
-    assertEquals("0.1", resolvedCombat.getString("deathRestartLevelKey"));
+    assertEquals("Hui's Family Level 1 / hành lang sâu", resolvedCombat.getString("deathRestartAnchorLocation"));
+    assertEquals("hua_1900_0", resolvedCombat.getString("deathRestartLevelKey"));
     assertTrue(resolvedCombat.getBoolean("deathRestartPending"));
     assertTrue(resolvedCombat.getBoolean("deathRecoveryApplied"));
 

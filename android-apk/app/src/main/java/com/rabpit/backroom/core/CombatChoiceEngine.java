@@ -154,7 +154,87 @@ public final class CombatChoiceEngine {
     entity("jane_the_killer", "Jane", 270, 20);
     entity("slenderman", "Slenderman", 360, 23);
     entity("diep_minh", "Diệp Minh", 1200, 42);
+    entity("huis_boss_01", "Nhân viên Mực Đen", 520, 29);
+    entity("huis_boss_02", "Người Gõ Cửa", 560, 32);
+    entity("huis_boss_03", "Hành Khách Trễ Giờ", 610, 35);
+    entity("huis_boss_04", "Người Hầu Không Lưng", 670, 37);
+    entity("huis_boss_05", "Thợ Máy Rỗng", 730, 40);
+    entity("huis_boss_06", "Y Tá Màn Trắng", 590, 34);
+    entity("huis_boss_07", "Diễn Viên Chưa Ra Đời", 640, 36);
+    entity("huis_boss_08", "Thủ Thư Không Miệng", 700, 38);
+    entity("huis_boss_09", "Người Đi Dạo", 580, 33);
+    entity("huis_boss_10", "Giám Thị Dài Tay", 770, 43);
+    entity("huis_boss_11", "Thủy Thủ Trương Nở", 830, 45);
+    entity("huis_boss_12", "Phu Lò", 870, 47);
+    entity("huis_boss_13", "Nhà Phát Minh", 720, 41);
+    entity("huis_boss_14", "Thánh Tượng Quay Lưng", 910, 49);
+    entity("huis_boss_15", "Cư Dân Ban Công", 790, 44);
+    entity("huis_boss_16", "Đám Đông Chưa Sinh", 1100, 54);
 
+    entitySkills("huis_boss_01",
+        entitySkill("Ink Drawer Strike", 126, 32),
+        entitySkill("Dossier Bind", 136, 25),
+        entitySkill("Black Ink Sweep", 116, 30));
+    entitySkills("huis_boss_02",
+        entitySkill("Closed Door Rush", 127, 32),
+        entitySkill("Handle Burn", 137, 25),
+        entitySkill("Numberless Threshold", 117, 30));
+    entitySkills("huis_boss_03",
+        entitySkill("Late Arrival Charge", 128, 32),
+        entitySkill("Platform Slam", 138, 25),
+        entitySkill("Timetable Pursuit", 118, 30));
+    entitySkills("huis_boss_04",
+        entitySkill("Hollow Back Grasp", 129, 32),
+        entitySkill("Corridor Pull", 139, 25),
+        entitySkill("Service Door Ambush", 119, 30));
+    entitySkills("huis_boss_05",
+        entitySkill("Steam Hammer", 130, 32),
+        entitySkill("Boiler Hook", 140, 25),
+        entitySkill("Pressure Release", 120, 30));
+    entitySkills("huis_boss_06",
+        entitySkill("Ward Clamp", 131, 32),
+        entitySkill("Surgical Reach", 141, 25),
+        entitySkill("White Veil Strike", 121, 30));
+    entitySkills("huis_boss_07",
+        entitySkill("Mask Change", 132, 32),
+        entitySkill("Curtain Drop", 142, 25),
+        entitySkill("Encore Lunge", 122, 30));
+    entitySkills("huis_boss_08",
+        entitySkill("Silent Seal", 133, 32),
+        entitySkill("Archive Crush", 143, 25),
+        entitySkill("Blank Page Strike", 123, 30));
+    entitySkills("huis_boss_09",
+        entitySkill("Glass Canopy Dive", 134, 32),
+        entitySkill("Reflection Step", 144, 25),
+        entitySkill("Sidewalk Ambush", 124, 30));
+    entitySkills("huis_boss_10",
+        entitySkill("Long Arm Sweep", 135, 32),
+        entitySkill("Bell Discipline", 145, 25),
+        entitySkill("Hallway Seizure", 125, 30));
+    entitySkills("huis_boss_11",
+        entitySkill("Swollen Hull Slam", 136, 32),
+        entitySkill("Deck Grip", 146, 25),
+        entitySkill("Bulkhead Crush", 126, 30));
+    entitySkills("huis_boss_12",
+        entitySkill("Coal Shovel Blow", 137, 32),
+        entitySkill("Furnace Grip", 147, 25),
+        entitySkill("Tunnel Rush", 127, 30));
+    entitySkills("huis_boss_13",
+        entitySkill("Machine Limb Strike", 138, 32),
+        entitySkill("Exhibit Clamp", 148, 25),
+        entitySkill("Clockwork Crush", 128, 30));
+    entitySkills("huis_boss_14",
+        entitySkill("Stone Gaze", 139, 32),
+        entitySkill("Backward Step", 149, 25),
+        entitySkill("Bell Tower Strike", 129, 30));
+    entitySkills("huis_boss_15",
+        entitySkill("Balcony Descent", 140, 32),
+        entitySkill("Apartment Grasp", 150, 25),
+        entitySkill("Void Push", 130, 30));
+    entitySkills("huis_boss_16",
+        entitySkill("Crowd Surge", 141, 32),
+        entitySkill("False Memory Strike", 151, 25),
+        entitySkill("Century Collapse", 131, 30));
     entitySkills("hound",
         entitySkill("Dead Bite", 120, 35),
         entitySkill("Rending Pounce", 115, 32),

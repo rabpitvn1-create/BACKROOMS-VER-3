@@ -88,8 +88,7 @@ final class GameCoreRules {
   static boolean levelTransitionAllowed(int from, int to) {
     if (from < 0 || from > 6 || to < 0 || to > 6) return false;
     if (from == to) return true;
-    // Level 0 <-> Level 1 is no longer a direct edge. LevelCore owns the mandatory
-    // Level 0 -> 0.1 -> 0.2 -> 0.5 -> 0.7 -> Manila -> Torment -> Red Rooms -> Level 1 chain.
+    // LevelCore owns the mandatory Level 0 -> Hui's Family Level 1–16 -> Level 1 chain.
     return edge(from, to, 1, 2)
         || edge(from, to, 2, 3)
         || edge(from, to, 3, 4)

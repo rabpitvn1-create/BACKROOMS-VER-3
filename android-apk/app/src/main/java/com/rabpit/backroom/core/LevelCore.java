@@ -25,16 +25,28 @@ final class LevelCore {
       "Level 0 / The Lobby — khu phòng vàng ban đầu sau khi đi qua cổng không gian";
 
   private static final String[] LEVEL_ZERO_PROGRESSION = {
-      "0", "0.1", "0.2", "0.5", "0.7", "manila_room", "the_torment", "red_rooms", "1"
+      "0",
+      "hua_1900_0", "hua_1900_1", "hua_1900_2", "hua_1900_3",
+      "hua_1900_4", "hua_1900_5", "hua_1900_6", "hua_1900_7",
+      "hua_1900_8", "hua_1900_9", "hua_1900_10", "hua_1900_11",
+      "hua_1900_12", "hua_1900_13", "hua_1900_14", "hua_1900_15", "1"
   };
   private static final String[] GAMEPLAY_PROGRESSION = {
-      "0", "0.1", "0.2", "0.5", "0.7", "manila_room", "the_torment", "red_rooms",
+      "0",
+      "hua_1900_0", "hua_1900_1", "hua_1900_2", "hua_1900_3",
+      "hua_1900_4", "hua_1900_5", "hua_1900_6", "hua_1900_7",
+      "hua_1900_8", "hua_1900_9", "hua_1900_10", "hua_1900_11",
+      "hua_1900_12", "hua_1900_13", "hua_1900_14", "hua_1900_15",
       "1", "1.2", "1.3", "1.5", "base_alpha", "traders_vault",
       "2", "2.1", "3", "3.5", "4", "office_market",
       "5", "5.1", "5.2", "5.3", "6", "6.1"
   };
   private static final String[] ALL_LEVEL_NODE_ORDER = {
-      "0", "0.1", "0.2", "0.5", "0.7", "manila_room", "the_torment", "red_rooms",
+      "0",
+      "hua_1900_0", "hua_1900_1", "hua_1900_2", "hua_1900_3",
+      "hua_1900_4", "hua_1900_5", "hua_1900_6", "hua_1900_7",
+      "hua_1900_8", "hua_1900_9", "hua_1900_10", "hua_1900_11",
+      "hua_1900_12", "hua_1900_13", "hua_1900_14", "hua_1900_15",
       "1", "1.2", "1.3", "1.5", "base_alpha", "traders_vault",
       "2", "2.1", "3", "3.5", "4", "office_market",
       "5", "5.1", "5.2", "5.3", "6", "6.1", "6.31"
@@ -354,6 +366,7 @@ final class LevelCore {
 
   static String displayName(String levelKey) {
     String key = normalizeKey(levelKey);
+    if (isHua1900Key(key)) return "Hui's Family Level " + (Integer.parseInt(key.substring("hua_1900_".length())) + 1);
     switch (key) {
       case "0": return "Level 0 — The Lobby";
       case "0.1": return "Level 0.1 — Zenith Station";
@@ -388,6 +401,7 @@ final class LevelCore {
 
   static String defaultLocation(String levelKey) {
     String key = normalizeKey(levelKey);
+    if (isHua1900Key(key)) return displayName(key);
     switch (key) {
       case "0": return LEVEL_ZERO_START_LOCATION;
       case "0.1": return "Level 0.1 / Zenith Station";
@@ -542,11 +556,20 @@ final class LevelCore {
     return 0;
   }
 
+  static boolean isHua1900Key(String levelKey) {
+    String key = levelKey == null ? "" : levelKey.trim().toLowerCase(Locale.ROOT);
+    return key.matches("hua_1900_(?:[0-9]|1[0-5])");
+  }
+
   static String rawLevelKeyFromLocation(String location) {
     String text = location == null ? "" : location.trim();
     if (text.isEmpty()) return "";
 
     String lower = text.toLowerCase(Locale.ROOT);
+    Matcher hui = Pattern.compile("(?i)hui's family level\\s*(1[0-6]|[1-9])\\b").matcher(text);
+    if (hui.find()) return "hua_1900_" + (Integer.parseInt(hui.group(1)) - 1);
+    Matcher hua = Pattern.compile("(?i)backrooms\\s*1900\\s*[—:/-]?\\s*tầng\\s*(1[0-5]|[0-9])\\b").matcher(text);
+    if (hua.find()) return "hua_1900_" + hua.group(1);
     if (lower.contains("manila room")) return "manila_room";
     if (lower.contains("the torment") || lower.matches(".*\\btorment\\b.*")) return "the_torment";
     if (lower.contains("red rooms") || lower.contains("red room")) return "red_rooms";

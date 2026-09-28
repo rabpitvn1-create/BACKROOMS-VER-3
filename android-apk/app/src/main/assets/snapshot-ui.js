@@ -142,7 +142,8 @@ if(typeof module!=='undefined'&&module.exports)module.exports=SnapshotOverlayLay
   function scrollBottom(){var l=document.getElementById('log');if(l)requestAnimationFrame(function(){l.scrollTop=l.scrollHeight;});}
   try{localStorage.removeItem('backroom-apk-snapshot');}catch(_){}
   function localLevelSnapshot(){try{if(!window.Android||typeof Android.levelSnapshot!=='function')return null;return JSON.parse(Android.levelSnapshot(JSON.stringify(state)));}catch(e){return null;}}
-  var __entityKeys=['hound','clump','duller','deathmoth','hostile_faceling','false_puddle','paintings','smiler','skin-stealer','predatory_window','biological_pipeline','wretch','cable_mimic','the_beast_of_level_5','hotel_corpse_lure','jeff_the_killer','async_rifleman','copx','tam_ma_cao_minh','jane_the_killer','slenderman','diep_minh'];
+  var __entityKeys=['hound','clump','duller','deathmoth','hostile_faceling','false_puddle','paintings','smiler','skin-stealer','predatory_window','biological_pipeline','wretch','cable_mimic','the_beast_of_level_5','hotel_corpse_lure','jeff_the_killer','async_rifleman','copx','tam_ma_cao_minh','jane_the_killer','slenderman','diep_minh','huis_boss_01','huis_boss_02','huis_boss_03','huis_boss_04','huis_boss_05','huis_boss_06','huis_boss_07','huis_boss_08','huis_boss_09','huis_boss_10','huis_boss_11','huis_boss_12','huis_boss_13','huis_boss_14','huis_boss_15','huis_boss_16'];
+  var __huisBossOverlayFiles={"huis_boss_01":"huis_boss_01_nhan_vien_muc_den.webp","huis_boss_02":"huis_boss_02_nguoi_go_cua.webp","huis_boss_03":"huis_boss_03_hanh_khach_tre_gio.webp","huis_boss_04":"huis_boss_04_nguoi_hau_khong_lung.webp","huis_boss_05":"huis_boss_05_tho_may_rong.webp","huis_boss_06":"huis_boss_06_y_ta_man_trang.webp","huis_boss_07":"huis_boss_07_dien_vien_chua_ra_doi.webp","huis_boss_08":"huis_boss_08_thu_thu_khong_mieng.webp","huis_boss_09":"huis_boss_09_nguoi_di_dao.webp","huis_boss_10":"huis_boss_10_giam_thi_dai_tay.webp","huis_boss_11":"huis_boss_11_thuy_thu_truong_no.webp","huis_boss_12":"huis_boss_12_phu_lo.webp","huis_boss_13":"huis_boss_13_nha_phat_minh.webp","huis_boss_14":"huis_boss_14_thanh_tuong_quay_lung.webp","huis_boss_15":"huis_boss_15_cu_dan_ban_cong.webp","huis_boss_16":"huis_boss_16_dam_dong_chua_sinh.webp"};
   var __combatCharacterOverlays={cao_minh:'file:///android_asset/cao_minh_entity_overlay.png',luc_tram:'file:///android_asset/luctram_overlay.png'};
   window.__combatVisualActorIndex=null;
   window.__combatVisualEntityKey='';
@@ -171,7 +172,7 @@ if(typeof module!=='undefined'&&module.exports)module.exports=SnapshotOverlayLay
       appendCombatCharacter(box,combatVisualParticipant());
       img=document.createElement('img');
       img.className='snapshot-entity snapshot-grounded';
-      img.src='file:///android_asset/entity/'+key+'.webp';
+      img.src='file:///android_asset/entity/'+(__huisBossOverlayFiles[key]||key+'.webp');
       img.alt=key;
       box.appendChild(img);
       alignOverlayToGround(img,'left','entity');
