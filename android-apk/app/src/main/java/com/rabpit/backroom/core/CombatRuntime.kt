@@ -112,7 +112,10 @@ object CombatRuntime {
       eventCounter = 0,
       seed = seed
     )
-    return writeDice(encode(state, snapshot), PokerDiceRuntime.initial(diceSeed(seed)))
+    var next = encode(state, snapshot)
+    val initial = PokerDiceRuntime.ensureInitialRoll(diceSeed(seed), 0, PokerDiceRuntime.newState())
+    next = writeRngSequence(next, initial.nextSequence)
+    return writeDice(next, initial.state)
   }
 
   fun dice(state: GameState): PokerDiceState? {
@@ -128,7 +131,8 @@ object CombatRuntime {
   fun rerollDice(state: GameState): GameState {
     val snapshot = active(state) ?: throw IllegalStateException("No active combat")
     val current = readDice(state, snapshot.seed)
-    return writeDice(state, PokerDiceRuntime.reroll(diceSeed(snapshot.seed), current))
+    val rolled = PokerDiceRuntime.roll(diceSeed(snapshot.seed), readRngSequence(state), current)
+    return writeDice(writeRngSequence(state, rolled.nextSequence), rolled.state)
   }
 
   fun finishHand(state: GameState): GameState {
@@ -138,13 +142,21 @@ object CombatRuntime {
 
   fun resolveFinalizedHand(state: GameState): Resolution {
     val dice = dice(state) ?: return Resolution(state, handled = false)
-    if (!dice.finalized) throw IllegalStateException("Poker Dice hand is not finalized")
+    if (!dice.finalized) throw IllegalStateException("Hand chưa được chốt.")
     if (dice.resolved) return Resolution(state, handled = true)
-    val result = resolve(state, "EXECUTE", "poker-dice attack")
+
+    val resolving = writeDice(state, PokerDiceRuntime.markResolved(dice))
+    val result = resolve(resolving, "EXECUTE", "poker-dice attack")
     if (!result.handled || result.entityDestroyed || result.escaped) return result
+
     val nextSnapshot = active(result.state)
     val next = if (nextSnapshot != null) {
-      writeDice(result.state, PokerDiceRuntime.initial(diceSeed(nextSnapshot.seed xor nextSnapshot.eventCounter.toLong())))
+      val prepared = PokerDiceRuntime.ensureInitialRoll(
+        diceSeed(nextSnapshot.seed),
+        readRngSequence(result.state),
+        PokerDiceRuntime.newState()
+      )
+      writeDice(writeRngSequence(result.state, prepared.nextSequence), prepared.state)
     } else result.state
     return result.copy(state = next)
   }
@@ -200,11 +212,11 @@ object CombatRuntime {
         log += "Kai dồn ưu thế vào đường thoát (${c.escapeProgress}%)."
       }
       Intent.ATTACK -> {
-        val finalizedDice = dice(state)?.takeIf { it.finalized && !it.resolved }
+        val finalizedDice = dice(state)?.takeIf { it.finalized }
         if (finalizedDice != null) {
           val actorId = state.party.leaderId
           val stats = CharacterStatRules.project(state, actorId)
-          val hand = finalizedDice.hand
+          val hand = PokerDiceRules.fromV2Name(finalizedDice.hand)
           val baseAttack = state.characters[actorId]?.metadata?.get("baseAttack")?.toIntOrNull()?.coerceAtLeast(1) ?: 30
           val str = stats?.stats?.get(com.rabpit.backroom.core.gameplay.CharacterStat.STR)?.effective ?: 5
           val skl = stats?.stats?.get(com.rabpit.backroom.core.gameplay.CharacterStat.SKL)?.effective ?: 5
@@ -331,12 +343,13 @@ object CombatRuntime {
       put("dice", JSONObject().apply {
         put("values", org.json.JSONArray(dice.values))
         put("held", org.json.JSONArray(dice.held))
+        put("hasRolled", dice.hasRolled)
         put("rerollsUsed", dice.rerollsUsed)
-        put("maxRerolls", PokerDiceRules.MAX_REROLLS)
+        put("maxRerolls", dice.maxRerolls)
         put("finalized", dice.finalized)
         put("resolved", dice.resolved)
-        put("hand", dice.hand.name)
-        put("token", dice.hand.token)
+        put("hand", dice.hand)
+        put("token", PokerDiceRules.fromV2Name(dice.hand).token)
       })
     }
   } }
@@ -402,11 +415,12 @@ object CombatRuntime {
     val metadata = state.metadata.toMutableMap()
     metadata["${PREFIX}dice.values"] = dice.values.joinToString(",")
     metadata["${PREFIX}dice.held"] = dice.held.joinToString(",") { if (it) "1" else "0" }
+    metadata["${PREFIX}dice.hasRolled"] = dice.hasRolled.toString()
     metadata["${PREFIX}dice.rerollsUsed"] = dice.rerollsUsed.toString()
-    metadata["${PREFIX}dice.sequence"] = dice.sequence.toString()
+    metadata["${PREFIX}dice.maxRerolls"] = dice.maxRerolls.toString()
     metadata["${PREFIX}dice.finalized"] = dice.finalized.toString()
     metadata["${PREFIX}dice.resolved"] = dice.resolved.toString()
-    metadata["${PREFIX}dice.hand"] = dice.hand.name
+    metadata["${PREFIX}dice.hand"] = dice.hand
     return state.copy(metadata = metadata)
   }
 
@@ -414,19 +428,30 @@ object CombatRuntime {
     val metadata = state.metadata
     val values = metadata["${PREFIX}dice.values"]?.split(',')?.mapNotNull(String::toIntOrNull)
     val held = metadata["${PREFIX}dice.held"]?.split(',')?.map { it == "1" }
-    if (values?.size != PokerDiceRules.DICE_COUNT || held?.size != PokerDiceRules.DICE_COUNT || values.any { it !in 1..6 }) {
-      return PokerDiceRuntime.initial(diceSeed(seed))
+    val hasRolled = metadata["${PREFIX}dice.hasRolled"].toBoolean()
+    if (values?.size != PokerDiceRules.DICE_COUNT || held?.size != PokerDiceRules.DICE_COUNT) {
+      return PokerDiceRuntime.newState()
+    }
+    if (values.any { it !in 0..6 } || (hasRolled && values.any { it !in 1..6 })) {
+      return PokerDiceRuntime.newState()
     }
     return PokerDiceState(
       values = values,
       held = held,
+      hasRolled = hasRolled,
       rerollsUsed = metadata["${PREFIX}dice.rerollsUsed"]?.toIntOrNull()?.coerceIn(0, PokerDiceRules.MAX_REROLLS) ?: 0,
-      sequence = metadata["${PREFIX}dice.sequence"]?.toIntOrNull()?.coerceAtLeast(0) ?: PokerDiceRules.DICE_COUNT,
+      maxRerolls = PokerDiceRules.MAX_REROLLS,
       finalized = metadata["${PREFIX}dice.finalized"].toBoolean(),
       resolved = metadata["${PREFIX}dice.resolved"].toBoolean(),
-      hand = enumOr(PokerDiceRules.Hand.NO_HAND, metadata["${PREFIX}dice.hand"])
+      hand = metadata["${PREFIX}dice.hand"].orEmpty()
     )
   }
+
+  private fun readRngSequence(state: GameState): Int =
+    state.metadata["${PREFIX}rngSequence"]?.toIntOrNull()?.coerceAtLeast(0) ?: 0
+
+  private fun writeRngSequence(state: GameState, sequence: Int): GameState =
+    state.copy(metadata = state.metadata + ("${PREFIX}rngSequence" to sequence.coerceAtLeast(0).toString()))
 
   private fun diceSeed(seed: Long): Int = (seed xor (seed ushr 32)).toInt().let { if (it == Int.MIN_VALUE) 1 else kotlin.math.abs(it) }
 
