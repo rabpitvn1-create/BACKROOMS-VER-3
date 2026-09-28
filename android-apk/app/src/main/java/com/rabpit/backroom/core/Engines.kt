@@ -165,7 +165,6 @@ object InventoryEngine {
         val owned = source.items[command.itemId] ?: return invalid(state, "item_not_owned")
         if (owned.quantity < command.quantity) return invalid(state, "insufficient_item_quantity")
         if (EquipmentRules.isEquipped(state, command.actorId, command.itemId)) return invalid(state, "item_equipped")
-        if (command.actorId == KAI_ID && InventoryPolicy.isKaiSignatureEquipment(state, owned)) return invalid(state, "signature_equipment_locked")
         val transferred = ItemContentRules.normalize(owned).copy(quantity = command.quantity)
         val targetInventory = state.inventories[targetId] ?: InventoryState(targetId)
         val validation = InventoryPolicy.validateAddition(state, targetId, targetInventory, transferred, command.quantity)
@@ -186,8 +185,6 @@ object InventoryEngine {
         changed(EquipmentRules.preserveMissingHp(state, equipped, command.actorId), "item_equipped")
       }
       ItemCommand.Operation.UNEQUIP -> {
-        state.characters[command.actorId]?.metadata?.get("equipmentLockReason")
-          ?.takeIf { it.isNotBlank() }?.let { return invalid(state, it) }
         val equipment = state.equipment[command.actorId] ?: return invalid(state, "equipment_missing")
         if (command.itemId !in equipment.slots.values) return invalid(state, "item_not_equipped")
         val unequipped = state.copy(equipment = state.equipment + (
@@ -228,8 +225,6 @@ object PartyEngine {
       changed(state.copy(party = state.party.copy(leaderId = command.targetId)), "party_leader_changed")
     }
     PartyCommand.Operation.SEPARATE -> {
-      state.characters[command.targetId]?.metadata?.get("partyLockReason")
-        ?.takeIf { it.isNotBlank() }?.let { return invalid(state, it) }
       val character = state.characters[command.targetId] ?: return invalid(state, "target_unknown")
       changed(state.copy(characters = state.characters + (command.targetId to character.copy(presence = CharacterPresence.SEPARATED))), "party_member_separated")
     }
