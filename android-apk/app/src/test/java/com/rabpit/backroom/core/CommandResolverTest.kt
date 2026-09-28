@@ -9,7 +9,7 @@ class CommandResolverTest {
     GameState.initial().copy(
       characters = GameState.initial().characters + ("companion" to CharacterState("companion", "Companion"))
     ),
-    actorAliases = mapOf("player" to KAI_ID, "companion" to "companion"),
+    actorAliases = mapOf("player" to PLAYER_ID, "companion" to "companion"),
     itemAliases = mapOf("chai nước" to "almond-water")
   )
 
@@ -22,7 +22,7 @@ class CommandResolverTest {
       CommandSource.RULE
     )
     val command = resolver.resolve(candidate, 0, "TURN_184", context) as ItemCommand
-    assertEquals(KAI_ID, command.actorId)
+    assertEquals(PLAYER_ID, command.actorId)
     assertEquals("companion", command.targetId)
     assertEquals("almond-water", command.itemId)
     assertEquals(2, command.quantity)
