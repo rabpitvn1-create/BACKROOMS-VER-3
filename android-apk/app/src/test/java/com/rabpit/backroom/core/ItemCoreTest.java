@@ -42,8 +42,8 @@ public class ItemCoreTest {
   @Test public void chestCoreRollIsIndependentAndUsesStageBundle() throws Exception {
     JSONObject state = new JSONObject()
         .put("turn", 1)
-        .put("currentLevel", 3)
-        .put(LevelCore.LEVEL_KEY, "3")
+        .put("currentLevel", 0)
+        .put(LevelCore.LEVEL_KEY, "hua_1900_10")
         .put("player", new JSONObject().put("name", "Cao Minh"))
         .put("party", new JSONArray())
         .put("flags", new JSONObject().put("chestPresent", true));

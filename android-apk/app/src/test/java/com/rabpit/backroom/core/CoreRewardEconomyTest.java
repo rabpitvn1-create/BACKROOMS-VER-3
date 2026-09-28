@@ -83,7 +83,7 @@ public class CoreRewardEconomyTest {
     assertEquals("treasure", repeatCombat.getString("coreDropRewardType"));
     assertEquals(110, progression.coreCount(state));
 
-    state.put(LevelCore.LEVEL_KEY, "0.1");
+    state.put(LevelCore.LEVEL_KEY, "hua_1900_0");
     CombatChoiceEngine.start(state, "tam_ma_cao_minh", 0);
     JSONObject nextStageFirstCombat = state.getJSONObject("combat");
     nextStageFirstCombat.getJSONObject("entity").put("hp", 1);
@@ -111,7 +111,7 @@ public class CoreRewardEconomyTest {
     progression.normalizeState(state);
 
     for (int kill = 0; kill < 3; kill++) {
-      if (kill == 2) state.put(LevelCore.LEVEL_KEY, "0.1");
+      if (kill == 2) state.put(LevelCore.LEVEL_KEY, "hua_1900_0");
       CombatChoiceEngine.start(state, "copx", 0);
       JSONObject combat = state.getJSONObject("combat");
       assertEquals(260, combat.getJSONObject("entity").getInt("baseHp"));

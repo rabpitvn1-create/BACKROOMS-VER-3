@@ -499,7 +499,7 @@ public class CombatChoiceEngineTest {
     }
 
     JSONObject nextStage = combatState(new JSONArray());
-    nextStage.put(LevelCore.LEVEL_KEY, "0.1");
+    nextStage.put(LevelCore.LEVEL_KEY, "hua_1900_0");
     CombatChoiceEngine.start(nextStage, "tam_ma_cao_minh", 0);
     JSONObject scaled = nextStage.getJSONObject("combat").getJSONObject("entity");
     assertEquals(330, scaled.getInt("maxHp"));
