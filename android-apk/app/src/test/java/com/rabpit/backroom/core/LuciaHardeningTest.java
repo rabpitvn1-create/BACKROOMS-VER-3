@@ -68,6 +68,9 @@ public class LuciaHardeningTest {
 
     Path canonPath = Paths.get("src/main/assets/canon/Lucia_Codex.md");
     if (!Files.isRegularFile(canonPath)) canonPath = Paths.get("app/src/main/assets/canon/Lucia_Codex.md");
+    if (!Files.isRegularFile(canonPath)) {
+      canonPath = Paths.get("android-apk/app/src/main/assets/canon/Lucia_Codex.md");
+    }
     String canonText = new String(Files.readAllBytes(canonPath), StandardCharsets.UTF_8);
     Map<String, String> canonFiles = new LinkedHashMap<>();
     canonFiles.put("Lucia_Codex.md", canonText);
