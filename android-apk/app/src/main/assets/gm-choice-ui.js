@@ -207,18 +207,31 @@
   }
 
   function fallbackExplorerChoices() {
-    var level = Number.isInteger(state && state.currentLevel) ? state.currentLevel : 0;
+    var level = state && (state.currentLevelKey || state.currentLevel || '0');
     var levelText = 'Level ' + level;
+    var exitAvailable = !!(state && state.levelRoute && state.levelRoute.exitAvailable === true);
     return [
       {id:'A',text:'Quan sát kỹ khu vực xung quanh',action:'Quan sát kỹ khu vực xung quanh'},
       {id:'B',text:'Kiểm tra các lối đi hoặc điểm bất thường gần nhất',action:'Kiểm tra các lối đi hoặc điểm bất thường gần nhất'},
-      {id:'C',text:'Tiếp tục khám phá ' + levelText,action:'Tiếp tục khám phá ' + levelText,highlights:[{text:levelText,type:'location'}]}
+      exitAvailable
+        ? {id:'C',text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'}
+        : {id:'C',text:'Tiếp tục khám phá ' + levelText,action:'Tiếp tục khám phá ' + levelText,highlights:[{text:levelText,type:'location'}]}
     ];
   }
 
   function displayedExplorerChoices(entry) {
     var choices = Array.isArray(entry && entry.choices) ? entry.choices.slice(0, 3) : [];
-    fallbackExplorerChoices().forEach(function(fallback){
+    var fallbacks = fallbackExplorerChoices();
+    if (state && state.levelRoute && state.levelRoute.exitAvailable === true) {
+      choices = choices.filter(function(choice){ return String(choice.action || choice.text || '').trim() !== fallbacks[2].action; }).slice(0, 2);
+      fallbacks.slice(0, 2).forEach(function(fallback){
+        if (choices.length < 2 && !choices.some(function(choice){
+          return String(choice.action || choice.text || '').trim() === fallback.action;
+        })) choices.push(fallback);
+      });
+      choices.push(fallbacks[2]);
+    }
+    fallbacks.forEach(function(fallback){
       if (choices.length < 3 && !choices.some(function(choice){
         return String(choice.action || choice.text || '').trim() === fallback.action;
       })) choices.push(fallback);

@@ -20,10 +20,7 @@ final class LevelCore {
 
   static final String ROUTE_STATE = "levelRoute";
   static final String LEVEL_KEY = "currentLevelKey";
-  static final int ROUTE_SUCCESS_PERCENT = 50;
-  static final int ROUTE_TRIPLE_SUCCESS_PERCENT = 1;
-  static final int ROUTE_TRIPLE_SUCCESS_INCREMENT = 3;
-  static final int ROUTE_REQUIRED_STREAK = 6;
+  static final int ROUTE_REQUIRED_STREAK = 10;
   static final String LEVEL_ZERO_START_LOCATION =
       "Level 0 / The Lobby — khu phòng vàng ban đầu sau khi đi qua cổng không gian";
 
@@ -48,7 +45,12 @@ final class LevelCore {
   private static final String LEGACY_KNOWLEDGE_ASSET = "knowledge/knowledge_db.json";
   private static final String SNAPSHOT_MANIFEST_ASSET = "level_snapshots/drive/manifest.json";
   private static final int LEVEL_MISMATCH = -2;
-  private static final int ROUTE_ROLL_BOUND = 100;
+  // Each of 200 deterministic outcomes represents 0.5%.
+  private static final int ROUTE_ROLL_BOUND = 200;
+  private static final int ROUTE_PLUS_ONE_END = 97;   // 48.5%
+  private static final int ROUTE_PLUS_TWO_END = 99;   // 1%
+  private static final int ROUTE_PLUS_THREE_END = 101; // 1%
+  private static final int ROUTE_PLUS_FIVE_END = 102;  // 0.5%; remaining 49% reset
   static final int MAX_KNOWLEDGE_CONTEXT_CHARS = 3200;
 
   private final Map<String, JSONObject> knowledgeByLevelKey = new LinkedHashMap<>();
@@ -124,10 +126,10 @@ final class LevelCore {
     int roll = nextRoll(turnRng, ROUTE_ROLL_BOUND);
     route.put("lastRollTurn", turn);
 
-    if (roll < ROUTE_SUCCESS_PERCENT) {
-      int increment = roll < ROUTE_TRIPLE_SUCCESS_PERCENT
-          ? ROUTE_TRIPLE_SUCCESS_INCREMENT
-          : 1;
+    if (roll < ROUTE_PLUS_FIVE_END) {
+      int increment = roll < ROUTE_PLUS_ONE_END ? 1
+          : roll < ROUTE_PLUS_TWO_END ? 2
+          : roll < ROUTE_PLUS_THREE_END ? 3 : 5;
       streak = Math.min(ROUTE_REQUIRED_STREAK, streak + increment);
       route.put("streak", streak);
       route.remove("returnLocation");
@@ -210,37 +212,27 @@ final class LevelCore {
 
     String next = nextForKey(levelKey);
     String allowed;
-    String allowedKeys;
     if (levelGraph.available()) {
       StringBuilder values = new StringBuilder();
-      StringBuilder keys = new StringBuilder();
       for (String target : levelGraph.outgoing(levelKey)) {
         if (values.length() > 0) {
           values.append(", ");
-          keys.append(", ");
         }
         values.append(displayNameForKey(target));
-        keys.append(target);
       }
       allowed = values.length() == 0 ? "none" : values.toString();
-      allowedKeys = keys.length() == 0 ? "none" : keys.toString();
     } else if (next != null) {
       allowed = displayName(next);
-      allowedKeys = next;
     } else {
       StringBuilder values = new StringBuilder();
-      StringBuilder keys = new StringBuilder();
       for (int target = 0; target <= 6; target++) {
         if (target == level || !GameCoreRules.levelTransitionAllowed(level, target)) continue;
         if (values.length() > 0) {
           values.append(", ");
-          keys.append(", ");
         }
         values.append(displayName(String.valueOf(target)));
-        keys.append(target);
       }
       allowed = values.length() == 0 ? "none" : values.toString();
-      allowedKeys = keys.length() == 0 ? "none" : keys.toString();
     }
 
     JSONObject route;
@@ -261,11 +253,13 @@ final class LevelCore {
           "HIDDEN ROUTE OUTCOME THIS TURN: RESET. Narrate naturally that the attempted route folds, loops, or returns Cao Minh toward familiar ground"
               + (returnLocation.trim().isEmpty() ? "." : " near: " + returnLocation + ".")
               + " Never mention a roll, streak, probability, reset counter, or hidden system.";
-    } else if ("EXIT_AVAILABLE".equals(result) || exitAvailable) {
+    } else if ("EXIT_AVAILABLE".equals(result)) {
       routeInstruction =
-          "HIDDEN ROUTE OUTCOME: EXIT AVAILABLE. You may now establish a real boundary/route to "
-              + allowed
-              + " if the player's action naturally reaches or crosses it. Never reveal the hidden route system.";
+          "HIDDEN ROUTE OUTCOME THIS TURN: EXIT_AVAILABLE. Narrate that Cao Minh has identified a real boundary/exit toward "
+              + allowed + ", without crossing it yet. Never reveal the hidden route system.";
+    } else if (exitAvailable) {
+      routeInstruction = "ROUTE STATUS: an exit toward " + allowed
+          + " was already identified on an earlier turn. Do not narrate a new discovery.";
     } else if ("SUCCESS".equals(result)) {
       routeInstruction =
           "HIDDEN ROUTE OUTCOME THIS TURN: SUCCESS. Narrate meaningful continued exploration inside "
@@ -278,16 +272,9 @@ final class LevelCore {
 
     String transitionInstruction = exitAvailable
         ? "LEVEL TRANSITION: AVAILABLE. The only allowed next destination is " + allowed
-            + ". Do not skip any required Level graph node."
-        : "LEVEL TRANSITION: LOCKED. Keep currentLevelKey unchanged and keep the environment inside "
+            + ". Core alone applies crossing after a player action; do not narrate a crossing until the committed current Level changes."
+        : "LEVEL TRANSITION: LOCKED. Keep the environment inside "
             + displayNameForKey(levelKey) + ".";
-
-    String narrativeTransitionInstruction = exitAvailable
-        ? "NARRATIVE TRANSITION SIGNAL: sceneLabel is descriptive only and never changes Level state. "
-            + "If this turn actually crosses an allowed boundary, return transitionTarget as one exact key from ["
-            + allowedKeys + "]. Otherwise transitionTarget must be empty."
-        : "NARRATIVE TRANSITION SIGNAL: sceneLabel is descriptive only and never changes Level state. "
-            + "transitionTarget must be empty because the route is locked.";
 
 
     return "CURRENT LEVEL NODE: " + displayNameForKey(levelKey) + "\n"
@@ -299,7 +286,6 @@ final class LevelCore {
         + "Entity spawning, item spawning, combat, stats and hidden route progress remain Core-owned.\n"
         + "VALID NEXT LEVEL TRANSITION: " + allowed + "\n"
         + transitionInstruction + "\n"
-        + narrativeTransitionInstruction + "\n"
         + routeInstruction;
   }
 

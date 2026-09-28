@@ -772,17 +772,30 @@ public class MainActivity extends Activity {
         + "OUTPUT chỉ JSON: {\"actionType\":\"INTERCEPT\",\"intentTag\":\"opportunistic\"}";
   }
 
-  private JSONObject narrationFallback(JSONObject state, String replyHint) {
+  static JSONObject narrationFallback(JSONObject state, String replyHint) {
     JSONObject generated = new JSONObject();
     try {
       String reply = replyHint == null ? "" : replyHint.trim();
+      JSONObject route = state == null ? null : state.optJSONObject("levelRoute");
+      String result = route != null && route.optInt("lastRollTurn", -1) == state.optInt("turn", 1)
+          ? route.optString("lastResult", "") : "";
+      String location = state == null ? "khu vực hiện tại" : state.optString("location", "khu vực hiện tại");
+      if ("SUCCESS".equals(result)) {
+        reply = "Cao Minh lần theo một lối đi mới và tiến sâu hơn trong " + location
+            + ", nhưng vẫn chưa tìm thấy lối thoát.";
+      } else if ("RESET".equals(result)) {
+        reply = "Lối đi gập vòng, đưa Cao Minh trở lại khu vực quen thuộc: " + location + ".";
+      } else if ("EXIT_AVAILABLE".equals(result)) {
+        reply = "Cao Minh xác định được một lối ra tại " + location
+            + ", có thể dẫn sang chặng tiếp theo.";
+      }
       JSONObject emergent = state == null ? null : state.optJSONObject("emergent");
       JSONObject selection = emergent == null ? null : emergent.optJSONObject("lastSelection");
       if (reply.isEmpty() && selection != null && !selection.optBoolean("selectedNone", false)) {
         reply = selection.optString("publicSummary", "").trim();
       }
       if (reply.isEmpty()) {
-        reply = "Không có biến cố mới. Cao Minh vẫn ở " + state.optString("location", "khu vực hiện tại") + ".";
+        reply = "Không có biến cố mới. Cao Minh vẫn ở " + location + ".";
       }
       generated.put("reply", reply)
           .put("choices", new JSONArray())
