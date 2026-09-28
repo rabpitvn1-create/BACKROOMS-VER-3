@@ -1,5 +1,5 @@
 {
-  "version": 10,
+  "version": 11,
   "source": "User-provided Google Drive snapshot set",
   "sourceFolder": "https://drive.google.com/drive/folders/1QsapoDnhAH69j0EIgdVQb7jV6sKc_IZe",
   "importedAt": "2026-09-28",
@@ -73,5 +73,137 @@
       ]
     }
   },
-  "dimensionPolicy": "legacy_set_351x250; newer_level_0_expansions_keep_source_native_dimensions"
+  "dimensionPolicy": "legacy_set_351x250; newer_level_0_expansions_keep_source_native_dimensions",
+  "sublevelRoot": "level_snapshots/huis_family",
+  "huisFamilySourceFolder": "https://drive.google.com/drive/folders/1LcnDud3fd142sGSpiLaUebsrqjCPwT9H",
+  "sublevels": {
+    "hua_1900_0": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_01_snapshot_01.webp",
+        "huis_level_01_snapshot_02.webp",
+        "huis_level_01_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_1": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_02_snapshot_01.webp",
+        "huis_level_02_snapshot_02.webp",
+        "huis_level_02_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_2": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_03_snapshot_01.webp",
+        "huis_level_03_snapshot_02.webp",
+        "huis_level_03_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_3": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_04_snapshot_01.webp",
+        "huis_level_04_snapshot_02.webp",
+        "huis_level_04_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_4": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_05_snapshot_01.webp",
+        "huis_level_05_snapshot_02.webp",
+        "huis_level_05_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_5": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_06_snapshot_01.webp",
+        "huis_level_06_snapshot_02.webp",
+        "huis_level_06_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_6": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_07_snapshot_01.webp",
+        "huis_level_07_snapshot_02.webp",
+        "huis_level_07_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_7": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_08_snapshot_01.webp",
+        "huis_level_08_snapshot_02.webp",
+        "huis_level_08_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_8": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_09_snapshot_01.webp",
+        "huis_level_09_snapshot_02.webp",
+        "huis_level_09_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_9": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_10_snapshot_01.webp",
+        "huis_level_10_snapshot_02.webp",
+        "huis_level_10_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_10": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_11_snapshot_01.webp",
+        "huis_level_11_snapshot_02.webp",
+        "huis_level_11_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_11": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_12_snapshot_01.webp",
+        "huis_level_12_snapshot_02.webp",
+        "huis_level_12_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_12": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_13_snapshot_01.webp",
+        "huis_level_13_snapshot_02.webp",
+        "huis_level_13_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_13": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_14_snapshot_01.webp",
+        "huis_level_14_snapshot_02.webp",
+        "huis_level_14_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_14": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_15_snapshot_01.webp",
+        "huis_level_15_snapshot_02.webp",
+        "huis_level_15_snapshot_03.webp"
+      ]
+    },
+    "hua_1900_15": {
+      "visualType": "scene",
+      "assets": [
+        "huis_level_16_snapshot_01.webp",
+        "huis_level_16_snapshot_02.webp",
+        "huis_level_16_snapshot_03.webp"
+      ]
+    }
+  }
 }

@@ -109,8 +109,8 @@ public class LevelCoreChainExplorerTest {
     assertTrue(core.promptContext(state).contains("was already identified on an earlier turn"));
     assertFalse(core.promptContext(state).contains("OUTCOME THIS TURN: EXIT_AVAILABLE"));
     assertTrue(core.applyPlayerTransitionIfRequested(state, "Đi qua lối ra"));
-    assertEquals("0.1", state.getString("currentLevelKey"));
-    assertEquals(LevelCore.defaultLocation("0.1"), state.getString("location"));
+    assertEquals("hua_1900_0", state.getString("currentLevelKey"));
+    assertEquals(LevelCore.defaultLocation("hua_1900_0"), state.getString("location"));
     assertEquals(0, state.getJSONObject("levelRoute").getInt("streak"));
     assertFalse(state.getJSONObject("levelRoute").getBoolean("exitAvailable"));
     assertEquals(-1, state.getJSONObject("levelRoute").getInt("lastRollTurn"));
@@ -123,6 +123,22 @@ public class LevelCoreChainExplorerTest {
     assertFalse(core.applyPlayerTransitionIfRequested(state, "Đi qua lối ra"));
     assertEquals("0", state.getString("currentLevelKey"));
     assertEquals(LevelCore.LEVEL_ZERO_START_LOCATION, state.getString("location"));
+  }
+
+  @Test public void hua1900FloorsRunInOrderBetweenZeroAndOne() throws Exception {
+    JSONObject state = start();
+    String[] route = LevelCore.levelZeroProgressionKeys();
+    assertEquals(18, route.length);
+    assertEquals("0", route[0]);
+    assertEquals("1", route[17]);
+    for (int i = 0; i < 16; i++) assertEquals("hua_1900_" + i, route[i + 1]);
+    for (int i = 1; i < route.length; i++) {
+      assertFalse(core.applyPlayerTransitionIfRequested(state, "Đi qua lối ra"));
+      core.normalizeState(state);
+      state.getJSONObject("levelRoute").put("streak", LevelCore.ROUTE_REQUIRED_STREAK);
+      assertTrue(core.applyPlayerTransitionIfRequested(state, "Đi qua lối ra"));
+      assertEquals(route[i], state.getString("currentLevelKey"));
+    }
   }
 
   @Test public void independentPreviewBranchesDoNotShareRouteOutcomes() throws Exception {

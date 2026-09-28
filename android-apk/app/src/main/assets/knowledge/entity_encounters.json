@@ -587,6 +587,422 @@
         5,
         6
       ]
+    },
+    {
+      "key": "huis_boss_01",
+      "name": "Nhân viên Mực Đen",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 1",
+      "canon": "Hui's Family source boss of Level 1. Source environment: Văn phòng hành chính vô tận, giấy dán tường vàng úa, thảm nỉ ẩm và hồ sơ ghi lại hành động vừa xảy ra. Source rule: Bản đồ không đáng tin; không mở cửa đỏ khi có tiếng gõ phía sau, vì tiếng gõ có thể phát ra từ chính phía người mở. Source threat descriptions: Nhân viên Mực Đen bò ra từ ngăn kéo, gầm bàn và vết mực; Nạn nhân bị biến thành hồ sơ. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Ink Drawer Strike",
+          "damagePercent": 126,
+          "procPercent": 32
+        },
+        {
+          "name": "Dossier Bind",
+          "damagePercent": 136,
+          "procPercent": 25
+        },
+        {
+          "name": "Black Ink Sweep",
+          "damagePercent": 116,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_02",
+      "name": "Người Gõ Cửa",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 2",
+      "canon": "Hui's Family source boss of Level 2. Source environment: Hành lang khách sạn hẹp với hàng triệu cửa đỏ có số thứ tự liên tục thay đổi. Source rule: Người Gõ Cửa chỉ tồn tại khi cửa khép; tay nắm nóng chỉ an toàn trước khi bị chạm. Source threat descriptions: Cửa tự mở đồng loạt; Người Gõ Cửa xuất hiện gần hơn sau mỗi lần đóng cửa. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Closed Door Rush",
+          "damagePercent": 127,
+          "procPercent": 32
+        },
+        {
+          "name": "Handle Burn",
+          "damagePercent": 137,
+          "procPercent": 25
+        },
+        {
+          "name": "Numberless Threshold",
+          "damagePercent": 117,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_03",
+      "name": "Hành Khách Trễ Giờ",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 3",
+      "canon": "Hui's Family source boss of Level 3. Source environment: Nhà ga mái kính không có đường ray, bảng giờ ghi những nơi không tồn tại và một đầu máy vô hình đi xuyên đại sảnh. Source rule: Không trả lời câu hỏi về thời gian bằng bất kỳ con số nào; người trả lời sẽ bị nhận diện là chuyến tàu. Source threat descriptions: Hành Khách Trễ Giờ; Đầu máy vô hình; Bị đánh dấu là chuyến tàu. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Late Arrival Charge",
+          "damagePercent": 128,
+          "procPercent": 32
+        },
+        {
+          "name": "Platform Slam",
+          "damagePercent": 138,
+          "procPercent": 25
+        },
+        {
+          "name": "Timetable Pursuit",
+          "damagePercent": 118,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_04",
+      "name": "Người Hầu Không Lưng",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 4",
+      "canon": "Hui's Family source boss of Level 4. Source environment: Khách sạn Belle Époque vô tận với phòng đã chuẩn bị sẵn cho người chưa từng đến. Source rule: Ngủ trong phòng khóa kín sẽ tỉnh ở hành lang; ngủ giữa hành lang sẽ tỉnh trong phòng bị khóa từ ngoài. Source threat descriptions: Người Hầu Không Lưng; Sinh vật chui ra từ khoảng rỗng sau thân chúng. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Hollow Back Grasp",
+          "damagePercent": 129,
+          "procPercent": 32
+        },
+        {
+          "name": "Corridor Pull",
+          "damagePercent": 139,
+          "procPercent": 25
+        },
+        {
+          "name": "Service Door Ambush",
+          "damagePercent": 119,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_05",
+      "name": "Thợ Máy Rỗng",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 5",
+      "canon": "Hui's Family source boss of Level 5. Source environment: Nhà máy gạch đỏ co giãn như lồng ngực; máy móc chỉ vận hành máy móc khác mà không tạo sản phẩm. Source rule: Mỗi nhịp thở ra phủ hơi nóng kín hành lang; tiếng động cho phép Thợ Máy Rỗng tạo công cụ săn mồi từ cơ thể chúng. Source threat descriptions: Thợ Máy Rỗng; Hình người bị ép khỏi van hơi và nồi hơi khóa. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Steam Hammer",
+          "damagePercent": 130,
+          "procPercent": 32
+        },
+        {
+          "name": "Boiler Hook",
+          "damagePercent": 140,
+          "procPercent": 25
+        },
+        {
+          "name": "Pressure Release",
+          "damagePercent": 120,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_06",
+      "name": "Y Tá Màn Trắng",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 6",
+      "canon": "Hui's Family source boss of Level 6. Source environment: Bệnh viện gạch trắng có giường lõm, chuông gọi từ phòng bị xây kín và bệnh án về những chứng bệnh không thể tồn tại. Source rule: Người bị thương ít bị săn hơn người khỏe; tự gây thương tích khiến bệnh viện coi người đó là nhân viên. Source threat descriptions: Y Tá Màn Trắng sửa cơ thể cho khớp bệnh án; Bệnh nhân vô hình. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Ward Clamp",
+          "damagePercent": 131,
+          "procPercent": 32
+        },
+        {
+          "name": "Surgical Reach",
+          "damagePercent": 141,
+          "procPercent": 25
+        },
+        {
+          "name": "White Veil Strike",
+          "damagePercent": 121,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_07",
+      "name": "Diễn Viên Chưa Ra Đời",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 7",
+      "canon": "Hui's Family source boss of Level 7. Source environment: Nhà hát không có sân khấu, mọi ghế quay về một hố trống và dàn nhạc vô hình luôn chơi sai một nốt. Source rule: Mỗi nốt sai tạo thêm khán giả; gây tiếng động khiến toàn khán phòng vỗ tay và thực thể bò qua ghế. Source threat descriptions: Khán Giả Nhìn Ngược; Diễn Viên Chưa Ra Đời mang gương mặt từ ký ức người nhìn. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Mask Change",
+          "damagePercent": 132,
+          "procPercent": 32
+        },
+        {
+          "name": "Curtain Drop",
+          "damagePercent": 142,
+          "procPercent": 25
+        },
+        {
+          "name": "Encore Lunge",
+          "damagePercent": 122,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_08",
+      "name": "Thủ Thư Không Miệng",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 8",
+      "canon": "Hui's Family source boss of Level 8. Source environment: Kho hồ sơ vô tận nơi mực bò khỏi trang và việc đọc xóa từ, khái niệm hoặc ký ức tương ứng. Source rule: Đọc làm mất ký ức; đốt tài liệu trả chữ lại nhưng chữ xuất hiện trên tường, da hoặc bên trong mí mắt. Source threat descriptions: Con dấu xóa tên, kỹ năng, ký ức hoặc giác quan; Mất khái niệm về đường thoát. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Silent Seal",
+          "damagePercent": 133,
+          "procPercent": 32
+        },
+        {
+          "name": "Archive Crush",
+          "damagePercent": 143,
+          "procPercent": 25
+        },
+        {
+          "name": "Blank Page Strike",
+          "damagePercent": 123,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_09",
+      "name": "Người Đi Dạo",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 9",
+      "canon": "Hui's Family source boss of Level 9. Source environment: Thành phố thương mại dưới mái kính, mưa bay ngược và biển hiệu đổi ngôn ngữ sau mỗi lần chớp mắt. Source rule: Bóng đổ có thể tách khỏi chủ thể, mọc cơ thể và tiếp tục tồn tại độc lập. Source threat descriptions: Người Đi Dạo; Ma-nơ-canh; Bàn tay thò xuống từ mái kính. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Glass Canopy Dive",
+          "damagePercent": 134,
+          "procPercent": 32
+        },
+        {
+          "name": "Reflection Step",
+          "damagePercent": 144,
+          "procPercent": 25
+        },
+        {
+          "name": "Sidewalk Ambush",
+          "damagePercent": 124,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_10",
+      "name": "Giám Thị Dài Tay",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 10",
+      "canon": "Hui's Family source boss of Level 10. Source environment: Trường học nằm trong đêm bất biến; bảng đen tự viết bài học về người đang có mặt. Source rule: Giám thị xuất hiện khi có người chạy, nói lớn hoặc mở cửa không được phép, nhưng không ai biết cửa nào được phép. Source threat descriptions: Học Sinh Trong Tường; Giám Thị Dài Tay. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Long Arm Sweep",
+          "damagePercent": 135,
+          "procPercent": 32
+        },
+        {
+          "name": "Bell Discipline",
+          "damagePercent": 145,
+          "procPercent": 25
+        },
+        {
+          "name": "Hallway Seizure",
+          "damagePercent": 125,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_11",
+      "name": "Thủy Thủ Trương Nở",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 11",
+      "canon": "Hui's Family source boss of Level 11. Source environment: Tàu viễn dương bị nhét vào hành lang đá, cửa sổ nhìn ra đại dương dựng đứng và nước rơi từ trần. Source rule: Không gian rộng làm thủy thủ phình lên; khe hẹp ép chúng mỏng như giấy. Source threat descriptions: Thủy Thủ Trương Nở; Người Chết Đuối Khô kéo nạn nhân về mặt nước dưới sàn. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Swollen Hull Slam",
+          "damagePercent": 136,
+          "procPercent": 32
+        },
+        {
+          "name": "Deck Grip",
+          "damagePercent": 146,
+          "procPercent": 25
+        },
+        {
+          "name": "Bulkhead Crush",
+          "damagePercent": 126,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_12",
+      "name": "Phu Lò",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 12",
+      "canon": "Hui's Family source boss of Level 12. Source environment: Cống, hầm lò và đường than đan nhau trong không khí nóng đặc; xe goòng chở giày, răng người và cửa đỏ. Source rule: Lửa xua phần lớn quái vật nhưng làm đường hầm dài thêm. Source threat descriptions: Phu Lò chỉ có mắt trong bóng tối; Sinh vật trồi khỏi than, nước và kim loại nóng. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Coal Shovel Blow",
+          "damagePercent": 137,
+          "procPercent": 32
+        },
+        {
+          "name": "Furnace Grip",
+          "damagePercent": 147,
+          "procPercent": 25
+        },
+        {
+          "name": "Tunnel Rush",
+          "damagePercent": 127,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_13",
+      "name": "Nhà Phát Minh",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 13",
+      "canon": "Hui's Family source boss of Level 13. Source environment: Khu triển lãm về một thế kỷ mới không bao giờ đến, đầy máy móc có hình dạng hợp lý nhưng chức năng vô nghĩa. Source rule: Người Tham Quan Bằng Sáp bất động khi nhìn trực diện nhưng chạy trong kính phản chiếu. Source threat descriptions: Người Tham Quan Bằng Sáp; Nhà Phát Minh lắp bộ phận nạn nhân vào máy. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Machine Limb Strike",
+          "damagePercent": 138,
+          "procPercent": 32
+        },
+        {
+          "name": "Exhibit Clamp",
+          "damagePercent": 148,
+          "procPercent": 25
+        },
+        {
+          "name": "Clockwork Crush",
+          "damagePercent": 128,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_14",
+      "name": "Thánh Tượng Quay Lưng",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 14",
+      "canon": "Hui's Family source boss of Level 14. Source environment: Thánh đường đá đen có đồng hồ chỉ về phía người nhìn và chuông xóa sự kiện khỏi lịch sử cá nhân. Source rule: Không quan sát thì tượng đứng sau lưng; nhìn quá lâu khiến da hóa đá. Source threat descriptions: Tu Sĩ Không Chuông; Thánh Tượng Quay Lưng; Mất ký ức cá nhân. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Stone Gaze",
+          "damagePercent": 139,
+          "procPercent": 32
+        },
+        {
+          "name": "Backward Step",
+          "damagePercent": 149,
+          "procPercent": 25
+        },
+        {
+          "name": "Bell Tower Strike",
+          "damagePercent": 129,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_15",
+      "name": "Cư Dân Ban Công",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 15",
+      "canon": "Hui's Family source boss of Level 15. Source environment: Thành phố không có mặt đất, gồm căn hộ và ban công chồng lên nhau trong vực sâu vô tận. Source rule: Đi xuống làm thành phố sáng hơn; đi lên chỉ nghe phố xá mà không bao giờ tới mặt đất. Source threat descriptions: Cư Dân Ban Công; Căn hộ bò về phía người hỏi; Quái vật chui từ đồ gia dụng. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Balcony Descent",
+          "damagePercent": 140,
+          "procPercent": 32
+        },
+        {
+          "name": "Apartment Grasp",
+          "damagePercent": 150,
+          "procPercent": 25
+        },
+        {
+          "name": "Void Push",
+          "damagePercent": 130,
+          "procPercent": 30
+        }
+      ]
+    },
+    {
+      "key": "huis_boss_16",
+      "name": "Đám Đông Chưa Sinh",
+      "ratePercent": 3.0,
+      "spawnClass": "boss",
+      "tier": "boss",
+      "originLevel": "Hui's Family Level 16",
+      "canon": "Hui's Family source boss of Level 16. Source environment: Mọi tầng trước bị ép chung vào một kiến trúc; ký ức sai trở thành hành lang và người quen trở thành thực thể. Source rule: Tầng dùng ký ức người sống để xây thêm Backrooms; một bản sao thế giới thật có thể khiến cả nhóm tin rằng đã thoát. Source threat descriptions: Mọi thực thể từ các tầng trước; Đám Đông Chưa Sinh; Bản sao của người quen và thế giới thật. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction.",
+      "autoProcSkills": [
+        {
+          "name": "Crowd Surge",
+          "damagePercent": 141,
+          "procPercent": 32
+        },
+        {
+          "name": "False Memory Strike",
+          "damagePercent": 151,
+          "procPercent": 25
+        },
+        {
+          "name": "Century Collapse",
+          "damagePercent": 131,
+          "procPercent": 30
+        }
+      ]
     }
   ],
   "legacyEntities": [

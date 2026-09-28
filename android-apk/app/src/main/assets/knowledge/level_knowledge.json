@@ -43,7 +43,7 @@
         "status": "project-authoritative with current Wikidot môi trường canon",
         "url": "https://backrooms-wiki.wikidot.com/level-0",
         "checked": "2026-09-19",
-        "note": "BACKROOMsV2 preserves its mandatory Level 0 -> Level 0.1 lộ trình and separates Red Rooms into a later standalone Level."
+        "note": "Tuyến hiện tại đi từ Level 0 qua Hui's Family Level 1–16 rồi đến Level 1."
       },
       "identity": [
         "Level 0 là điểm khởi đầu chủ đạo của Backrooms và trong BACKROOMsV2 là môi trường Cao Minh xuất hiện sau khi mặt đất dưới chân biến mất và hắn rơi khỏi thế giới nguyên sinh.",
@@ -64,7 +64,7 @@
         "Peripheral Shift có thể làm bố cục warp, stretch hoặc rearrange khi không được quan sát trực tiếp; hiện tượng không xảy ra liên tục và có vùng ổn định hơn.",
         "tiếng ù huỳnh quang có thể dao động mạnh về âm lượng; các đợt cực lớn có thể gây đau tai hoặc nguy cơ tổn thương thính giác nếu kéo dài.",
         "Các anomalous noises như tiếng thì thầm, familiar giọng nói và tiếng cào có thể theo hành lang nhưng nguyên nhân không được xác nhận.",
-        "Theo nguồn hiện tại, Red Rooms có thể xuất hiện như cấu trúc aberration; BACKROOMsV2 cố ý vô hiệu hóa việc cuộc chạm trán Red Rooms tại Level 0 vì Red Rooms là Level gameplay riêng xuất hiện sau The Torment."
+        "Red Rooms và Manila Room không nằm trong tuyến chơi hiện tại sau Level 0."
       ],
       "architecture": [
         "Phòng cơ bản dùng giấy dán tường vàng/beige, chân tường đơn giản, trần ô vuông, đèn huỳnh quang âm trần và các lối mở không có cửa.",
@@ -141,13 +141,13 @@
       "entrancesExits": [
         "Cao Minh bắt đầu trong môi trường tương ứng Level 0 sau khi rơi khỏi thế giới nguyên sinh; bản thân Cao Minh không mặc định biết tên hoặc số thứ tự Level này.",
         "Nguồn Wiki hiện hành có lối ra sang Level 1 qua flickering tường; BACKROOMsV2 cố ý override lộ trình này.",
-        "Trong BACKROOMsV2, Level 0 chỉ được chuyển sang Level 0.1 khi LevelCore mở transition.",
-        "Không cho Manila Room, Red Rooms, Level 1 hoặc bất kỳ Level nào khác xuất hiện như lối ra sớm từ Level 0."
+        "Level 0 chỉ chuyển sang Hui's Family Level 1 khi LevelCore mở lối ra và người chơi chọn đi qua.",
+        "Không chuyển thẳng sang Level 1 hay các sublevel cũ từ Level 0."
       ],
       "gameplayOverride": [
-        "Chuỗi bắt buộc bắt đầu: Level 0 -> Level 0.1. Không được skip.",
-        "Red Rooms bị loại khỏi random cấu trúc aberration của Level 0 trong runtime. Nó tồn tại dưới dạng Level riêng sau The Torment.",
-        "Manila Room cũng không được cuộc chạm trán sớm ở Level 0 dù nguồn canon xem nó là exception của Isolation Effect; game đặt Manila Room ở node riêng sau Level 0.7.",
+        "Chuỗi bắt buộc bắt đầu: Level 0 → Hui's Family Level 1–16 → Level 1.",
+        "Red Rooms không phải một node gameplay trong tuyến hiện tại.",
+        "Manila Room không phải một node gameplay trong tuyến hiện tại.",
         "Lucia chỉ có thể roll cuộc chạm trán ở Level 0 gốc theo CharacterEncounterCore.",
         "Hidden lộ trình roll/streak/exitAvailable do LevelCore sở hữu và tuyệt đối không được tiết lộ.",
         "GM không được tự đổi currentLevel/currentLevelKey trước khi Core cho phép."
@@ -156,7 +156,7 @@
         "Không tự spawn Entity, survivor, NPC, faction, base, settlement hoặc rescue signal.",
         "Không tự cấp item, chest, Almond Water, food, medical nhu yếu phẩm hay usable trang bị.",
         "Không dùng Red Rooms hoặc Manila Room như scene ở Level 0.",
-        "Không cho Cao Minh nhìn thấy Level 0.1 trước khi lộ trình tiến trình hợp lý và Core mở lối ra.",
+        "Không nhắc tên Backrooms 1900 trước khi người chơi tìm ra lối thoát và bước qua.",
         "Không giải thích nguồn gốc Backrooms, Isolation Effect, Peripheral Shift, thảm chất lỏng hoặc familiar voices như fact.",
         "Không biến Level thành chủ thể có ý thức, nói chuyện hoặc cố tình thử thách Cao Minh.",
         "Không ép Cao Minh hoảng loạn, bỏ chạy, mất ý chí hoặc tin một ảo giác; chỉ mô tả stimuli và phản ứng cơ thể trực tiếp hợp lý.",
@@ -231,7 +231,7 @@
         "HOLE_HAZARD: hố density trở thành ràng buộc chính của movement.",
         "PILLAR_NAVIGATION: hướng di chuyển commitment và large-scale mệt mỏi là ràng buộc chính.",
         "ARCH_REST: hình học ổn định tương đối và vị trí khô/raised có thể tạo pause ngắn.",
-        "ROUTE_EMERGENCE: chỉ khi Core exitAvailable, các dấu hiệu vật liệu/hình học của Level 0.1 mới bắt đầu xuất hiện.",
+        "ROUTE_EMERGENCE: chỉ khi Core exitAvailable, cấu trúc văn phòng với hồ sơ và các dấu hiệu của tầng đầu tiên mới bắt đầu hiện ra.",
         "RECOVERY_AFTER_EVENT: noise/blackout/shift có thể giảm intensity, tránh escalation vô hạn."
       ],
       "stateTransitions": [
@@ -338,12 +338,12 @@
       "routeProgressionCues": [
         "thành công sớm: mốc định hướng mới nhưng vẫn thuần Level 0, room relation bớt vòng lặp trong lượt đó.",
         "thành công giữa: cấu trúc variation rõ hơn, ổn định dấu hiệu hoặc thay đổi vật liệu nhỏ nhưng chưa có Zenith Station.",
-        "thành công gần đủ: xuất hiện chi tiết kim loại/kính/luồng khí kỹ thuật rất nhẹ nhưng chưa gọi tên hoặc xác nhận Level 0.1.",
+        "Khi gần tìm ra lối ra: xuất hiện dấu hiệu giấy tờ và hành lang văn phòng lạ, nhưng chưa xác nhận tầng kế.",
         "EXIT_AVAILABLE: dấu hiệu chuyển tiếp có thể trở nên bền vững: panel kim loại, kính, machine hum khác huỳnh quang tiếng ù, doorway hình học không còn thuần Level 0.",
         "đặt lại: mốc định hướng lộ trình vừa theo trở nên không còn nối đúng, hoặc người chơi quay lại một anchor cũ; không xóa mọi dấu vết.",
         "đặt lại trong blackout: tiếng ù dẫn sai/vòng lặp về vùng đã biết thay vì teleport.",
         "đặt lại trong phòng cột: hướng di chuyển đưa về lưới/mốc định hướng quen theo cấu trúc không gian shift.",
-        "Không dùng màu đỏ, Manila Room hoặc Level 1 dấu hiệu làm lộ trình tiến trình của Level 0."
+        "Không dùng màu đỏ, Manila Room hoặc Level 1 làm dấu hiệu mở lối từ Level 0."
       ],
       "encounterStaging": [
         "Nếu EntityCore không đang hoạt động: môi trường tension phải tự đứng vững, không thêm creature.",
@@ -448,7 +448,7 @@
         "Một quiet room không có anomaly nhưng cho thấy thảm độ sâu giảm, giúp người chơi suy luận đang gần pillar-type khu vực.",
         "Khi lộ trình gần hoàn tất, một seam kim loại vô hại xuất hiện trong tường nhưng chưa đủ xác định Zenith Station.",
         "Khi exitAvailable, machine hum khác hẳn huỳnh quang tiếng ù trở thành dấu hiệu bền vững qua nhiều room.",
-        "Transition cuối chỉ hoàn thành khi Cao Minh thực sự crossing boundary sang cấu trúc kim loại/kính của Level 0.1."
+        "Chuyển tầng chỉ hoàn thành khi Cao Minh bước qua ranh giới vào Hui's Family Level 1."
       ]
     },
     "1": {
@@ -501,7 +501,7 @@
         "BACKROOMsV2 transition sang Level 2 nên xuất hiện dần khi xe/cột giảm và pipes/machinery chiếm ưu thế."
       ],
       "entrancesExits": [
-        "Đến từ Red Rooms theo progression game.",
+        "Đến từ Hui's Family Level 16 theo progression game.",
         "Điểm đến chuẩn tiếp theo của route chính là Level 2; các exit phụ ngoài route không được tự mở."
       ],
       "gameplayOverride": [
@@ -871,485 +871,436 @@
         "Một đoạn hoàn toàn mất mọi âm vang khiến khoảng cách trở nên khó đánh giá."
       ]
     },
-    "0.1": {
-      "name": "Level 0.1 — Zenith Station",
+    "hua_1900_0": {
+      "name": "Hui's Family Level 1",
       "source": {
-        "basis": "Backrooms Wiki Level 0.1 — Zenith Station",
-        "status": "active"
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
       },
       "identity": [
-        "Một megastructure kim loại và kính khổng lồ bị nhúng bên trong Level 0, có kiến trúc tương lai nhưng đã xuống cấp nặng.",
-        "Cấu trúc được hiểu như một lớp vỏ hình cầu cực dày bao quanh khoang rỗng trung tâm; nhiều phần chưa được lập bản đồ."
+        "Hui's Family Level 1 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Văn phòng hành chính vô tận, giấy dán tường vàng úa, thảm nỉ ẩm và hồ sơ ghi lại hành động vừa xảy ra."
       ],
-      "architecture": [
-        "Vật liệu chủ đạo là kim loại, kính, panel kỹ thuật, cửa trượt tự động, dây điện lộ và thiết bị điện tử hỏng.",
-        "Các buồng chức năng có thể gồm phòng ngủ, bếp, phòng tập, khu sinh hoạt và nhà kính thủy canh, nhiều nơi hư hỏng hoặc bị bỏ mặc.",
-        "Từ một số cửa kính hoặc khoảng trống lớn có thể nhìn thấy các tầng Level 0 xếp chồng thành mạng lưới ở phía ngoài, một quan sát không thể tái tạo bằng cách xuyên trần Level 0 thông thường."
-      ],
-      "zones": [
-        "Central Cavity: khoang rỗng quy mô cực lớn dùng để định hướng tương đối cho cấu trúc tổng thể.",
-        "Residential/Utility Chambers: các phòng chức năng sáng hơn, nhiều cửa trượt và máy móc dân dụng.",
-        "Degraded Sectors: panel vỡ, dây điện hở, cửa kẹt, kính nứt và hệ thống môi trường hoạt động không ổn định.",
-        "Hydroponic Areas: nhà kính hoặc khu trồng cây trong nhiều trạng thái hư hỏng; không mặc định có thức ăn an toàn."
-      ],
-      "sensory": [
-        "Âm thanh thay đổi giữa tiếng quạt, relay, motor cửa, tiếng máy hoạt động rời rạc và những khoảng im lặng sâu.",
-        "Ánh sáng trắng sạch ở khu còn điện đối lập mạnh với vùng chập chờn hoặc tối.",
-        "Nhiệt độ có thể khác biệt đáng kể giữa các sector do hệ thống môi trường hỏng."
-      ],
-      "anomalies": [
-        "Một số automatons vẫn thực hiện tác vụ đơn giản như vệ sinh hoặc nấu nướng dù hệ thống xung quanh đã hư hỏng; không suy diễn chúng có ý thức nếu chưa có bằng chứng.",
-        "Quan hệ không gian giữa Zenith Station và Level 0 cho thấy hình học lớn hơn vẻ ngoài của Level 0, nhưng không được dùng làm cớ cho teleport tùy ý."
-      ],
-      "hazards": [
-        "Điện hở, kính vỡ, sàn/cầu nối hư hỏng, cửa tự động lỗi và chênh lệch nhiệt độ.",
-        "Khoang trung tâm và các vùng cao tạo nguy cơ rơi nếu người chơi đi vào mép hoặc cầu nối bị phá.",
-        "Thiết bị đang chạy không mặc định an toàn hoặc điều khiển được."
-      ],
-      "resources": [
-        "Có thể quan sát máy móc, đồ dùng dân dụng, linh kiện và cấu trúc thủy canh; việc biến chúng thành item gameplay phải do Core cho phép.",
-        "Không tự coi thực phẩm, nước hoặc máy móc còn hoạt động là tài nguyên sử dụng được chỉ vì hình thức gợi ý như vậy."
-      ],
-      "entities": [
-        "Zenith Station không tự cho phép GM spawn Entity. EntityCore vẫn là nguồn duy nhất xác nhận active encounter.",
-        "Automatons môi trường không được nâng thành hostile Entity nếu Core không định nghĩa chúng như vậy."
+      "canonicalFacts": [
+        "Văn phòng hành chính vô tận, giấy dán tường vàng úa, thảm nỉ ẩm và hồ sơ ghi lại hành động vừa xảy ra.",
+        "Quy luật của Level: Bản đồ không đáng tin; không mở cửa đỏ khi có tiếng gõ phía sau, vì tiếng gõ có thể phát ra từ chính phía người mở."
       ],
       "navigation": [
-        "Khoang trung tâm, dãy cửa kính, cụm phòng chức năng và trạng thái hư hỏng là landmark tốt hơn số phòng.",
-        "Tiến triển nên thể hiện qua thay đổi mật độ máy móc, độ nguyên vẹn và tầm nhìn vào cavity, không phải bằng hành lang vô nghĩa lặp lại."
+        "Không gian và dấu hiệu định hướng: Văn phòng hành chính vô tận, giấy dán tường vàng úa, thảm nỉ ẩm và hồ sơ ghi lại hành động vừa xảy ra."
       ],
       "entrancesExits": [
-        "BACKROOMsV2 bắt buộc đi vào Zenith Station sau Level 0.",
-        "Sau khi hoàn thành route của Zenith Station, điểm đến duy nhất là Level 0.2."
-      ],
-      "gameplayOverride": [
-        "Zenith Station là một Level gameplay độc lập dù nguồn Wiki phân loại là sub-section.",
-        "Không cho phép quay tắt về Level 0 hoặc đi Level 1 bằng exit canon bên ngoài route game."
+        "Lối ra theo lore nguồn: Tìm cánh cửa đỏ đứng riêng và mở đúng lúc không có tiếng gõ.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
       ],
       "gmConstraints": [
-        "Không biến Zenith Station thành tàu vũ trụ đang vận hành hoàn chỉnh hoặc thuộc quyền kiểm soát của một faction nếu state chưa chứng minh.",
-        "Không tự tạo AI trung tâm, crew còn sống, bản đồ toàn cấu trúc hoặc lời giải nguồn gốc trạm.",
-        "Không mô tả Level 0.3."
-      ],
-      "variationPool": [
-        "Phòng sinh hoạt sáng lạnh với đồ nội thất cố định nhưng thiết bị hiển thị đã chết.",
-        "Cửa trượt mở chậm rồi dừng nửa chừng vì motor yếu.",
-        "Một hành lang kính nhìn vào cavity nhưng kính nhiều lớp làm méo chiều sâu.",
-        "Khu kỹ thuật có relay còn nhấp nháy trong khi toàn bộ màn hình tắt.",
-        "Nhà kính khô héo với ống dẫn và đèn trồng cây còn treo trên khung.",
-        "Một automaton lặp tác vụ vô hại, bỏ qua Cao Minh trừ khi bị cản đường."
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
       ]
     },
-    "0.2": {
-      "name": "Level 0.2 — Remodeled Mess",
+    "hua_1900_1": {
+      "name": "Hui's Family Level 2",
       "source": {
-        "basis": "Backrooms Wiki Level 0.2 — Remodeled Mess",
-        "status": "active"
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
       },
       "identity": [
-        "Một bản 'cải tạo' của Level 0: thảm đỏ khô, tường trắng sơn lại, ổ điện và Wi‑Fi hoạt động ổn định hơn, đôi khi có phòng tắm.",
-        "Sự hoàn thiện chỉ là trạng thái mong manh. Khi có người bước vào, level có xu hướng bắt đầu một chuỗi sụp đổ khiến bề mặt hoàn thiện bong ra và để lộ cấu trúc giống công trình nhà đang xây."
+        "Hui's Family Level 2 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Hành lang khách sạn hẹp với hàng triệu cửa đỏ có số thứ tự liên tục thay đổi."
       ],
-      "architecture": [
-        "Bề mặt ban đầu sạch và có vẻ hợp lý hơn Level 0, với tường trắng, thảm đỏ và hạ tầng điện.",
-        "Sau khi chain reaction bắt đầu: tấm trần rơi, tường đổ, sàn sập, khung gỗ/kim loại và lớp xây thô lộ ra.",
-        "Sự phá hủy lan theo không gian chứ không xảy ra toàn bộ tức thời; GM phải thể hiện dấu hiệu, tiến triển và hậu quả vật lý."
-      ],
-      "zones": [
-        "Remodeled Rooms: phần còn nguyên, sáng, khô và có vẻ gần với nội thất thương mại hiện đại.",
-        "Active Collapse Front: vùng đang chuyển tiếp, nhiều bụi, vật liệu rơi và bề mặt mất ổn định.",
-        "Exposed Construction: phần đã sập, trông giống nhà/công trình chưa hoàn thiện với khung chịu lực lộ ra."
-      ],
-      "sensory": [
-        "Trước sập: tiếng điện nhẹ, thảm khô, không khí ít ẩm hơn Level 0.",
-        "Trong sập: tiếng nứt, vật liệu rơi, bụi xây dựng, rung cục bộ và tầm nhìn giảm.",
-        "Sau sập: mùi bụi thạch cao/gỗ, âm vang cứng hơn và nhiều bề mặt sắc cạnh."
-      ],
-      "anomalies": [
-        "Level có thể tự phục hồi khi quay lại theo canon nguồn; trong BACKROOMsV2 không dùng điều này để reset consequence ngay trong cùng encounter.",
-        "Hệ thống Wi‑Fi hoặc ổ điện hoạt động không đồng nghĩa có internet về thế giới nguyên sinh, định vị ngoại giới hay một đường liên lạc ổn định."
-      ],
-      "hazards": [
-        "Debris rơi, sàn yếu, bụi hô hấp, cạnh sắc, đường cũ bị chặn và nguy cơ bị kẹt.",
-        "Không để Cao Minh đứng cạnh một điểm sập lớn mà không có dấu hiệu vật lý nào trước đó trừ khi state đã xác nhận biến cố đột ngột."
-      ],
-      "resources": [
-        "Ổ điện, phòng tắm hoặc hạ tầng có thể tồn tại như môi trường, nhưng nước/điện sử dụng được phải được kiểm chứng.",
-        "Loot gameplay vẫn do Core sở hữu; công trình đổ không tự sinh item."
-      ],
-      "entities": [
-        "Không có quyền spawn Entity từ Level knowledge. Active Entity vẫn chỉ từ EntityCore.",
-        "Tiếng nứt, bóng qua bụi và chuyển động do sập không được tự quy thành Entity."
+      "canonicalFacts": [
+        "Hành lang khách sạn hẹp với hàng triệu cửa đỏ có số thứ tự liên tục thay đổi.",
+        "Quy luật của Level: Người Gõ Cửa chỉ tồn tại khi cửa khép; tay nắm nóng chỉ an toàn trước khi bị chạm."
       ],
       "navigation": [
-        "Route bị thay đổi thực tế bởi sập: cửa bị chặn, lỗ sàn mở, khung nhà tạo lối vòng.",
-        "Dùng ranh giới giữa khu còn hoàn thiện và khu đã sập làm landmark tiến triển."
+        "Không gian và dấu hiệu định hướng: Hành lang khách sạn hẹp với hàng triệu cửa đỏ có số thứ tự liên tục thay đổi."
       ],
       "entrancesExits": [
-        "BACKROOMsV2 vào Level 0.2 từ Zenith Station.",
-        "Điểm đến bắt buộc duy nhất sau route là Level 0.5; không quay về Level 0 theo exit Wiki trong tuyến gameplay."
-      ],
-      "gameplayOverride": [
-        "Cơ chế tự phục hồi của nguồn canon không được dùng để hủy damage/consequence đã ghi trong state.",
-        "Level 0.3 bị loại khỏi game hoàn toàn."
+        "Lối ra theo lore nguồn: Bước qua cánh cửa không số xuất hiện giữa hai cửa mang cùng một con số.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
       ],
       "gmConstraints": [
-        "Không biến level thành công trường có công nhân sống hoặc faction Remodeling Co. hiện diện nếu state không xác nhận.",
-        "Không cho Wi‑Fi tự tạo đường liên lạc ổn định với thế giới nguyên sinh.",
-        "Không dùng collapse như cutscene bắt buộc ở mọi lượt; nó là quá trình môi trường có thể được quan sát và phản ứng."
-      ],
-      "variationPool": [
-        "Một phòng trắng gần như hoàn chỉnh nhưng chân tường đã tách khỏi tường.",
-        "Ổ điện còn sáng đèn trong khi trần phía xa võng xuống.",
-        "Hành lang đỏ sạch kết thúc ở khung gỗ trần trụi.",
-        "Bụi mịn rơi trước khi một tấm trần rớt xuống.",
-        "Sàn nứt để lộ khoảng rỗng và dầm bên dưới.",
-        "Phòng tắm hoạt động về hình thức nhưng nguồn nước cần kiểm chứng."
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
       ]
     },
-    "0.5": {
-      "name": "Level 0.5 — Aquaclaustrophobic Infirmary",
+    "hua_1900_2": {
+      "name": "Hui's Family Level 3",
       "source": {
-        "basis": "Backrooms Wiki Level 0.5 — Aquaclaustrophobic Infirmary",
-        "status": "active-2026"
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
       },
       "identity": [
-        "Một sub-level mới được ghi nhận, gồm các hành lang ngập nước bẩn chuyển dần sang một bệnh viện/infirmary mục nát.",
-        "Horror của level đến từ sự bức bí, nước ô nhiễm, thiếu chỗ nghỉ khô, kiệt sức kéo dài và nguy cơ môi trường chứ không chỉ từ Entity."
+        "Hui's Family Level 3 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Nhà ga mái kính không có đường ray, bảng giờ ghi những nơi không tồn tại và một đầu máy vô hình đi xuyên đại sảnh."
       ],
-      "architecture": [
-        "Waterlogged Passages: hành lang hẹp, giấy tường kem nhợt giống Level 0 nhưng bong dưới mực nước, nước thường ngang gối và đục đến mức không thấy đáy.",
-        "Đèn chữ nhật xanh treo bằng dây sờn có thể phát tia lửa phía trên nước.",
-        "Càng sâu, giấy tường nhường chỗ cho vách gỗ mục, trần thả và trolley; sau đó mở sang The Hospital với sàn bẩn dầu, gạch trần lệch, debris và phòng bệnh xuống cấp."
-      ],
-      "zones": [
-        "Waterlogged Passages: phần đầu ngập nước lạnh, thiếu chỗ ngồi/ngủ an toàn.",
-        "Transition Timber Halls: vùng chuyển tiếp với vách gỗ mục và cấu trúc giống bệnh viện xuất hiện dần.",
-        "The Hospital: hành lang/phòng bệnh với giường ẩm, debris và mùi phân hủy; khô hơn nhưng không an toàn.",
-        "Clear/Chlorinated Water Patches: hiện tượng hiếm, không được tự coi là exit hoặc nước uống nếu Core chưa mở route."
-      ],
-      "sensory": [
-        "Mùi quần áo mốc ướt trộn với mùi hóa chất, đôi khi nặng đến mức gây khó chịu đường hô hấp.",
-        "Tiếng nước bị chân khuấy và tiếng giọt vang xa thay cho tiếng buzz đều của Level 0.",
-        "The Hospital có mùi dầu, ẩm, mothball và phân hủy; âm vang thay đổi vì nhiều cửa/phòng kín."
-      ],
-      "anomalies": [
-        "Sự chuyển đổi từ hành lang ngập sang bệnh viện xảy ra dần theo kiến trúc, không phải teleport.",
-        "Nước có thể chứa sinh vật/vi khuẩn/chất ô nhiễm; GM không được chẩn đoán chính xác tác nhân nếu không có kiểm tra.",
-        "Drowned trong nguồn canon có khả năng theo đuổi dai dẳng, nhưng chỉ được hiện diện khi EntityCore/state xác nhận encounter tương ứng."
-      ],
-      "hazards": [
-        "Ngâm nước lâu gây mềm/mục da, phồng rộp, vết thương nhiễm trùng và mất nhiệt; nước uống vào có thể gây nôn và mất nước.",
-        "Ngủ trong Waterlogged Passages nguy hiểm vì đầu có thể chìm khi cơ thể trượt hoặc mất ý thức.",
-        "Dây điện, đèn chập và nước tạo rủi ro điện giật cần được mô tả bằng vị trí vật lý thực tế."
-      ],
-      "resources": [
-        "Trolley hoặc phòng bệnh có thể chứa đồ nền, nhưng Core quyết định vật phẩm có thể thu vào inventory.",
-        "Nước bẩn không phải nguồn uống; đồ ăn hoặc chai kín chỉ được coi an toàn sau khi quan sát/kiểm tra phù hợp."
-      ],
-      "entities": [
-        "Nguồn Wiki mô tả The Drowned như một mối đe dọa đặc trưng của Hospital; BACKROOMsV2 không tự spawn nó từ knowledge.",
-        "Nếu không có active encounter, tiếng gurgle hoặc chuyển động mặt nước phải giữ ở mức dấu hiệu chưa xác minh."
+      "canonicalFacts": [
+        "Nhà ga mái kính không có đường ray, bảng giờ ghi những nơi không tồn tại và một đầu máy vô hình đi xuyên đại sảnh.",
+        "Quy luật của Level: Không trả lời câu hỏi về thời gian bằng bất kỳ con số nào; người trả lời sẽ bị nhận diện là chuyến tàu."
       ],
       "navigation": [
-        "Dùng mực nước, loại tường, kiểu đèn, trolley, ledge và mật độ debris để cho thấy tiến sâu.",
-        "Các loop nên trả người chơi về Waterlogged Passages hoặc khu bệnh viện quen thuộc bằng landmark vật lý, không đổi scene vô cớ."
+        "Không gian và dấu hiệu định hướng: Nhà ga mái kính không có đường ray, bảng giờ ghi những nơi không tồn tại và một đầu máy vô hình đi xuyên đại sảnh."
       ],
       "entrancesExits": [
-        "BACKROOMsV2 vào Level 0.5 từ Level 0.2.",
-        "Điểm đến duy nhất theo route game là Level 0.7, bất kể nguồn Wiki có các exit khác."
-      ],
-      "gameplayOverride": [
-        "Không cho phép exit sang Level 1 hoặc Level 37 trước Level 0.7.",
-        "Mọi damage, infection hoặc dehydration phải đi qua hệ stat/survival hiện có thay vì GM tự sửa số."
+        "Lối ra theo lore nguồn: Lên toa tàu không có đầu máy và không chọn toa có hành khách nhìn ra ngoài.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
       ],
       "gmConstraints": [
-        "Không biến mọi lượt thành truy đuổi Drowned.",
-        "Không tự cho nước sạch, thuốc hay giường an toàn để giải khó khăn.",
-        "Không dùng gore quá mức; ưu tiên hậu quả vật lý quan sát được."
-      ],
-      "variationPool": [
-        "Nước nâu có váng dầu mỏng và giấy tường cuộn khỏi chân tường.",
-        "Một đèn xanh treo thấp hơn các đèn khác, dây điện rung theo chuyển động không khí.",
-        "Trolley kẹt ngang hành lang, bánh xe ngập nửa dưới.",
-        "Vách gỗ mục có lỗ sâu nhưng chưa đủ rộng thành passage.",
-        "Phòng bệnh với giường ẩm, rèm rách và trần lệch.",
-        "Một hành lang hospital quay lại ledge dẫn xuống vùng nước, tạo áp lực lựa chọn đường."
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
       ]
     },
-    "0.7": {
-      "name": "Level 0.7 — The Reminiscence District",
+    "hua_1900_3": {
+      "name": "Hui's Family Level 4",
       "source": {
-        "basis": "Backrooms Wiki Level 0.7 — The Reminiscence District",
-        "status": "active-2026"
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
       },
       "identity": [
-        "Một kho lưu giữ khổng lồ các biểu hiện lịch sử của Level 0, từ những hình thức cổ đại đến các phiên bản gần hiện đại.",
-        "Không gian hoạt động như các 'lớp lịch sử' của cùng một ý niệm Level 0 hơn là bảo tàng có trưng bày chủ động."
+        "Hui's Family Level 4 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Khách sạn Belle Époque vô tận với phòng đã chuẩn bị sẵn cho người chưa từng đến."
       ],
-      "architecture": [
-        "Kiến trúc thay đổi theo vùng thời kỳ: vật liệu, nguồn sáng, kỹ thuật xây và đồ dùng phù hợp với giai đoạn được bảo tồn.",
-        "Ranh giới thời kỳ có thể xuất hiện dần qua vật liệu hoặc bố cục thay vì một cánh cửa ghi năm.",
-        "Một số lối ra bị khóa bởi hiện tượng thị giác giống static/no-signal, không được dùng như portal tùy tiện."
-      ],
-      "zones": [
-        "Ancient Remnants: các hình thức Level 0 cực cũ, vật liệu thô và ánh sáng phi hiện đại.",
-        "Pre-Industrial/Industrial Remnants: hành lang nến hoặc kiến trúc chuyển tiếp.",
-        "Early-to-Late 20th Century Remnants: nội thất, ánh sáng và vật liệu phản ánh các giai đoạn lịch sử gần hơn.",
-        "Recovered Outpost Traces: dấu tích tổ chức cũ có thể tồn tại như tài liệu hoặc kiến trúc bỏ hoang, không mặc định có cư dân hiện tại."
-      ],
-      "sensory": [
-        "Âm thanh và ánh sáng thay đổi theo thời kỳ: nến, nguồn điện cũ, tiếng vật liệu khác nhau dưới chân.",
-        "Cảm giác thời gian không đồng nghĩa time travel; đồ vật và cảnh chỉ là manifestation được bảo tồn.",
-        "Các khu bị block có thể nhấp nháy như màn hình nhiễu."
-      ],
-      "anomalies": [
-        "Level bảo tồn các phiên bản lịch sử không còn tồn tại của Level 0.",
-        "Thông tin lịch sử tìm thấy trong môi trường có thể sai, thiếu hoặc thuộc góc nhìn của người viết; GM không được biến tất cả tài liệu thành sự thật tuyệt đối."
-      ],
-      "hazards": [
-        "Nguồn thức ăn/nước không ổn định; đi quá sâu khi thiếu supplies là nguy cơ chính.",
-        "Ngủ ở vùng không che chắn và đi sâu vào các remnant nguy hiểm có thể tăng rủi ro theo canon nguồn.",
-        "Các blocked exit không được chạm/đi xuyên nếu route Core chưa mở."
-      ],
-      "resources": [
-        "Đồ vật lịch sử có thể xuất hiện làm scenery/evidence, nhưng inventory mutation thuộc ItemCore.",
-        "Tài liệu, biển hiệu hoặc công cụ cũ có thể cung cấp clue nhưng phải được đánh giá theo nguồn và tình trạng."
-      ],
-      "entities": [
-        "Nguồn 0.7 ghi nhận Entities ở các vùng sâu, nhưng BACKROOMsV2 chỉ cho Entity xuất hiện qua EntityCore.",
-        "Không tự sinh Entity 'cổ đại' chỉ vì cảnh đang ở thời kỳ cũ."
+      "canonicalFacts": [
+        "Khách sạn Belle Époque vô tận với phòng đã chuẩn bị sẵn cho người chưa từng đến.",
+        "Quy luật của Level: Ngủ trong phòng khóa kín sẽ tỉnh ở hành lang; ngủ giữa hành lang sẽ tỉnh trong phòng bị khóa từ ngoài."
       ],
       "navigation": [
-        "Điều hướng theo thay đổi vật liệu và thời kỳ, không theo năm tuyệt đối nếu không có bằng chứng.",
-        "Tiến trình nên cho thấy các remnant thay đổi có logic; route thất bại có thể loop về một thời kỳ/landmark đã thấy."
+        "Không gian và dấu hiệu định hướng: Khách sạn Belle Époque vô tận với phòng đã chuẩn bị sẵn cho người chưa từng đến."
       ],
       "entrancesExits": [
-        "BACKROOMsV2 vào Level 0.7 từ Level 0.5.",
-        "Sau route, điểm đến duy nhất là Manila Room."
-      ],
-      "gameplayOverride": [
-        "Các exit nguồn Wiki bị vô hiệu hóa cho đến khi route game cho phép Manila Room.",
-        "Không cho phép 0.7 trở thành cổng chọn tự do sang các Level lịch sử khác."
+        "Lối ra theo lore nguồn: Đi thang máy xuống tầng hầm bằng cách nói tên một tầng không tồn tại.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
       ],
       "gmConstraints": [
-        "Không khẳng định player đã du hành về quá khứ.",
-        "Không cho NPC lịch sử sống xuất hiện nếu Character/Entity Core không xác nhận.",
-        "Không dùng timeline lore để spoiler kiến thức mà Cao Minh chưa thu thập."
-      ],
-      "variationPool": [
-        "Một đoạn hành lang chuyển từ vật liệu hiện đại sang tường thô và ánh nến qua vài phòng.",
-        "Một biển hiệu cũ có chữ mờ nhưng không đủ dữ liệu để xác định năm.",
-        "Dãy cửa bị phủ nhiễu thị giác như màn hình mất tín hiệu.",
-        "Một phòng có đồ nội thất thuộc thập niên cũ nhưng phủ bụi và không có người.",
-        "Một outpost cũ chỉ còn tủ hồ sơ, dây điện và vật liệu tháo dỡ.",
-        "Hai remnant thời kỳ khác nhau gặp nhau ở một góc kiến trúc không liền mạch."
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
       ]
     },
-    "manila_room": {
-      "name": "Manila Room",
+    "hua_1900_4": {
+      "name": "Hui's Family Level 5",
       "source": {
-        "basis": "Backrooms Wiki Manila Room (archived/current Level 0 lore)",
-        "status": "archived-source + project-override"
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
       },
       "identity": [
-        "Một không gian beige/manila ổn định hơn Level 0, nổi bật vì người ở bên trong có thể gặp và tương tác với nhau thay vì bị isolation tách rời.",
-        "Trong nguồn cổ điển, nó là một phòng nhỏ tĩnh với đồ đạc tối thiểu; BACKROOMsV2 mở rộng nó thành một Level gameplay nhưng giữ bản chất sanctuary/rendezvous."
+        "Hui's Family Level 5 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Nhà máy gạch đỏ co giãn như lồng ngực; máy móc chỉ vận hành máy móc khác mà không tạo sản phẩm."
       ],
-      "architecture": [
-        "Wallpaper beige/manila, sàn gỗ hoặc vật liệu khô hơn Level 0, tường dày và bố cục ít biến đổi.",
-        "Motif trung tâm là bàn và vài ghế; số cửa có thể thay đổi trong source lore, nhưng game không dùng chúng làm exit tự do.",
-        "Phần mở rộng gameplay có thể gồm các phòng phụ nhỏ cùng vật liệu, kho tài liệu và lối nối hẹp, nhưng phải giữ quy mô kín và cảm giác tĩnh."
-      ],
-      "zones": [
-        "Central Room: bàn, ghế và điểm gặp chính.",
-        "Document Alcoves: khu lưu lại ghi chép, biển chỉ dẫn hoặc đồ do wanderer để lại; không mặc định mọi tài liệu đều đúng.",
-        "Quiet Extensions: các phòng phụ rất gần về thẩm mỹ dùng để tạo đủ không gian gameplay mà không biến thành hotel/office."
-      ],
-      "sensory": [
-        "Âm thanh yên hơn Level 0, ít buzz hơn và tiếng bước chân trên sàn khô rõ hơn.",
-        "Không khí bớt ẩm và ít gây áp lực hơn nhưng vẫn không phải Frontrooms.",
-        "Sự hiện diện của người khác nếu state có companion/NPC là điểm khác biệt lớn nhất."
-      ],
-      "anomalies": [
-        "Isolation của Level 0 yếu đi hoặc không áp dụng bên trong, cho phép nhiều người cùng hiện diện.",
-        "Tính ổn định tương đối không có nghĩa căn phòng miễn nhiễm mọi anomaly hoặc có vị trí Frontrooms xác định."
-      ],
-      "hazards": [
-        "Nguy hiểm môi trường thấp hơn các node trước, nhưng đói/khát/kiệt sức và hậu quả mang từ Level trước vẫn còn.",
-        "Tài liệu sai, vật phẩm bỏ lại không rõ nguồn và cửa không xác minh vẫn có thể gây rủi ro quyết định."
-      ],
-      "resources": [
-        "Có thể có tài liệu hoặc supplies do người trước để lại theo lore, nhưng loot thực tế phải do ItemCore.",
-        "Không tự cấp đồ chỉ vì Manila Room là safe point."
-      ],
-      "entities": [
-        "Không spawn hostile Entity từ knowledge.",
-        "Nếu EntityCore kích hoạt encounter, GM phải xử lý theo Core dù nguồn Manila Room thường được xem là an toàn hơn."
+      "canonicalFacts": [
+        "Nhà máy gạch đỏ co giãn như lồng ngực; máy móc chỉ vận hành máy móc khác mà không tạo sản phẩm.",
+        "Quy luật của Level: Mỗi nhịp thở ra phủ hơi nóng kín hành lang; tiếng động cho phép Thợ Máy Rỗng tạo công cụ săn mồi từ cơ thể chúng."
       ],
       "navigation": [
-        "Không gian ổn định hơn nên landmark có giá trị; bàn trung tâm, loại cửa và alcove có thể được dùng để quay lại.",
-        "Để duy trì gameplay nhiều lượt, mở rộng bằng các annex nhỏ cùng motif thay vì tạo mê cung vô hạn."
+        "Không gian và dấu hiệu định hướng: Nhà máy gạch đỏ co giãn như lồng ngực; máy móc chỉ vận hành máy móc khác mà không tạo sản phẩm."
       ],
       "entrancesExits": [
-        "BACKROOMsV2 vào Manila Room từ Level 0.7.",
-        "Không dùng exit nguồn canon sang Level 1. Điểm đến bắt buộc duy nhất sau route là The Torment."
-      ],
-      "gameplayOverride": [
-        "Manila Room là Level gameplay riêng.",
-        "Canon safe-room được giữ về tone, nhưng route sang The Torment là override bắt buộc của game."
+        "Lối ra theo lore nguồn: Chui qua một nồi hơi đã nguội, bên trong lớn hơn toàn bộ nhà máy.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
       ],
       "gmConstraints": [
-        "Không tự triệu tập cộng đồng đông người, M.E.G. base hoặc vendor.",
-        "Không biến tài liệu thành exposition toàn tri.",
-        "Không cho Level 1 xuất hiện trước The Torment và Red Rooms."
-      ],
-      "variationPool": [
-        "Bàn trung tâm với dấu sử dụng cũ nhưng không có vật phẩm gameplay tự sinh.",
-        "Một cửa mở sang annex beige nhỏ chứa bảng ghim và giấy cũ.",
-        "Sàn gỗ kêu rõ dưới bước chân, tương phản với thảm ẩm của Level 0.",
-        "Một góc có ghế không đồng bộ kiểu dáng, gợi ý chúng được mang vào từ nhiều nơi.",
-        "Tường có dấu bút chì hoặc ghi chú không rõ tác giả.",
-        "Một passage ngắn quay về Central Room, củng cố tính ổn định."
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
       ]
     },
-    "the_torment": {
-      "name": "The Torment",
+    "hua_1900_5": {
+      "name": "Hui's Family Level 6",
       "source": {
-        "basis": "Backrooms Wiki The Torment",
-        "status": "active"
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
       },
       "identity": [
-        "Một anomaly/world greyscale từng xuất hiện trong Level 0: các vòng mộ đồng tâm bao quanh tượng đá hư hỏng của một người đàn ông trùm mũ.",
-        "Không khí của Level dựa trên sự bất định và dread, không phải jumpscare liên tục."
+        "Hui's Family Level 6 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Bệnh viện gạch trắng có giường lõm, chuông gọi từ phòng bị xây kín và bệnh án về những chứng bệnh không thể tồn tại."
       ],
-      "architecture": [
-        "Mộ đá xếp thành các vòng hình học quanh tượng trung tâm.",
-        "Cây chết cao khoảng người lớn hoặc hơn đứng gần một số mộ, lá mục phủ mặt đất.",
-        "Không gian ngoài trời tối, một mặt trăng đứng yên là nguồn sáng chính; sương xám dày giới hạn tầm nhìn rất ngắn."
-      ],
-      "zones": [
-        "Outer Fog Margin: ranh giới nơi màu vàng của Level trước bị rút bão hòa dần.",
-        "Grave Rings: các vòng mộ và cây chết, tầm nhìn ngắn.",
-        "Central Statue: landmark trung tâm có giá trị định hướng nhưng không được tự gán quyền năng/ý thức.",
-        "Gray Spread Front: bề mặt bị anomaly làm mất màu, là hazard cần tránh."
-      ],
-      "sensory": [
-        "Màu gần như biến mất; contrast ánh trăng/sương là tín hiệu thị giác chính.",
-        "Sương lạnh làm giảm tầm nhìn và tạo cảm giác rét.",
-        "Lá mục có thể phát tiếng rít/chói bất thường khi bị giẫm, phá sự im lặng."
-      ],
-      "anomalies": [
-        "Màu xám của anomaly có thể lan sang vật liệu lân cận.",
-        "Tiếp xúc trực tiếp với bề mặt anomaly đã được mô tả có thể làm vật thể, Entity hoặc người chuyển xám rồi tan thành tro; đây là hazard thật, không dùng tùy tiện để one-shot ngoài vị trí tiếp xúc.",
-        "Tên và ngày trên bia mộ không được mặc định là tiên tri, người quen hoặc tương lai của Cao Minh."
-      ],
-      "hazards": [
-        "Gray spread/contact là hazard nghiêm trọng nhất.",
-        "Sương dày làm giảm quan sát, tăng nguy cơ bước nhầm vào bề mặt anomaly hoặc mất landmark.",
-        "Âm thanh bất thường từ lá có thể che tiếng tiếp cận khác nhưng không tự chứng minh Entity."
-      ],
-      "resources": [
-        "Không coi mộ, tượng hay đồ tùy táng là loot mặc định.",
-        "Không tự tạo nước/food/safe camp trong vùng trung tâm."
-      ],
-      "entities": [
-        "Không có Entity nào được tự spawn từ mô tả The Torment.",
-        "Tượng trùm đầu là vật thể/landmark cho đến khi state hoặc Core xác nhận khác."
+      "canonicalFacts": [
+        "Bệnh viện gạch trắng có giường lõm, chuông gọi từ phòng bị xây kín và bệnh án về những chứng bệnh không thể tồn tại.",
+        "Quy luật của Level: Người bị thương ít bị săn hơn người khỏe; tự gây thương tích khiến bệnh viện coi người đó là nhân viên."
       ],
       "navigation": [
-        "Dùng vòng mộ, vị trí tương đối với tượng và mật độ cây để điều hướng.",
-        "Sương khiến khoảng cách khó ước lượng nhưng không xóa bỏ vật lý; route progression nên cho thấy thay đổi số vòng/độ gần tượng."
+        "Không gian và dấu hiệu định hướng: Bệnh viện gạch trắng có giường lõm, chuông gọi từ phòng bị xây kín và bệnh án về những chứng bệnh không thể tồn tại."
       ],
       "entrancesExits": [
-        "BACKROOMsV2 vào The Torment từ Manila Room.",
-        "Nguồn Wiki không có conventional route ổn định; game override mở route duy nhất sang Red Rooms sau khi Core cho phép."
-      ],
-      "gameplayOverride": [
-        "The Torment là Level độc lập và bắt buộc trong progression.",
-        "Connectivity sang Red Rooms là canon riêng của BACKROOMsV2."
+        "Lối ra theo lore nguồn: Đẩy một giường vào phòng phẫu thuật số 0 khi toàn bộ đèn cùng tắt.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
       ],
       "gmConstraints": [
-        "Không giải thích tượng là ai, ai tạo mộ, hoặc The Torment là purgatory/afterlife.",
-        "Không đọc bia mộ thành spoiler về character nếu chưa có dữ kiện.",
-        "Không làm gray spread tự đuổi theo Cao Minh như sinh vật nếu không có state."
-      ],
-      "variationPool": [
-        "Một vòng mộ biến mất vào sương chỉ vài mét phía trước.",
-        "Lá xám vụn dưới chân phát âm thanh bất tương xứng với kích thước.",
-        "Mặt trăng không thay đổi vị trí dù hướng di chuyển đổi.",
-        "Một mảng màu của vật liệu gần rìa bị rút dần bão hòa.",
-        "Tên trên bia không khớp bất kỳ hồ sơ Cao Minh biết.",
-        "Bóng tượng trung tâm hiện rồi mất theo mật độ sương."
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
       ]
     },
-    "red_rooms": {
-      "name": "Red Rooms",
+    "hua_1900_6": {
+      "name": "Hui's Family Level 7",
       "source": {
-        "basis": "Backrooms Wiki Red Rooms",
-        "status": "active"
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
       },
       "identity": [
-        "Một nhánh Level 0 bị phủ sắc đỏ sâu: wallpaper đỏ thẫm, ánh sáng kiểu darkroom và cảm giác không gian bị tách khỏi phần còn lại.",
-        "Nguồn canon mô tả đây là dead end cực khó hoặc không thể thoát; BACKROOMsV2 cố ý override để nó trở thành cổng cuối trước Level 1."
+        "Hui's Family Level 7 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Nhà hát không có sân khấu, mọi ghế quay về một hố trống và dàn nhạc vô hình luôn chơi sai một nốt."
       ],
-      "architecture": [
-        "Bố cục vẫn gợi Level 0 nhưng màu, vật liệu và cảm giác bề mặt thay đổi rõ rệt.",
-        "Thảm thô và dính hơn thảm Level 0, góc tối có nấm và mốc đen.",
-        "Lối vào có thể đóng lại như thể bức tường luôn tồn tại, làm mất đường quay đầu."
-      ],
-      "zones": [
-        "Threshold Bleed: vùng màu vàng chuyển đỏ dần, là dấu hiệu cảnh báo.",
-        "Crimson Halls: phòng/hành lang đỏ với ánh sáng tối và thảm dính.",
-        "Mold Corners: khu ẩm tối có mốc/nấm, không mặc định là tài nguyên.",
-        "Deep Deadzone: vùng communications gần như tắt và landmark trở nên khó phân biệt."
-      ],
-      "sensory": [
-        "Ánh sáng đỏ làm giảm khả năng phân biệt màu và khoảng cách.",
-        "Buzz của đèn khác Level 0, có thể gắt và khó chịu hơn.",
-        "Bề mặt tường lạnh/ẩm và thảm thô tạo tương phản xúc giác mạnh."
-      ],
-      "anomalies": [
-        "Chất lượng radio giảm theo thời gian ở sâu trong Red Rooms và cuối cùng có thể mất hoàn toàn.",
-        "Cảm giác disgust, despair, paranoia và claustrophobia đã được báo cáo, nhưng GM phải mô tả như phản ứng/cảm nhận chứ không điều khiển ý chí Cao Minh.",
-        "Đường vào có thể biến mất sau khi bước sâu vào."
-      ],
-      "hazards": [
-        "Mất liên lạc, không tìm được đường quay lại, mốc/nấm không an toàn và áp lực tâm lý môi trường.",
-        "Không có hostile resident Entity được xác nhận trong source canon; danger đến từ dead-end topology và suy kiệt."
-      ],
-      "resources": [
-        "Không có nguồn supplies đáng tin cậy.",
-        "Nấm/mốc không phải thực phẩm hoặc item nếu Core không xác nhận."
-      ],
-      "entities": [
-        "Source canon ghi nhận không có hostile Entities đặc trưng.",
-        "BACKROOMsV2 EntityCore vẫn có thể kích hoạt roaming encounter; nếu không có active encounter, GM không được thêm quái để 'tăng horror'."
+      "canonicalFacts": [
+        "Nhà hát không có sân khấu, mọi ghế quay về một hố trống và dàn nhạc vô hình luôn chơi sai một nốt.",
+        "Quy luật của Level: Mỗi nốt sai tạo thêm khán giả; gây tiếng động khiến toàn khán phòng vỗ tay và thực thể bò qua ghế."
       ],
       "navigation": [
-        "Dùng mức độ đỏ, chất lượng radio, thảm, mốc và kiểu ánh sáng làm progression cues.",
-        "Loop và sealed entrance là hợp canon nhưng phải tôn trọng hidden route state; khi Core mở exit, cảnh phải phát triển tự nhiên tới Level 1."
+        "Không gian và dấu hiệu định hướng: Nhà hát không có sân khấu, mọi ghế quay về một hố trống và dàn nhạc vô hình luôn chơi sai một nốt."
       ],
       "entrancesExits": [
-        "BACKROOMsV2 vào Red Rooms từ The Torment.",
-        "Đây là node cuối chuỗi Level 0. Chỉ sau khi route hoàn tất mới được sang Level 1."
-      ],
-      "gameplayOverride": [
-        "Override dead-end của source canon: Red Rooms có đúng một gameplay exit bắt buộc sang Level 1 khi Core mở.",
-        "Không được quay về The Torment hoặc skip sang Level khác."
+        "Lối ra theo lore nguồn: Ngồi vào chiếc ghế duy nhất quay khỏi hố và chờ màn hạ từ trần.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
       ],
       "gmConstraints": [
-        "Không thêm Smiler/Hound chỉ vì căn phòng tối.",
-        "Không biến paranoia thành mind control.",
-        "Không mở exit sớm dù người chơi mô tả 'tìm thấy cửa Level 1'."
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+      ]
+    },
+    "hua_1900_7": {
+      "name": "Hui's Family Level 8",
+      "source": {
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
+      },
+      "identity": [
+        "Hui's Family Level 8 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Kho hồ sơ vô tận nơi mực bò khỏi trang và việc đọc xóa từ, khái niệm hoặc ký ức tương ứng."
       ],
-      "variationPool": [
-        "Một góc tường vàng cũ còn sót rồi biến mất sau vài phòng.",
-        "Thảm dính kéo nhẹ đế giày và có vùng khô bất thường.",
-        "Nấm nhỏ mọc ở chân tường nhưng không có thuộc tính gameplay.",
-        "Radio từ nhiễu nhẹ chuyển sang tiếng vỡ rồi im hẳn.",
-        "Hành lang đỏ quay về một wallpaper mark quen thuộc dù đã rẽ khác hướng.",
-        "Khi exitAvailable, vật liệu có thể dần chuyển sang concrete lạnh và cột của Level 1."
+      "canonicalFacts": [
+        "Kho hồ sơ vô tận nơi mực bò khỏi trang và việc đọc xóa từ, khái niệm hoặc ký ức tương ứng.",
+        "Quy luật của Level: Đọc làm mất ký ức; đốt tài liệu trả chữ lại nhưng chữ xuất hiện trên tường, da hoặc bên trong mí mắt."
+      ],
+      "navigation": [
+        "Không gian và dấu hiệu định hướng: Kho hồ sơ vô tận nơi mực bò khỏi trang và việc đọc xóa từ, khái niệm hoặc ký ức tương ứng."
+      ],
+      "entrancesExits": [
+        "Lối ra theo lore nguồn: Tìm bản đồ trắng và gấp thành hình cánh cửa.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
+      ],
+      "gmConstraints": [
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+      ]
+    },
+    "hua_1900_8": {
+      "name": "Hui's Family Level 9",
+      "source": {
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
+      },
+      "identity": [
+        "Hui's Family Level 9 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Thành phố thương mại dưới mái kính, mưa bay ngược và biển hiệu đổi ngôn ngữ sau mỗi lần chớp mắt."
+      ],
+      "canonicalFacts": [
+        "Thành phố thương mại dưới mái kính, mưa bay ngược và biển hiệu đổi ngôn ngữ sau mỗi lần chớp mắt.",
+        "Quy luật của Level: Bóng đổ có thể tách khỏi chủ thể, mọc cơ thể và tiếp tục tồn tại độc lập."
+      ],
+      "navigation": [
+        "Không gian và dấu hiệu định hướng: Thành phố thương mại dưới mái kính, mưa bay ngược và biển hiệu đổi ngôn ngữ sau mỗi lần chớp mắt."
+      ],
+      "entrancesExits": [
+        "Lối ra theo lore nguồn: Vào ngôi trường chỉ mở khi tiếng chuông nhà thờ vang dưới lòng đất.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
+      ],
+      "gmConstraints": [
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+      ]
+    },
+    "hua_1900_9": {
+      "name": "Hui's Family Level 10",
+      "source": {
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
+      },
+      "identity": [
+        "Hui's Family Level 10 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Trường học nằm trong đêm bất biến; bảng đen tự viết bài học về người đang có mặt."
+      ],
+      "canonicalFacts": [
+        "Trường học nằm trong đêm bất biến; bảng đen tự viết bài học về người đang có mặt.",
+        "Quy luật của Level: Giám thị xuất hiện khi có người chạy, nói lớn hoặc mở cửa không được phép, nhưng không ai biết cửa nào được phép."
+      ],
+      "navigation": [
+        "Không gian và dấu hiệu định hướng: Trường học nằm trong đêm bất biến; bảng đen tự viết bài học về người đang có mặt."
+      ],
+      "entrancesExits": [
+        "Lối ra theo lore nguồn: Viết tên mình lên bảng rồi xóa trước khi viên phấn tự viết tên lần thứ hai.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
+      ],
+      "gmConstraints": [
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+      ]
+    },
+    "hua_1900_10": {
+      "name": "Hui's Family Level 11",
+      "source": {
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
+      },
+      "identity": [
+        "Hui's Family Level 11 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Tàu viễn dương bị nhét vào hành lang đá, cửa sổ nhìn ra đại dương dựng đứng và nước rơi từ trần."
+      ],
+      "canonicalFacts": [
+        "Tàu viễn dương bị nhét vào hành lang đá, cửa sổ nhìn ra đại dương dựng đứng và nước rơi từ trần.",
+        "Quy luật của Level: Không gian rộng làm thủy thủ phình lên; khe hẹp ép chúng mỏng như giấy."
+      ],
+      "navigation": [
+        "Không gian và dấu hiệu định hướng: Tàu viễn dương bị nhét vào hành lang đá, cửa sổ nhìn ra đại dương dựng đứng và nước rơi từ trần."
+      ],
+      "entrancesExits": [
+        "Lối ra theo lore nguồn: Leo xuống đáy khoang cho đến khi thang biến thành giếng gạch.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
+      ],
+      "gmConstraints": [
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+      ]
+    },
+    "hua_1900_11": {
+      "name": "Hui's Family Level 12",
+      "source": {
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
+      },
+      "identity": [
+        "Hui's Family Level 12 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Cống, hầm lò và đường than đan nhau trong không khí nóng đặc; xe goòng chở giày, răng người và cửa đỏ."
+      ],
+      "canonicalFacts": [
+        "Cống, hầm lò và đường than đan nhau trong không khí nóng đặc; xe goòng chở giày, răng người và cửa đỏ.",
+        "Quy luật của Level: Lửa xua phần lớn quái vật nhưng làm đường hầm dài thêm."
+      ],
+      "navigation": [
+        "Không gian và dấu hiệu định hướng: Cống, hầm lò và đường than đan nhau trong không khí nóng đặc; xe goòng chở giày, răng người và cửa đỏ."
+      ],
+      "entrancesExits": [
+        "Lối ra theo lore nguồn: Đi theo đường ống có luồng khí lạnh tới cổng triển lãm dát vàng.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
+      ],
+      "gmConstraints": [
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+      ]
+    },
+    "hua_1900_12": {
+      "name": "Hui's Family Level 13",
+      "source": {
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
+      },
+      "identity": [
+        "Hui's Family Level 13 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Khu triển lãm về một thế kỷ mới không bao giờ đến, đầy máy móc có hình dạng hợp lý nhưng chức năng vô nghĩa."
+      ],
+      "canonicalFacts": [
+        "Khu triển lãm về một thế kỷ mới không bao giờ đến, đầy máy móc có hình dạng hợp lý nhưng chức năng vô nghĩa.",
+        "Quy luật của Level: Người Tham Quan Bằng Sáp bất động khi nhìn trực diện nhưng chạy trong kính phản chiếu."
+      ],
+      "navigation": [
+        "Không gian và dấu hiệu định hướng: Khu triển lãm về một thế kỷ mới không bao giờ đến, đầy máy móc có hình dạng hợp lý nhưng chức năng vô nghĩa."
+      ],
+      "entrancesExits": [
+        "Lối ra theo lore nguồn: Bước vào gian trưng bày mang tên năm sinh của chính mình dù năm đó chưa tới.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
+      ],
+      "gmConstraints": [
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+      ]
+    },
+    "hua_1900_13": {
+      "name": "Hui's Family Level 14",
+      "source": {
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
+      },
+      "identity": [
+        "Hui's Family Level 14 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Thánh đường đá đen có đồng hồ chỉ về phía người nhìn và chuông xóa sự kiện khỏi lịch sử cá nhân."
+      ],
+      "canonicalFacts": [
+        "Thánh đường đá đen có đồng hồ chỉ về phía người nhìn và chuông xóa sự kiện khỏi lịch sử cá nhân.",
+        "Quy luật của Level: Không quan sát thì tượng đứng sau lưng; nhìn quá lâu khiến da hóa đá."
+      ],
+      "navigation": [
+        "Không gian và dấu hiệu định hướng: Thánh đường đá đen có đồng hồ chỉ về phía người nhìn và chuông xóa sự kiện khỏi lịch sử cá nhân."
+      ],
+      "entrancesExits": [
+        "Lối ra theo lore nguồn: Leo lên tháp chuông có bóng đổ hướng lên trời.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
+      ],
+      "gmConstraints": [
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+      ]
+    },
+    "hua_1900_14": {
+      "name": "Hui's Family Level 15",
+      "source": {
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
+      },
+      "identity": [
+        "Hui's Family Level 15 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Thành phố không có mặt đất, gồm căn hộ và ban công chồng lên nhau trong vực sâu vô tận."
+      ],
+      "canonicalFacts": [
+        "Thành phố không có mặt đất, gồm căn hộ và ban công chồng lên nhau trong vực sâu vô tận.",
+        "Quy luật của Level: Đi xuống làm thành phố sáng hơn; đi lên chỉ nghe phố xá mà không bao giờ tới mặt đất."
+      ],
+      "navigation": [
+        "Không gian và dấu hiệu định hướng: Thành phố không có mặt đất, gồm căn hộ và ban công chồng lên nhau trong vực sâu vô tận."
+      ],
+      "entrancesExits": [
+        "Lối ra theo lore nguồn: Nhảy vào cửa sổ phản chiếu một căn phòng không tồn tại phía sau.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
+      ],
+      "gmConstraints": [
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+      ]
+    },
+    "hua_1900_15": {
+      "name": "Hui's Family Level 16",
+      "source": {
+        "basis": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "e2ca8d316517e19b03f1cfdbda9f8813f6ef1de2",
+        "status": "project import: environment only"
+      },
+      "identity": [
+        "Hui's Family Level 16 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.",
+        "Mọi tầng trước bị ép chung vào một kiến trúc; ký ức sai trở thành hành lang và người quen trở thành thực thể."
+      ],
+      "canonicalFacts": [
+        "Mọi tầng trước bị ép chung vào một kiến trúc; ký ức sai trở thành hành lang và người quen trở thành thực thể.",
+        "Quy luật của Level: Tầng dùng ký ức người sống để xây thêm Backrooms; một bản sao thế giới thật có thể khiến cả nhóm tin rằng đã thoát."
+      ],
+      "navigation": [
+        "Không gian và dấu hiệu định hướng: Mọi tầng trước bị ép chung vào một kiến trúc; ký ức sai trở thành hành lang và người quen trở thành thực thể."
+      ],
+      "entrancesExits": [
+        "Lối ra theo lore nguồn: Tìm văn phòng vàng và quyết định có ký tờ giấy: Bạn chưa từng rời khỏi đây.",
+        "Chỉ chuyển sang Level kế tiếp khi LevelCore xác nhận exitAvailable và người chơi chọn đi qua."
+      ],
+      "gmConstraints": [
+        "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
+        "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
       ]
     }
   }
