@@ -86,8 +86,7 @@ object GameplayCatalog {
 
   fun item(id: String?) = items[id?.trim()?.lowercase(Locale.ROOT)]
   fun itemFor(stack: ItemStack): GameplayItem? =
-    item(stack.archetypeId) ?: item(stack.itemId.substringBefore(':')) ?:
-      items.values.firstOrNull { it.name.equals(stack.name, ignoreCase = true) }
+    item(stack.itemId) ?: items.values.firstOrNull { it.name.equals(stack.name, ignoreCase = true) }
 
   fun decorate(stack: ItemStack): ItemStack {
     val item = itemFor(stack) ?: return stack
@@ -97,8 +96,8 @@ object GameplayCatalog {
       if (item.effect.hp > 0) put("effect.hp", item.effect.hp.toString())
     }
     return stack.copy(
+      itemId = item.id,
       name = item.name,
-      archetypeId = item.id,
       metadata = stack.metadata + effects + mapOf("category" to item.category, "consumable" to "true")
     )
   }
