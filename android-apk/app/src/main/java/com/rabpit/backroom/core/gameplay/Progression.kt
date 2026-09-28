@@ -216,10 +216,12 @@ object CharacterProgressionRules {
 }
 
 object CharacterStatRules {
+  const val MA_TON_STAT_BONUS = 99
+
   fun project(state: GameState, characterId: String): CharacterStatProjection? {
     val character = state.characters[characterId] ?: return null
     val base = character.progression.stats.normalized()
-    val passive = 0
+    val passive = if (character.id == "cao_minh") MA_TON_STAT_BONUS else 0
     val equipment = EquipmentRules.bonuses(state, characterId)
     val effective = CharacterStat.entries.associateWith {
       effectiveStat(character, state.statuses.values, it, passive, equipment.forStat(it))

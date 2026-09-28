@@ -27,7 +27,8 @@ class GameplayPortTest {
     val state = GameState.initial().copy(coreResource = CoreResourceState(quantity = 1))
     val upgraded = CharacterProgressionRules.upgrade(state, PLAYER_ID, "VIT").state
     assertEquals(6, upgraded.characters.getValue(PLAYER_ID).progression.stats.vit)
-    assertEquals(55, CharacterStatRules.project(upgraded, PLAYER_ID)!!.maxHp)
+    assertEquals(550, CharacterStatRules.project(upgraded, PLAYER_ID)!!.maxHp)
+    assertEquals(55, CharacterStatRules.project(upgraded, PLAYER_ID)!!.currentHp)
 
     assertEquals(8, GameplayCatalog.chestPool.size)
     assertEquals(35, GameplayCatalog.item("first-aid-kit")!!.effect.hp)
@@ -146,7 +147,7 @@ class GameplayPortTest {
     ))
     assertTrue(equip.applied)
     val equippedStats = CharacterStatRules.project(equip.state, PLAYER_ID)!!
-    assertEquals(80, equippedStats.maxHp)
+    assertEquals(575, equippedStats.maxHp)
     assertEquals(80, equippedStats.currentHp)
     assertEquals(2, equippedStats.stats.getValue(CharacterStat.VIT).equipmentBonus)
     assertTrue(equip.state.inventories.getValue(PLAYER_ID).items.containsKey("field-armor"))
@@ -175,7 +176,7 @@ class GameplayPortTest {
     ))
     assertTrue(unequip.applied)
     val plainStats = CharacterStatRules.project(unequip.state, PLAYER_ID)!!
-    assertEquals(50, plainStats.maxHp)
+    assertEquals(545, plainStats.maxHp)
     assertEquals(50, plainStats.currentHp)
   }
 

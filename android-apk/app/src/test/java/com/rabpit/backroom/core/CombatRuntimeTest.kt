@@ -17,7 +17,7 @@ class CombatRuntimeTest {
     assertEquals("hound", combat!!.entityKey)
     assertEquals(150, combat.entityMaxHp)
     assertEquals(150, combat.entityHp)
-    assertEquals(50, combat.playerMaxHp)
+    assertEquals(545, combat.playerMaxHp)
     assertEquals(50, combat.playerHp)
 
     val duplicate = CombatRuntime.start(started, "smiler")
