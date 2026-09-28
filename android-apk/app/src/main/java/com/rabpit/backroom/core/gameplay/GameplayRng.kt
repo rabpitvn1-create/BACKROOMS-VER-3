@@ -23,7 +23,7 @@ class GameplayRng(
   }
 
   fun nextUnit(scope: Scope): Double =
-    (nextPositiveLong(scope) ushr 10) * 0x1.0p-53
+    (nextPositiveLong(scope) ushr 10).toDouble() / 9_007_199_254_740_992.0
 
   fun drawsUsed(scope: Scope): Int = counters[scope] ?: 0
 
