@@ -65,6 +65,20 @@ class GameCoreFacade private constructor(
     return response(true, result, null, "committed", reply)
   }
 
+  fun normalizeState(stateJson: String): String {
+    val ui = JSONObject(stateJson)
+    val state = loadState(ui)
+    return syncUiState(ui, state, false).toString()
+  }
+
+  fun startNewGame(initialJson: String): String {
+    val ui = JSONObject(initialJson)
+    val fresh = GameState.initial()
+    repository.clear()
+    repository.save(fresh)
+    return syncUiState(ui, fresh, false).toString()
+  }
+
   fun currentCoreState(): String = GameStateCodec.encode(repository.load())
   fun levelSnapshotDescriptor(turn: Int): String {
     val key = repository.load().levelRuntime.key
@@ -458,7 +472,17 @@ class GameCoreFacade private constructor(
       put("exitAvailable", state.levelRuntime.route.exitAvailable)
       put("lastResult", state.levelRuntime.route.lastResult.name)
     })
-    output.put("chestPresent", ExplorationRuntime.chestPresent(state))
+    output.put("currentLevelKey", state.levelRuntime.key)
+    levelGraph.node(state.levelRuntime.key)?.parentLevel?.let { output.put("currentLevel", it) }
+    val chestPresent = ExplorationRuntime.chestPresent(state)
+    output.put("chestPresent", chestPresent)
+    val flags = output.optJSONObject("flags") ?: JSONObject()
+    state.world["flagsJson"]?.let { raw ->
+      val projected = JSONObject(raw)
+      projected.keys().forEach { key -> flags.put(key, projected.get(key)) }
+    }
+    flags.put("chestPresent", chestPresent)
+    output.put("flags", flags)
     CombatRuntime.toJson(state)?.let { output.put("combat", it) }
     val playerInventory = state.inventories[PLAYER_ID]?.items?.values.orEmpty()
     output.put("inventory", JSONArray().apply { playerInventory.forEach { stack -> put(JSONObject().apply {
@@ -469,12 +493,12 @@ class GameCoreFacade private constructor(
       state.characters[id]?.let { character -> put(JSONObject().apply {
         put("id", character.id); put("name", character.name); character.avatarRef?.let { put("avatar", it) }
         put("presence", character.presence.name)
+        put("joined", true)
       }) }
     } })
     state.world["location"]?.let { output.put("location", it) }
     state.world["title"]?.let { output.put("title", it) }
     state.world["levelJson"]?.let { output.put("level", JSONObject(it)) }
-    state.world["flagsJson"]?.let { output.put("flags", JSONObject(it)) }
     state.metadata["playerJson"]?.let { output.put("player", JSONObject(it)) }
     return output
   }
