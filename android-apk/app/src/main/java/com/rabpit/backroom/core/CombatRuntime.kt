@@ -78,8 +78,8 @@ object CombatRuntime {
   private fun profileFor(state: GameState, entityKey: String): Profile? {
     val entity = GameplayCatalog.entity(entityKey) ?: return null
     val (maxHp, damage) = GameplayCatalog.entityStats(entity, state.levelRuntime.stageIndex)
-    val legacy = tuning[entity.key] ?: Tuning(3, 7)
-    return Profile(entity.key, entity.name, maxHp, damage, legacy.armor, legacy.aggression)
+    val combatTuning = tuning[entity.key] ?: Tuning(3, 7)
+    return Profile(entity.key, entity.name, maxHp, damage, combatTuning.armor, combatTuning.aggression)
   }
 
   fun active(state: GameState): Snapshot? = decode(state)?.takeIf { it.phase == Phase.ACTIVE }
