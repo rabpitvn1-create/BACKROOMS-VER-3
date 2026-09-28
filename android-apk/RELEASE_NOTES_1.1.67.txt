@@ -1,0 +1,5 @@
+Backroom 1.1.67
+
+- GAME MASTER kiểm tra riêng chất lượng lời kể và từng lựa chọn A/B/C trước khi ghi log hoặc hiển thị. Lời kể kiểu báo cáo trạng thái và lựa chọn chung chung bị từ chối.
+- Khi validation thất bại, model nhận lỗi cụ thể để sửa một lần; bản sửa phải qua lại toàn bộ kiểm tra. Nhánh prefetch lỗi không được cache, và lượt chọn nhánh đó dùng luồng tạo bình thường.
+- Bổ sung ví dụ phong cách kể chuyện và lựa chọn hữu ích. Chỉ dùng ba lựa chọn mở đầu ở prologue; các lượt tiếp theo giữ đúng lựa chọn đã được kiểm tra. Lối ra do Core xác nhận vẫn hiện thành hành động riêng.
