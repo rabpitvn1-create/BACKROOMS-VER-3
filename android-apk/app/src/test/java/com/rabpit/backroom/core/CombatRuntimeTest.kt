@@ -76,11 +76,22 @@ class CombatRuntimeTest {
     assertTrue(after!!.opening >= 1)
     assertTrue(after.momentum >= 0)
     assertFalse(after.telegraph.isBlank())
-  }  @Test fun pokerDiceSessionPersistsHoldsAndStopsAfterThreeRerolls() {
+  }
+
+  @Test fun pokerDiceMatchesV2StateAndRerollContract() {
+    val fresh = com.rabpit.backroom.core.gameplay.PokerDiceRuntime.newState()
+    assertEquals(listOf(0, 0, 0, 0, 0), fresh.values)
+    assertFalse(fresh.hasRolled)
+    assertEquals("", fresh.hand)
+    assertEquals(0, fresh.rerollsUsed)
+    assertEquals(3, fresh.maxRerolls)
+
     var state = CombatRuntime.start(GameState.initial(), "hound")
     val initial = CombatRuntime.dice(state)!!
-    assertEquals(5, initial.values.size)
+    assertTrue(initial.hasRolled)
+    assertEquals(0, initial.rerollsUsed)
     assertTrue(initial.values.all { it in 1..6 })
+    assertEquals(PokerDiceRules.classify(*initial.values.toIntArray()).v2Name, initial.hand)
 
     state = CombatRuntime.setHold(state, 0, true)
     val heldValue = CombatRuntime.dice(state)!!.values[0]
@@ -98,8 +109,11 @@ class CombatRuntimeTest {
     state = CombatRuntime.finishHand(state)
     val finalized = CombatRuntime.dice(state)!!
     assertTrue(finalized.finalized)
-    assertEquals(PokerDiceRules.classify(*finalized.values.toIntArray()), finalized.hand)
+    assertEquals(PokerDiceRules.classify(*finalized.values.toIntArray()).v2Name, finalized.hand)
+
+    val json = CombatRuntime.toJson(state)!!.getJSONObject("dice")
+    assertTrue(json.getBoolean("hasRolled"))
+    assertEquals(3, json.getInt("maxRerolls"))
+    assertEquals(finalized.hand, json.getString("hand"))
   }
-
-
 }
