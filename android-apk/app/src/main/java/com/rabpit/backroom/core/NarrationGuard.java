@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Locale;
 
 /** Deterministic guard for the non-authoritative narration payload. */
 public final class NarrationGuard {
@@ -18,9 +19,20 @@ public final class NarrationGuard {
 
   /** Returns an empty string when valid, otherwise a deterministic rejection reason. */
   public static String validate(JSONObject generated, JSONObject committedState) {
+    return validate(generated, committedState, "");
+  }
+
+  public static String validate(JSONObject generated, JSONObject committedState, String playerAction) {
     if (generated == null) return "Narration payload is missing.";
     String reply = generated.optString("reply", "").trim();
     if (reply.isEmpty()) return "reply is required.";
+    String narrative = reply.toLowerCase(Locale.ROOT);
+    if (narrative.startsWith("tiến độ ") || narrative.startsWith("trạng thái ")
+        || narrative.startsWith("hệ thống:") || narrative.startsWith("system:")
+        || narrative.startsWith("game master:") || narrative.startsWith("lượt chơi:")
+        || narrative.startsWith("bạn quyết định ") || narrative.startsWith("bạn chọn ")) {
+      return "reply must be GM narration, not a status report or a player decision.";
+    }
 
     for (String key : FORBIDDEN_ROOT_KEYS) {
       if (generated.has(key)) return "Narration attempted authoritative field: " + key;
@@ -29,10 +41,18 @@ public final class NarrationGuard {
     JSONArray choices = generated.optJSONArray("choices");
     if (choices != null) {
       if (choices.length() > 3) return "choices must contain at most 3 suggestions.";
+      Set<String> distinct = new HashSet<>();
       for (int i = 0; i < choices.length(); i++) {
         JSONObject choice = choices.optJSONObject(i);
         if (choice == null || choice.optString("text", "").trim().isEmpty()) {
           return "Each choice must contain non-empty text.";
+        }
+        String suggestion = choice.optString("text", "").trim().toLowerCase(Locale.ROOT);
+        if (suggestion.length() > 100 || !distinct.add(suggestion)
+            || suggestion.equals(playerAction == null ? "" : playerAction.trim().toLowerCase(Locale.ROOT))
+            || suggestion.startsWith("đã ") || suggestion.startsWith("kết quả ")
+            || suggestion.equals("tiếp tục") || suggestion.equals("làm gì đó")) {
+          return "choices must be short, distinct actions without an outcome or repeated action.";
         }
       }
     }

@@ -33,6 +33,6 @@ public class ChainNarrationFallbackTest {
   @Test public void oldOutcomeDoesNotRepeatOnNextTurn() throws Exception {
     String reply = MainActivity.narrationFallback(state("SUCCESS", 1), "").getString("reply");
     assertFalse(reply.contains("tiến sâu hơn"));
-    assertTrue(reply.contains("Không có biến cố mới"));
+    assertTrue(reply.contains("tiếp tục quan sát"));
   }
 }

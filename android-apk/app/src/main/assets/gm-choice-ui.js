@@ -171,15 +171,17 @@
   }
 
   function submitExplorerChoice(entry, choice) {
-    if (!choice || window.__combatBusy || (state.combat && state.combat.active)) return;
+    if (!choice || window.__combatBusy || (typeof busy !== 'undefined' && busy)
+        || (state.combat && state.combat.active)) return;
     var text = String(choice.action || choice.text || '').trim();
-    if (!text || !form || !action) return;
-    if (Array.isArray(entry.choices)) entry.choices.forEach(function(x){ x.disabled = true; });
-    choice.selected = true;
+    if (!text || !window.Android || typeof Android.submitChoice !== 'function') return;
+    var sourceIndex = lastGmIndex();
+    if (sourceIndex < 0 || state.log[sourceIndex] !== entry) return;
+    if (typeof busy !== 'undefined') busy = true;
+    if (submit) submit.disabled = true;
     if (typeof window.render === 'function') window.render();
-    action.value = text;
-    if (typeof form.requestSubmit === 'function') form.requestSubmit();
-    else form.dispatchEvent(new Event('submit', {bubbles:true,cancelable:true}));
+    Android.submitChoice(JSON.stringify(state), text, choice.id, state.turn,
+      sourceIndex, String(entry.text || ''));
   }
 
   function chestPresent() {
@@ -810,7 +812,7 @@
       return {id:String.fromCharCode(65 + i),action:String(choice.action || choice.text || '').trim()};
     });
     if (actions.some(function(choice){return !choice.action;})) return;
-    Android.prefetchChoices(JSON.stringify(actions));
+    Android.prefetchChoices(JSON.stringify(state), JSON.stringify(actions));
   };
 
   window.render();

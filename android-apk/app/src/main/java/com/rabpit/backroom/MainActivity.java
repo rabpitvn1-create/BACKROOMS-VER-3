@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import com.rabpit.backroom.core.CombatChoiceEngine;
 import com.rabpit.backroom.core.GameCoreFacade;
 import com.rabpit.backroom.core.GmChoiceContract;
+import com.rabpit.backroom.core.GmBranchBatch;
 import com.rabpit.backroom.core.GmNarrativePacket;
 import com.rabpit.backroom.core.CanonRetriever;
 import com.rabpit.backroom.core.GmNarratorContract;
@@ -33,6 +34,7 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -48,7 +50,10 @@ public class MainActivity extends Activity {
   private final ExecutorService io = Executors.newSingleThreadExecutor();
   private final ExecutorService prefetchIo = Executors.newSingleThreadExecutor();
   private final AtomicLong prefetchGeneration = new AtomicLong();
+  private final AtomicBoolean turnInFlight = new AtomicBoolean();
   private volatile PrefetchCache prefetchCache;
+  private volatile String activePrefetchKey;
+  private volatile boolean destroyed;
   private GameCoreFacade gameCore;
   private CanonRetriever canonRetriever;
   private static final String GEMINI_MODEL = "gemini-3.8-flash";
@@ -156,6 +161,7 @@ public class MainActivity extends Activity {
   }
 
   @Override protected void onDestroy() {
+    destroyed = true;
     if (gameCore != null) gameCore.close();
     prefetchGeneration.incrementAndGet();
     prefetchIo.shutdownNow();
@@ -693,30 +699,58 @@ public class MainActivity extends Activity {
 
   private static final class PrefetchCache {
     final String baseHash;
+    final int sourceTurn, sourceGmIndex;
+    final String sourceGmText;
     final Map<String, PrefetchBranch> branches;
-    PrefetchCache(String baseHash, Map<String, PrefetchBranch> branches) {
+    PrefetchCache(String baseHash, int sourceTurn, int sourceGmIndex, String sourceGmText,
+                  Map<String, PrefetchBranch> branches) {
       this.baseHash = baseHash;
+      this.sourceTurn = sourceTurn;
+      this.sourceGmIndex = sourceGmIndex;
+      this.sourceGmText = sourceGmText;
       this.branches = branches;
     }
-    PrefetchBranch forAction(String action) {
-      for (PrefetchBranch branch : branches.values()) if (branch.action.equals(action)) return branch;
-      return null;
+    PrefetchBranch forChoice(String id, String action, int turn, int index, String gmText) {
+      PrefetchBranch branch = branches.get(id);
+      return sourceTurn == turn && sourceGmIndex == index && sourceGmText.equals(gmText)
+          && branch != null && branch.action.equals(action) ? branch : null;
     }
   }
 
-  private void invalidatePrefetch() {
+  private synchronized void invalidatePrefetch() {
     prefetchGeneration.incrementAndGet();
     prefetchCache = null;
+    activePrefetchKey = null;
   }
 
-  private void prefetchChoices(String choicesJson) {
+  private synchronized void prefetchChoices(String sourceJson, String choicesJson) {
+    if (destroyed || turnInFlight.get()) return;
+    final String baseHash = gameCore.currentStateHash();
+    final JSONObject source, current;
+    final int sourceTurn, sourceGmIndex;
+    final String sourceGmText;
+    try {
+      source = new JSONObject(sourceJson);
+      current = new JSONObject(gameCore.currentCoreState());
+      sourceTurn = source.getInt("turn");
+      sourceGmIndex = lastGmLogIndex(source);
+      JSONObject gm = source.getJSONArray("log").getJSONObject(sourceGmIndex);
+      sourceGmText = gm.getString("text");
+      if (sourceTurn != current.optInt("turn", -1) || sourceGmIndex != lastGmLogIndex(current)
+          || !sourceGmText.equals(current.getJSONArray("log")
+              .getJSONObject(sourceGmIndex).optString("text", ""))) return;
+    } catch (Exception error) { return; }
+    final String key = baseHash + "|" + sourceTurn + "|" + sourceGmIndex + "|"
+        + JSONObject.quote(sourceGmText) + "|" + JSONObject.quote(choicesJson);
+    if (key.equals(activePrefetchKey)) return;
     final long generation = prefetchGeneration.incrementAndGet();
     prefetchCache = null;
-    prefetchIo.execute(() -> {
+    activePrefetchKey = key;
+    try { prefetchIo.execute(() -> {
       try {
         JSONArray choices = new JSONArray(choicesJson);
         if (choices.length() != 3) return;
-        String baseHash = gameCore.currentStateHash();
+        if (generation != prefetchGeneration.get() || !baseHash.equals(gameCore.currentStateHash())) return;
         Map<String, String> actions = new LinkedHashMap<>();
         Map<String, JSONObject> previews = new LinkedHashMap<>();
         StringBuilder prompt = new StringBuilder(
@@ -739,48 +773,35 @@ public class MainActivity extends Activity {
               .append(narrationPrompt(preview.getJSONObject("state"), action)).append('\n');
         }
         if (generation != prefetchGeneration.get() || !baseHash.equals(gameCore.currentStateHash())) return;
-        JSONObject output = geminiBranchBatch(prompt.toString());
-        JSONObject branches = output.optJSONObject("branches");
-        if (branches == null || branches.length() != 3 || output.length() != 1) return;
         Map<String, PrefetchBranch> valid = new LinkedHashMap<>();
-        for (String id : actions.keySet()) {
-          JSONObject generated = branches.optJSONObject(id);
-          if (generated == null || generated.length() != 3
-              || generated.optJSONArray("choices") == null
-              || generated.optJSONArray("encounterDialogue") == null
-              || generated.optString("reply", "").length() > 1800) continue;
+        Map<String, JSONObject> generatedBranches = GmBranchBatch.generate(
+            prompt.toString(), actions, previews, this::geminiBranchBatch);
+        for (Map.Entry<String, JSONObject> entry : generatedBranches.entrySet()) {
+          String id = entry.getKey();
           JSONObject preview = previews.get(id);
-          if (!NarrationGuard.validate(generated, preview.getJSONObject("state")).isEmpty()) continue;
-          valid.put(id, new PrefetchBranch(actions.get(id), preview.getString("outcomeHash"), generated));
+          valid.put(id, new PrefetchBranch(actions.get(id), preview.getString("outcomeHash"), entry.getValue()));
         }
-        if (generation == prefetchGeneration.get() && baseHash.equals(gameCore.currentStateHash())) {
-          prefetchCache = new PrefetchCache(baseHash, valid);
+        synchronized (MainActivity.this) {
+          if (!destroyed && generation == prefetchGeneration.get()
+              && baseHash.equals(gameCore.currentStateHash())) {
+            prefetchCache = new PrefetchCache(baseHash, sourceTurn, sourceGmIndex, sourceGmText, valid);
+          }
         }
       } catch (Exception error) {
         Log.w(TAG, "Branch prefetch unavailable; normal turn path remains available: "
             + providerErrorSummary(error));
       }
-    });
-  }
-
-  private String worldProposalPrompt(JSONObject selected) {
-    String summary = selected == null ? "" : selected.optString("publicSummary", "");
-    String canon = selected == null ? "" : selected.optString("capabilityContext", "");
-    JSONArray allowed = selected == null ? null : selected.optJSONArray("allowedWorldActions");
-    String allowedText = allowed == null ? "INTERCEPT, DIRECT_ATTACK, OBSERVE" : allowed.toString();
-    return "Bạn đang đề xuất CÁCH một world situation đã được Java Core chọn sẽ được thực hiện. "
-        + "Bạn không được đổi Entity/situation, không quyết outcome và không sửa state.\n"
-        + "SITUATION: " + summary + "\n"
-        + "CAPABILITY/CANON: " + canon + "\n"
-        + "actionType chỉ được chọn từ ALLOWED_WORLD_ACTIONS: " + allowedText + ". "
-        + "intentTag chỉ được aggressive, cautious hoặc opportunistic.\n"
-        + "OUTPUT chỉ JSON: {\"actionType\":\"INTERCEPT\",\"intentTag\":\"opportunistic\"}";
+    }); } catch (java.util.concurrent.RejectedExecutionException ignored) {}
   }
 
   static JSONObject narrationFallback(JSONObject state, String replyHint) {
     JSONObject generated = new JSONObject();
     try {
       String reply = replyHint == null ? "" : replyHint.trim();
+      if (reply.startsWith("Rương chứa ")) {
+        reply = "Cao Minh mở rương và tìm thấy "
+            + reply.substring("Rương chứa ".length()).replace("Đã thêm vào Inventory.", "").trim();
+      }
       JSONObject route = state == null ? null : state.optJSONObject("levelRoute");
       String result = route != null && route.optInt("lastRollTurn", -1) == state.optInt("turn", 1)
           ? route.optString("lastResult", "") : "";
@@ -800,7 +821,7 @@ public class MainActivity extends Activity {
         reply = selection.optString("publicSummary", "").trim();
       }
       if (reply.isEmpty()) {
-        reply = "Không có biến cố mới. Cao Minh vẫn ở " + location + ".";
+        reply = "Cao Minh tiếp tục quan sát " + location + "; chưa có gì cắt ngang bước chân của anh.";
       }
       generated.put("reply", reply)
           .put("choices", new JSONArray())
@@ -811,12 +832,12 @@ public class MainActivity extends Activity {
 
   private void emit(String function, String json) {
     String script = "window." + function + "(" + JSONObject.quote(json) + ")";
-    runOnUiThread(() -> webView.evaluateJavascript(script, null));
+    runOnUiThread(() -> { if (!destroyed && webView != null) webView.evaluateJavascript(script, null); });
   }
 
   private class GameBridge {
-    @JavascriptInterface public void prefetchChoices(String choicesJson) {
-      MainActivity.this.prefetchChoices(choicesJson);
+    @JavascriptInterface public void prefetchChoices(String sourceJson, String choicesJson) {
+      MainActivity.this.prefetchChoices(sourceJson, choicesJson);
     }
 
     @JavascriptInterface public String saveCheckpoint() {
@@ -834,18 +855,36 @@ public class MainActivity extends Activity {
     }
 
     @JavascriptInterface public void submitTurn(String stateJson, String action) {
-      io.execute(() -> {
+      submitTurnInternal(stateJson, action, null, -1, -1, "");
+    }
+
+    @JavascriptInterface public void submitChoice(String stateJson, String action, String choiceId,
+                                                  int sourceTurn, int sourceGmIndex, String sourceGmText) {
+      submitTurnInternal(stateJson, action, choiceId, sourceTurn, sourceGmIndex, sourceGmText);
+    }
+
+    private void submitTurnInternal(String stateJson, String action, String choiceId,
+                                    int sourceTurn, int sourceGmIndex, String sourceGmText) {
+      if (destroyed || !turnInFlight.compareAndSet(false, true)) return;
+      final PrefetchCache ready = prefetchCache;
+      invalidatePrefetch();
+      try { io.execute(() -> {
         JSONObject committedBeforeNarration = null;
         long tStart = System.currentTimeMillis();
         try {
           JSONObject submitted = new JSONObject(stateJson);
           JSONObject persisted = new JSONObject(gameCore.currentCoreState());
           if (persisted.length() > 0) submitted = persisted;
-          PrefetchCache ready = prefetchCache;
+          if (choiceId != null && (sourceTurn != submitted.optInt("turn", -1)
+              || sourceGmIndex != lastGmLogIndex(submitted)
+              || !sourceGmText.equals(submitted.getJSONArray("log")
+                  .getJSONObject(sourceGmIndex).optString("text", "")))) {
+            throw new Exception("Lựa chọn đã thuộc lượt cũ. Hãy chọn trên lượt hiện tại.");
+          }
           String baseHash = gameCore.currentStateHash();
-          invalidatePrefetch();
           PrefetchBranch cached = ready != null && ready.baseHash.equals(baseHash)
-              ? ready.forAction(action == null ? "" : action.trim()) : null;
+              && choiceId != null ? ready.forChoice(choiceId, action == null ? "" : action.trim(),
+                  sourceTurn, sourceGmIndex, sourceGmText) : null;
 
           if (CombatChoiceEngine.isActive(submitted)) {
             throw new Exception("Đang chiến đấu. Hãy dùng khung Poker Dice trong GAME MASTER.");
@@ -870,36 +909,9 @@ public class MainActivity extends Activity {
 
           String turnId = prepared.getString("turnId");
           JSONObject selected = prepared.optJSONObject("selectedCandidate");
-          JSONObject proposal = new JSONObject();
-          if (prepared.optBoolean("proposalRequired", false) && cached == null) {
-            try {
-              String proposalPrompt = worldProposalPrompt(selected);
-              JSONObject rawProposal = parseModelJson(generateText(proposalPrompt));
-              JSONObject validation = new JSONObject(
-                  gameCore.validateWorldProposal(selected.toString(), rawProposal.toString()));
-
-              if (!validation.optBoolean("valid", false)) {
-                String reason = validation.optString("reason", "proposal rejected");
-                rawProposal = parseModelJson(generateText(
-                    proposalPrompt + "\nVALIDATION REJECTED: " + reason
-                        + "\nRetry the SAME selected SituationCandidate. Do not change the situation or actor."));
-                validation = new JSONObject(
-                    gameCore.validateWorldProposal(selected.toString(), rawProposal.toString()));
-              }
-
-              if (!validation.optBoolean("valid", false)) {
-                throw new Exception(validation.optString("reason", "World proposal validation failed."));
-              }
-              proposal = validation.getJSONObject("proposal");
-            } catch (Exception proposalError) {
-              Log.w(TAG, "World proposal unavailable/invalid after bounded retry; Core will use canonical fallback: "
-                  + providerErrorSummary(proposalError));
-              proposal = new JSONObject();
-            }
-          }
-
+          // Core's canonical tactic is also used by previewTurn; the action needs one narration call.
           JSONObject committed = new JSONObject(
-              gameCore.completePreparedTurn(turnId, proposal.toString()));
+              gameCore.completePreparedTurn(turnId, "{}"));
           if (!committed.optBoolean("handled", false)) {
             throw new Exception(committed.optString("error", "Game State Core từ chối COMMIT."));
           }
@@ -913,18 +925,14 @@ public class MainActivity extends Activity {
           boolean narrationValidated = false;
           try {
             boolean hit = cached != null && cached.outcomeHash.equals(gameCore.currentStateHash());
-            generated = hit ? new JSONObject(cached.narration.toString())
-                : parseModelJson(generateText(narrationPrompt(state, action)));
-            String narrationViolation = NarrationGuard.validate(generated, state);
-            if (!narrationViolation.isEmpty()) {
-              generated = parseModelJson(generateText(
-                  narrationPrompt(state, action) + "\nVALIDATION REJECTED: " + narrationViolation
-                      + "\nRegenerate narration only. Do not add or mutate world state."));
-              narrationViolation = NarrationGuard.validate(generated, state);
-              if (!narrationViolation.isEmpty()) {
-                throw new Exception("Narration validation failed: " + narrationViolation);
-              }
+            generated = hit ? new JSONObject(cached.narration.toString()) : null;
+            if (hit && !NarrationGuard.validate(generated, state, action).isEmpty()) {
+              hit = false;
             }
+            if (!hit) generated = parseModelJson(generateText(narrationPrompt(state, action)));
+            String narrationViolation = NarrationGuard.validate(generated, state, action);
+            if (!narrationViolation.isEmpty())
+              throw new Exception("Narration validation failed: " + narrationViolation);
             reply = generated.optString("reply", "").trim();
             narrationValidated = true;
           } catch (Exception narrationError) {
@@ -977,11 +985,14 @@ public class MainActivity extends Activity {
           } else {
             emit("backroomError", message);
           }
+        } finally {
+          turnInFlight.set(false);
         }
-      });
+      }); } catch (java.util.concurrent.RejectedExecutionException ignored) { turnInFlight.set(false); }
     }
 
     @JavascriptInterface public void combatRoll(String stateJson) {
+      invalidatePrefetch();
       io.execute(() -> {
         try {
           JSONObject runtime = new JSONObject(gameCore.combatRollRuntime());
@@ -993,6 +1004,7 @@ public class MainActivity extends Activity {
     }
 
     @JavascriptInterface public void combatHold(String stateJson, int dieIndex, boolean held) {
+      invalidatePrefetch();
       io.execute(() -> {
         try {
           JSONObject runtime = new JSONObject(gameCore.combatHoldRuntime(dieIndex, held));
@@ -1004,6 +1016,7 @@ public class MainActivity extends Activity {
     }
 
     @JavascriptInterface public void combatFinish(String stateJson) {
+      invalidatePrefetch();
       io.execute(() -> {
         try {
           JSONObject runtime = new JSONObject(gameCore.combatFinishRuntime());
@@ -1015,6 +1028,7 @@ public class MainActivity extends Activity {
     }
 
     @JavascriptInterface public void combatResolve(String stateJson) {
+      invalidatePrefetch();
       io.execute(() -> {
         try {
           JSONObject result = new JSONObject(gameCore.processCombatResolution(stateJson));
@@ -1029,6 +1043,7 @@ public class MainActivity extends Activity {
     }
 
     @JavascriptInterface public void restartAfterDeath() {
+      invalidatePrefetch();
       io.execute(() -> {
         try {
           JSONObject result = new JSONObject(gameCore.restartAfterDeath());
@@ -1044,12 +1059,14 @@ public class MainActivity extends Activity {
     }
 
     @JavascriptInterface public void coreUpgrade(String stateJson, String characterId, String stat) {
+      invalidatePrefetch();
       io.execute(() -> emit("backroomCoreUpgrade",
           gameCore.processCoreUpgrade(stateJson, characterId, stat)));
     }
 
     @JavascriptInterface public void itemAction(String stateJson, String ownerId, String itemId,
                                                 String operation, String targetId, int quantity) {
+      invalidatePrefetch();
       io.execute(() -> {
         try {
           JSONObject submitted = new JSONObject(gameCore.currentCoreState());
@@ -1080,6 +1097,7 @@ public class MainActivity extends Activity {
     }
 
     @JavascriptInterface public String normalizeState(String stateJson) {
+      invalidatePrefetch();
       return gameCore.normalizeState(stateJson);
     }
 
