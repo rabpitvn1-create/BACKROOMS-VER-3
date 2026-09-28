@@ -7,7 +7,7 @@ import org.junit.Test
 class GameStateCodecTest {
   @Test fun roundTripPreservesCurrentTypedState() {
     val state = GameState.initial().copy(
-      inventories = mapOf(KAI_ID to InventoryState(KAI_ID, mapOf(
+      inventories = mapOf(PLAYER_ID to InventoryState(PLAYER_ID, mapOf(
         "water" to ItemStack("water", "Almond Water", 2)
       ))),
       turn = TurnState("TURN_9", PendingTurn("TURN_9", "search", PendingTurnStatus.INTERPRETING)),
