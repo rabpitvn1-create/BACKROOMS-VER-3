@@ -43,6 +43,12 @@ jobs:
           test ! -e android-apk/patch-luna-model-failover-final.py
           test ! -e android-apk/patch-provider-deadline-final.py
           ! grep -q 'LUNA_' android-apk/app/build.gradle
+          grep -Fq 'LUC_TRAM_REUNION_PERCENT = 0.25d' android-apk/app/src/main/java/com/rabpit/backroom/core/CharacterEncounterCore.java
+          test -s android-apk/app/src/main/assets/canon/Lục_Trầm_Codex.md
+          test -s android-apk/app/src/main/assets/avatars/luctram_avatar.png
+          test -s android-apk/app/src/main/assets/luctram_overlay.png
+          test ! -e android-apk/app/src/main/assets/avatars/Iris_avatar.jpg
+          ! grep -R -n -E 'character:iris|CHAR\.IRIS|REL\.CAO_MINH\.IRIS|ARGUS' android-apk/app/src/main android-apk/app/src/test
 
       - name: Validate Game Master configuration
         run: |
