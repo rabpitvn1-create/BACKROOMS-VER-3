@@ -6,9 +6,9 @@ import org.junit.Test
 class CharacterDetailJsonTest {
   @Test fun partyJsonContainsStableUiFieldsAndSubjectiveTime() {
     val member = CharacterDetailProjection(
-      id = "iris",
-      name = "Iris",
-      avatarRef = "avatars/iris.png",
+      id = "companion",
+      name = "Companion",
+      avatarRef = "avatars/companion.png",
       presence = CharacterPresence.ACTIVE,
       isLeader = false,
       healthState = "INJURED",
@@ -54,8 +54,8 @@ class CharacterDetailJsonTest {
     assertEquals(4, json.getInt("maxMembers"))
     assertEquals(915L, json.getLong("elapsedSubjectiveMinutes"))
     val character = json.getJSONArray("members").getJSONObject(0)
-    assertEquals("iris", character.getString("id"))
-    assertEquals("avatars/iris.png", character.getString("avatar"))
+    assertEquals("companion", character.getString("id"))
+    assertEquals("avatars/companion.png", character.getString("avatar"))
     assertEquals("INJURED", character.getString("healthState"))
     assertEquals(63, character.getInt("currentHp"))
     assertEquals(100, character.getInt("maxHp"))
@@ -70,8 +70,8 @@ class CharacterDetailJsonTest {
 
   @Test fun uiJsonDoesNotExposeInventoryOrStatusInternalMetadata() {
     val member = CharacterDetailProjection(
-      id = "kai",
-      name = "Kai",
+      id = "player",
+      name = "Player",
       avatarRef = null,
       presence = CharacterPresence.ACTIVE,
       isLeader = true,
