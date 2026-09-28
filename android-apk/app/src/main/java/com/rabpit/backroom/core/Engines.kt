@@ -175,8 +175,6 @@ object InventoryEngine {
         changed(state.copy(inventories = state.inventories + (command.actorId to from) + (targetId to to)), "inventory_transfer")
       }
       ItemCommand.Operation.EQUIP -> {
-        state.characters[command.actorId]?.metadata?.get("equipmentLockReason")
-          ?.takeIf { it.isNotBlank() }?.let { return invalid(state, it) }
         val owned = source.items[command.itemId] ?: return invalid(state, "item_not_owned")
         if (owned.quantity < 1) return invalid(state, "item_not_owned")
         val targetSlots = EquipmentRules.occupiedSlots(owned, command.slot)
@@ -221,15 +219,11 @@ object PartyEngine {
       ), "party_member_added")
     }
     PartyCommand.Operation.REMOVE -> {
-      state.characters[command.targetId]?.metadata?.get("partyLockReason")
-        ?.takeIf { it.isNotBlank() }?.let { return invalid(state, it) }
       if (command.targetId == state.party.leaderId) return invalid(state, "cannot_remove_leader")
       if (command.targetId !in state.party.memberIds) return invalid(state, "not_in_party")
       changed(state.copy(party = state.party.copy(memberIds = state.party.memberIds - command.targetId)), "party_member_removed")
     }
     PartyCommand.Operation.SET_LEADER -> {
-      state.characters[command.targetId]?.metadata?.get("leaderLockReason")
-        ?.takeIf { it.isNotBlank() }?.let { return invalid(state, it) }
       if (command.targetId !in state.party.memberIds) return invalid(state, "leader_not_in_party")
       changed(state.copy(party = state.party.copy(leaderId = command.targetId)), "party_leader_changed")
     }
