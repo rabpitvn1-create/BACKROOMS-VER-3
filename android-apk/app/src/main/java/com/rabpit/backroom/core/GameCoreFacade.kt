@@ -1,6 +1,7 @@
 package com.rabpit.backroom.core
 
 import android.content.Context
+import com.rabpit.backroom.core.gameplay.GameplayCatalog
 import com.rabpit.backroom.core.gameplay.LevelGraph
 import org.json.JSONArray
 import org.json.JSONObject
@@ -66,6 +67,10 @@ class GameCoreFacade private constructor(
   }
 
   fun normalizeState(stateJson: String): String {
+    if (!repository.exists() && repository.hasCheckpoint()) {
+      val (state, clientState) = repository.loadCheckpoint()
+      return syncUiState(JSONObject(clientState), state, false).toString()
+    }
     val ui = JSONObject(stateJson)
     val state = loadState(ui)
     return syncUiState(ui, state, false).toString()
@@ -74,10 +79,23 @@ class GameCoreFacade private constructor(
   fun startNewGame(initialJson: String): String {
     val ui = JSONObject(initialJson)
     val fresh = GameState.initial()
-    repository.clear()
     repository.save(fresh)
     return syncUiState(ui, fresh, false).toString()
   }
+
+  fun saveCheckpoint(stateJson: String): String {
+    val ui = JSONObject(stateJson)
+    if (!repository.exists()) repository.save(GameStateCodec.decode(ui))
+    repository.saveCheckpoint(ui.toString())
+    return ui.toString()
+  }
+
+  fun loadCheckpoint(): String {
+    val (state, clientState) = repository.loadCheckpoint()
+    return syncUiState(JSONObject(clientState), state, false).toString()
+  }
+
+  fun clearCheckpoint() = repository.clearCheckpoint()
 
   fun currentCoreState(): String = GameStateCodec.encode(repository.load())
   fun levelSnapshotDescriptor(turn: Int): String {
@@ -178,7 +196,7 @@ class GameCoreFacade private constructor(
     val actorId = resolveCharacterId(state, ownerId) ?: state.party.leaderId
     val inventory = state.inventories[actorId] ?: InventoryState(actorId)
     val stack = inventory.items[itemId]
-      ?: inventory.items.values.firstOrNull { it.itemId == itemId || it.archetypeId == itemId || it.name.equals(itemId, true) }
+      ?: inventory.items.values.firstOrNull { it.itemId == itemId || it.name.equals(itemId, true) }
       ?: return response(false, syncUiState(ui, state, false), "item_not_owned", "item_action_rejected")
     val op = operation.trim().lowercase()
     val target = when (op) {
@@ -290,8 +308,8 @@ class GameCoreFacade private constructor(
 
   /**
    * Commits only the gameplay delta already accepted by the ui canon/dice validator.
-   * Candidate prose/JSON never becomes storage directly: inventory and party are rebuilt
-   * from commands and then projected back onto the UI state.
+   * Candidate prose/JSON never becomes item authority: V2 loot stays Core/System-owned.
+   * Party/world deltas are validated and then projected back onto the UI state.
    */
   fun processValidatedCandidate(beforeJson: String, candidateJson: String, action: String): String {
     val before = JSONObject(beforeJson)
@@ -301,43 +319,8 @@ class GameCoreFacade private constructor(
     val pending = TurnCoordinator.createPending(core, turnId, action)
     if (pending.error != null) return response(false, before, pending.error, "pending_rejected")
     val commands = mutableListOf<GameCommand>()
-    val current = pending.state.inventories[PLAYER_ID]?.items.orEmpty()
-    val actionIntents = rules.interpretSync(action, contextFor(pending.state)).candidates.map { it.intent }.toSet()
-    val inventoryLocked = isDirectPlayerPickupAction(action) || GameIntent.PICKUP_ITEM in actionIntents
-
-    val desiredById = mutableMapOf<String, ItemStack>()
-    if (inventoryLocked) {
-      desiredById.putAll(current)
-    } else {
-      val desiredInventory = candidate.optJSONArray("inventory") ?: JSONArray()
-      for (index in 0 until desiredInventory.length()) {
-        val json = desiredInventory.optJSONObject(index) ?: continue
-        val name = json.optString("name").trim(); if (name.isEmpty()) continue
-        val id = json.optString("id").ifBlank { stableItemId(name) }
-        val currentStack = current[id]
-        val metadata = currentStack?.metadata.orEmpty() + jsonObjectStrings(json.optJSONObject("metadata"))
-        desiredById[id] = ItemStack(
-          id,
-          name,
-          json.optInt("quantity", 1).coerceAtLeast(1),
-          json.optString("state").takeIf(String::isNotBlank) ?: currentStack?.condition,
-          metadata,
-          currentStack?.archetypeId ?: id,
-          currentStack?.contentState ?: ContentState.NONE
-        )
-      }
-    }
-
-    (current.keys + desiredById.keys).sorted().forEachIndexed { index, id ->
-      val old = current[id]?.quantity ?: 0; val desired = desiredById[id]?.quantity ?: 0
-      if (desired == old) return@forEachIndexed
-      val stack = desiredById[id] ?: current.getValue(id)
-      commands += ItemCommand(
-        "$turnId:GEMINI:INV:$index", turnId, PLAYER_ID, source = CommandSource.GEMINI,
-        operation = if (desired > old) ItemCommand.Operation.PICKUP else ItemCommand.Operation.DROP,
-        itemId = id, itemName = stack.name, quantity = kotlin.math.abs(desired - old), metadata = stack.metadata
-      )
-    }
+    // V2 authority: AI narration cannot create, remove, transfer or otherwise mutate Inventory.
+    val inventoryLocked = true
 
     val desiredParty = mutableMapOf<String, JSONObject>()
     val partyJson = candidate.optJSONArray("party") ?: JSONArray()
@@ -441,14 +424,22 @@ class GameCoreFacade private constructor(
     return id
   }
 
-  private fun stableItemId(name: String): String = name.lowercase()
-    .replace(Regex("[^\\p{L}\\p{N}]+"), "-").trim('-').ifBlank { "item-${name.hashCode().toUInt()}" }
-
-  private fun jsonObjectStrings(json: JSONObject?): Map<String, String> {
-    if (json == null) return emptyMap()
-    val result = mutableMapOf<String, String>()
-    json.keys().forEach { key -> result[key] = json.optString(key) }
-    return result
+  private fun clientItem(stack: ItemStack): JSONObject = JSONObject().apply {
+    put("id", stack.itemId)
+    put("name", stack.name)
+    put("quantity", stack.quantity)
+    stack.condition?.let { put("state", it) }
+    put("metadata", JSONObject(stack.metadata))
+    GameplayCatalog.itemFor(stack)?.let { item ->
+      put("kind", "consumable")
+      put("category", item.category)
+      put("stackable", true)
+      put("effects", JSONObject().apply {
+        if (item.effect.hunger > 0) put("hunger", item.effect.hunger)
+        if (item.effect.thirst > 0) put("thirst", item.effect.thirst)
+        if (item.effect.hp > 0) put("hp", item.effect.hp)
+      })
+    }
   }
 
   private fun syncUiState(ui: JSONObject, state: GameState, incrementTurn: Boolean): JSONObject {
@@ -485,15 +476,15 @@ class GameCoreFacade private constructor(
     output.put("flags", flags)
     CombatRuntime.toJson(state)?.let { output.put("combat", it) }
     val playerInventory = state.inventories[PLAYER_ID]?.items?.values.orEmpty()
-    output.put("inventory", JSONArray().apply { playerInventory.forEach { stack -> put(JSONObject().apply {
-      put("id", stack.itemId); put("name", stack.name); put("quantity", stack.quantity)
-      stack.condition?.let { put("state", it) }; put("metadata", JSONObject(stack.metadata))
-    }) } })
+    output.put("inventory", JSONArray().apply { playerInventory.forEach { put(clientItem(it)) } })
     output.put("party", JSONArray().apply { state.party.memberIds.filter { it != PLAYER_ID }.forEach { id ->
       state.characters[id]?.let { character -> put(JSONObject().apply {
         put("id", character.id); put("name", character.name); character.avatarRef?.let { put("avatar", it) }
         put("presence", character.presence.name)
         put("joined", true)
+        put("inventory", JSONArray().apply {
+          state.inventories[id]?.items?.values.orEmpty().forEach { put(clientItem(it)) }
+        })
       }) }
     } })
     state.world["location"]?.let { output.put("location", it) }
@@ -527,7 +518,7 @@ class GameCoreFacade private constructor(
 
   private fun validationReply(reason: String): String {
     val message = when (reason) {
-      "player_pickup_unavailable", "restore_narrative_only", "precise_content_amount_forbidden", "item_content_empty" -> "This action is not available."
+      "player_pickup_unavailable", "restore_narrative_only", "item_not_consumable" -> "This action is not available."
       "scan_source_missing", "scan_template_missing" -> "There is no object available for scanning or multiplying."
       "insufficient_item_quantity", "item_not_owned" -> "This action is not available."
       "party_full" -> "Party đã đủ tối đa bốn thành viên."
