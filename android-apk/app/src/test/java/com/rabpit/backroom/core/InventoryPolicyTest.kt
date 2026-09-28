@@ -14,10 +14,12 @@ class InventoryPolicyTest {
   }
 
   @Test fun profilesMatchCharacterRules() {
-    val state = stateWith(CharacterState("iris", "Iris"), CharacterState("syvial", "Syvial"), CharacterState("bob", "Bob"))
+    val state = stateWith(
+      CharacterState("special", "Special", metadata = mapOf("inventoryProfile" to "special")),
+      CharacterState("bob", "Bob")
+    )
     assertEquals(InventoryProfile(9, 999), InventoryPolicy.profileFor(state, KAI_ID))
-    assertEquals(InventoryProfile(6, 20), InventoryPolicy.profileFor(state, "iris"))
-    assertEquals(InventoryProfile(6, 20), InventoryPolicy.profileFor(state, "syvial"))
+    assertEquals(InventoryProfile(6, 20), InventoryPolicy.profileFor(state, "special"))
     assertEquals(InventoryProfile(2, 2), InventoryPolicy.profileFor(state, "bob"))
   }
 
@@ -29,25 +31,32 @@ class InventoryPolicyTest {
     assertEquals("inventory_stack_limit", InventoryPolicy.validateAddition(stacked, KAI_ID, stacked.inventories.getValue(KAI_ID), ItemStack("water", "Water"), 1))
   }
 
-  @Test fun irisAndNormalFollowerUseSmallerLimits() {
-    val iris = CharacterState("iris", "Iris")
+  @Test fun specialAndNormalProfilesUseDifferentLimits() {
+    val special = CharacterState("special", "Special", metadata = mapOf("inventoryProfile" to "special"))
     val bob = CharacterState("bob", "Bob")
-    var state = stateWith(iris, bob)
+    var state = stateWith(special, bob)
     state = state.copy(inventories = state.inventories +
-      ("iris" to InventoryState("iris", (1..6).associate { "i$it" to ItemStack("i$it", "I$it", 1) })) +
+      ("special" to InventoryState("special", (1..6).associate { "i$it" to ItemStack("i$it", "I$it", 1) })) +
       ("bob" to InventoryState("bob", mapOf("a" to ItemStack("a", "A", 2), "b" to ItemStack("b", "B", 1)))))
-    assertEquals("inventory_slot_limit", InventoryPolicy.validateAddition(state, "iris", state.inventories.getValue("iris"), ItemStack("i7", "I7"), 1))
+    assertEquals("inventory_slot_limit", InventoryPolicy.validateAddition(state, "special", state.inventories.getValue("special"), ItemStack("i7", "I7"), 1))
     assertEquals("inventory_stack_limit", InventoryPolicy.validateAddition(state, "bob", state.inventories.getValue("bob"), ItemStack("a", "A"), 1))
     assertEquals("inventory_slot_limit", InventoryPolicy.validateAddition(state, "bob", state.inventories.getValue("bob"), ItemStack("c", "C"), 1))
   }
 
-  @Test fun equippedKaiSignatureItemCannotBeScanned() {
-    val gun = ItemStack("kai-gun", "Kai Gun", 1)
+  @Test fun equippedGenericItemCanBeScannedWithoutLegacyLock() {
+    val gun = ItemStack("field-gun", "Field Gun", 1)
     val state = stateWith().copy(
       inventories = mapOf(KAI_ID to InventoryState(KAI_ID, mapOf(gun.itemId to gun))),
       equipment = mapOf(KAI_ID to EquipmentState(KAI_ID, mapOf("weapon" to gun.itemId)))
     )
-    val result = StateReducer.execute(state, OmnivaultCommand("scan", "TURN_1", KAI_ID, source = CommandSource.RULE, operation = OmnivaultCommand.Operation.SCAN, itemId = gun.itemId, itemName = gun.name))
-    assertEquals("signature_equipment_locked", result.validation.reason)
+    val result = StateReducer.execute(state, OmnivaultCommand(
+      "scan", "TURN_1", KAI_ID,
+      source = CommandSource.RULE,
+      operation = OmnivaultCommand.Operation.SCAN,
+      itemId = gun.itemId,
+      itemName = gun.name
+    ))
+    assertTrue(result.applied)
+    assertTrue(gun.itemId in result.state.omnivault.markedSourceIds)
   }
 }
