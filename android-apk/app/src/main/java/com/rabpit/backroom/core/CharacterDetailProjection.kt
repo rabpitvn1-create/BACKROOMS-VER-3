@@ -1,5 +1,8 @@
 package com.rabpit.backroom.core
 
+import com.rabpit.backroom.core.gameplay.CharacterStatProjection
+import com.rabpit.backroom.core.gameplay.CharacterStatRules
+
 data class CharacterDetailProjection(
   val id: String,
   val name: String,
@@ -13,7 +16,8 @@ data class CharacterDetailProjection(
   val physiology: DerivedPhysiologyStatus,
   val inventory: List<ItemStack>,
   val equipment: Map<String, String>,
-  val statusEffects: List<StatusEffect>
+  val statusEffects: List<StatusEffect>,
+  val statProjection: CharacterStatProjection? = null
 )
 
 data class PartyDetailProjection(
@@ -46,7 +50,8 @@ object CharacterDetailProjector {
     val equipment = state.equipment[character.equipmentId]?.slots.orEmpty().toSortedMap()
     val effects = character.statusIds.mapNotNull(state.statuses::get)
       .sortedWith(compareBy<StatusEffect> { it.type }.thenBy { it.id })
-    val health = healthFor(state, character)
+    val stats = CharacterStatRules.project(state, character.id)
+    val health = stats?.let { it.currentHp to it.maxHp } ?: healthFor(state, character)
 
     return CharacterDetailProjection(
       id = character.id,
@@ -61,7 +66,8 @@ object CharacterDetailProjector {
       physiology = PhysiologyStatusPolicy.derive(character.physiology),
       inventory = inventory,
       equipment = equipment,
-      statusEffects = effects
+      statusEffects = effects,
+      statProjection = stats
     )
   }
 

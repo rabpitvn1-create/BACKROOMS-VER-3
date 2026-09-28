@@ -1,5 +1,7 @@
 package com.rabpit.backroom.core
 
+import com.rabpit.backroom.core.gameplay.CharacterStat
+
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -52,5 +54,27 @@ object CharacterDetailJson {
         put("persistent", effect.persistent)
       }) }
     })
+    character.statProjection?.let { projection ->
+      put("stats", JSONObject().apply {
+        CharacterStat.entries.forEach { stat ->
+          val line = projection.stats.getValue(stat)
+          put(stat.name, JSONObject().apply {
+            put("base", line.base)
+            put("passiveBonus", line.passiveBonus)
+            put("temporaryModifier", line.temporaryModifier)
+            put("effective", line.effective)
+            put("nextCoreCost", line.nextCoreCost)
+          })
+        }
+      })
+      put("combatStatus", JSONObject().apply {
+        put("damage", projection.combat.damage)
+        put("defendPercent", projection.combat.defendPercent)
+        put("criticalChancePercent", projection.combat.criticalChancePercent)
+        put("evasionPercent", projection.combat.evasionPercent)
+        put("resCriticalPercent", projection.combat.resCriticalPercent)
+        put("resEvasionPercent", projection.combat.resEvasionPercent)
+      })
+    }
   }
 }

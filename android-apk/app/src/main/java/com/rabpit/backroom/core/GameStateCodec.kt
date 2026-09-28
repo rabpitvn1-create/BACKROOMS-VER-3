@@ -1,5 +1,12 @@
 package com.rabpit.backroom.core
 
+import com.rabpit.backroom.core.gameplay.CharacterProgressionState
+import com.rabpit.backroom.core.gameplay.CharacterStatsState
+import com.rabpit.backroom.core.gameplay.CoreResourceState
+import com.rabpit.backroom.core.gameplay.LevelRouteState
+import com.rabpit.backroom.core.gameplay.LevelRuntimeState
+import com.rabpit.backroom.core.gameplay.RouteResult
+
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -20,6 +27,8 @@ object GameStateCodec {
     put("time", gameTime(state.time))
     put("world", stringMap(state.world))
     put("metadata", stringMap(state.metadata))
+    put("coreResource", coreResource(state.coreResource))
+    put("levelRuntime", levelRuntime(state.levelRuntime))
   }.toString()
 
   fun decode(raw: String): GameState = decode(JSONObject(raw))
@@ -67,7 +76,9 @@ object GameStateCodec {
       time = decodeGameTime(root.optJSONObject("time")),
       world = root.optJSONObject("world").stringsMap(),
       saveVersion = CURRENT_SAVE_VERSION,
-      metadata = root.optJSONObject("metadata").stringsMap() + mapOf("migratedFromVersion" to "2", "equipmentSeparated" to "true")
+      metadata = root.optJSONObject("metadata").stringsMap() + mapOf("migratedFromVersion" to "2", "equipmentSeparated" to "true"),
+      coreResource = decodeCoreResource(root.optJSONObject("coreResource")),
+      levelRuntime = decodeLevelRuntime(root.optJSONObject("levelRuntime"))
     )
   }
 
@@ -93,7 +104,9 @@ object GameStateCodec {
       time = decodeGameTime(root.optJSONObject("time")),
       world = root.optJSONObject("world").stringsMap(),
       saveVersion = CURRENT_SAVE_VERSION,
-      metadata = root.optJSONObject("metadata").stringsMap()
+      metadata = root.optJSONObject("metadata").stringsMap(),
+      coreResource = decodeCoreResource(root.optJSONObject("coreResource")),
+      levelRuntime = decodeLevelRuntime(root.optJSONObject("levelRuntime"))
     )
   }
 
@@ -102,6 +115,7 @@ object GameStateCodec {
     putNullable("healthState", value.healthState); put("injuries", JSONArray(value.injuries))
     put("presence", value.presence.name); put("inventoryId", value.inventoryId); put("equipmentId", value.equipmentId)
     put("statusIds", JSONArray(value.statusIds.toList())); put("physiology", physiology(value.physiology)); put("metadata", stringMap(value.metadata))
+    put("progression", progression(value.progression))
   }
 
   private fun decodeCharacter(json: JSONObject) = CharacterState(
@@ -113,7 +127,8 @@ object GameStateCodec {
     equipmentId = json.optString("equipmentId", json.optString("id")),
     statusIds = json.optJSONArray("statusIds").strings().toSet(),
     physiology = decodePhysiology(json.optJSONObject("physiology")),
-    metadata = json.optJSONObject("metadata").stringsMap()
+    metadata = json.optJSONObject("metadata").stringsMap(),
+    progression = decodeProgression(json.optJSONObject("progression"))
   )
 
   private fun physiology(value: PhysiologyState) = JSONObject().apply {
@@ -136,6 +151,78 @@ object GameStateCodec {
       infectionState = json.nullableString("infectionState"),
       thermalState = json.nullableString("thermalState"),
       metadata = json.optJSONObject("metadata").stringsMap()
+    )
+  }
+
+  private fun progression(value: CharacterProgressionState) = JSONObject().apply {
+    put("baseMaxHp", value.baseMaxHp)
+    put("currentHp", value.currentHp)
+    put("stats", JSONObject().apply {
+      put("STR", value.stats.str); put("DEF", value.stats.def); put("SKL", value.stats.skl); put("VIT", value.stats.vit)
+    })
+    putNullable("downedAtTurn", value.downedAtTurn)
+    putNullable("reviveAtTurn", value.reviveAtTurn)
+  }
+
+  private fun decodeProgression(json: JSONObject?): CharacterProgressionState {
+    if (json == null) return CharacterProgressionState()
+    val stats = json.optJSONObject("stats")
+    return CharacterProgressionState(
+      baseMaxHp = json.optInt("baseMaxHp", 50).coerceAtLeast(1),
+      currentHp = json.optInt("currentHp", json.optInt("baseMaxHp", 50)).coerceAtLeast(0),
+      stats = CharacterStatsState(
+        str = stats?.optInt("STR", 5) ?: 5,
+        def = stats?.optInt("DEF", 5) ?: 5,
+        skl = stats?.optInt("SKL", 5) ?: 5,
+        vit = stats?.optInt("VIT", 5) ?: 5
+      ).normalized(),
+      downedAtTurn = json.nullableInt("downedAtTurn"),
+      reviveAtTurn = json.nullableInt("reviveAtTurn")
+    )
+  }
+
+  private fun coreResource(value: CoreResourceState) = JSONObject().apply {
+    put("quantity", value.quantity)
+    put("highestRewardedStageIndex", value.highestRewardedStageIndex)
+    put("treasureStageKills", JSONArray(value.treasureStageKills.sorted()))
+  }
+
+  private fun decodeCoreResource(json: JSONObject?): CoreResourceState {
+    if (json == null) return CoreResourceState()
+    return CoreResourceState(
+      quantity = json.optInt("quantity", 0).coerceAtLeast(0),
+      highestRewardedStageIndex = json.optInt("highestRewardedStageIndex", -1).coerceAtLeast(-1),
+      treasureStageKills = json.optJSONArray("treasureStageKills").strings().toSet()
+    )
+  }
+
+  private fun levelRuntime(value: LevelRuntimeState) = JSONObject().apply {
+    put("key", value.key)
+    put("stageIndex", value.stageIndex)
+    put("route", JSONObject().apply {
+      put("streak", value.route.streak)
+      put("exitAvailable", value.route.exitAvailable)
+      putNullable("lastRollTurn", value.route.lastRollTurn)
+      put("lastResult", value.route.lastResult.name)
+      putNullable("originLocation", value.route.originLocation)
+      putNullable("returnLocation", value.route.returnLocation)
+    })
+  }
+
+  private fun decodeLevelRuntime(json: JSONObject?): LevelRuntimeState {
+    if (json == null) return LevelRuntimeState()
+    val route = json.optJSONObject("route")
+    return LevelRuntimeState(
+      key = json.optString("key", "0").ifBlank { "0" },
+      stageIndex = json.optInt("stageIndex", 0).coerceAtLeast(0),
+      route = LevelRouteState(
+        streak = route?.optInt("streak", 0)?.coerceIn(0, 6) ?: 0,
+        exitAvailable = route?.optBoolean("exitAvailable", false) ?: false,
+        lastRollTurn = route?.nullableInt("lastRollTurn"),
+        lastResult = enumOr(RouteResult.NONE, route?.optString("lastResult").orEmpty()),
+        originLocation = route?.nullableString("originLocation"),
+        returnLocation = route?.nullableString("returnLocation")
+      )
     )
   }
 
@@ -289,6 +376,7 @@ object LegacySaveMigration {
 private fun JSONObject.putNullable(key: String, value: Any?) { put(key, value ?: JSONObject.NULL) }
 private fun JSONObject.nullableString(key: String): String? = if (!has(key) || isNull(key)) null else optString(key).takeIf { it.isNotBlank() }
 private fun JSONObject.nullableLong(key: String): Long? = if (!has(key) || isNull(key)) null else optLong(key)
+private fun JSONObject.nullableInt(key: String): Int? = if (!has(key) || isNull(key)) null else optInt(key)
 private fun JSONObject?.stringsMap(): Map<String, String> {
   if (this == null) return emptyMap()
   val result = mutableMapOf<String, String>(); keys().forEach { result[it] = optString(it) }; return result

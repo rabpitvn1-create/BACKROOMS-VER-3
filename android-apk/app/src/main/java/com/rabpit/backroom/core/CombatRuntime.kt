@@ -1,5 +1,9 @@
 package com.rabpit.backroom.core
 
+import com.rabpit.backroom.core.gameplay.CharacterProgressionRules
+import com.rabpit.backroom.core.gameplay.CharacterStatRules
+import com.rabpit.backroom.core.gameplay.GameplayCatalog
+
 import org.json.JSONObject
 import kotlin.math.abs
 import kotlin.math.max
@@ -56,34 +60,33 @@ object CombatRuntime {
     val escaped: Boolean = false
   )
 
-  private val profiles = listOf(
-    Profile("hound", "Hound", 80, 15, 2, 8),
-    Profile("clump", "Clump", 105, 17, 5, 7),
-    Profile("duller", "Duller", 90, 14, 3, 6),
-    Profile("deathmoth", "Deathmoth", 65, 13, 1, 7),
-    Profile("hostile_faceling", "Hostile Faceling", 75, 14, 2, 7),
-    Profile("false_puddle", "False Puddle", 95, 16, 4, 5),
-    Profile("paintings", "Paintings", 70, 12, 1, 5),
-    Profile("smiler", "Smiler", 85, 18, 2, 9),
-    Profile("skin-stealer", "Skin-Stealer", 100, 18, 4, 8),
-    Profile("predatory_window", "Predatory Window", 115, 17, 6, 6),
-    Profile("biological_pipeline", "Biological Pipeline", 120, 18, 7, 7),
-    Profile("wretch", "Wretch", 85, 16, 2, 8),
-    Profile("cable_mimic", "Cable Mimic", 100, 17, 5, 8),
-    Profile("the_beast_of_level_5", "The Beast of Level 5", 145, 22, 8, 9),
-    Profile("hotel_corpse_lure", "Hotel Corpse Lure", 110, 18, 5, 7),
-    Profile("jeff_the_killer", "Jeff the Killer", 120, 20, 4, 9),
-    Profile("jane_the_killer", "Jane the Killer", 120, 20, 4, 9),
-    Profile("slenderman", "Slenderman", 160, 23, 8, 10)
-  ).associateBy { it.key }
+  private data class Tuning(val armor: Int, val aggression: Int)
+
+  private val tuning = mapOf(
+    "hound" to Tuning(2,8), "clump" to Tuning(5,7), "duller" to Tuning(3,6),
+    "deathmoth" to Tuning(1,7), "hostile_faceling" to Tuning(2,7), "false_puddle" to Tuning(4,5),
+    "paintings" to Tuning(1,5), "smiler" to Tuning(2,9), "skin-stealer" to Tuning(4,8),
+    "predatory_window" to Tuning(6,6), "biological_pipeline" to Tuning(7,7), "wretch" to Tuning(2,8),
+    "cable_mimic" to Tuning(5,8), "the_beast_of_level_5" to Tuning(8,9),
+    "hotel_corpse_lure" to Tuning(5,7), "jeff_the_killer" to Tuning(4,9),
+    "jane_the_killer" to Tuning(4,9), "slenderman" to Tuning(8,10)
+  )
+
+  private fun profileFor(state: GameState, entityKey: String): Profile? {
+    val entity = GameplayCatalog.entity(entityKey) ?: return null
+    val (maxHp, damage) = GameplayCatalog.entityStats(entity, state.levelRuntime.stageIndex)
+    val legacy = tuning[entity.key] ?: Tuning(3, 7)
+    return Profile(entity.key, entity.name, maxHp, damage, legacy.armor, legacy.aggression)
+  }
 
   fun active(state: GameState): Snapshot? = decode(state)?.takeIf { it.phase == Phase.ACTIVE }
 
   fun start(state: GameState, entityKey: String): GameState {
     if (active(state) != null) return state
-    val profile = profiles[entityKey] ?: return state
-    val playerMax = state.metadata[PLAYER_MAX_HP]?.toIntOrNull()?.coerceIn(1, 999) ?: 100
-    val playerHp = state.metadata[PLAYER_HP]?.toIntOrNull()?.coerceIn(0, playerMax) ?: playerMax
+    val profile = profileFor(state, entityKey) ?: return state
+    val projected = CharacterStatRules.project(state, state.party.leaderId)
+    val playerMax = projected?.maxHp ?: state.metadata[PLAYER_MAX_HP]?.toIntOrNull()?.coerceAtLeast(1) ?: 50
+    val playerHp = projected?.currentHp ?: state.metadata[PLAYER_HP]?.toIntOrNull()?.coerceIn(0, playerMax) ?: playerMax
     val seed = stableSeed(entityKey, state.turn.currentTurnId, state.time.elapsedSubjectiveMinutes)
     val snapshot = Snapshot(
       encounterId = "${state.turn.currentTurnId}:${entityKey}:${abs(seed)}",
@@ -111,7 +114,7 @@ object CombatRuntime {
 
   fun resolve(state: GameState, actionKind: String, action: String): Resolution {
     val current = active(state) ?: return Resolution(state, handled = false)
-    val profile = profiles[current.entityKey] ?: return Resolution(clear(state), handled = false)
+    val profile = profileFor(state, current.entityKey) ?: return Resolution(clear(state), handled = false)
     val intent = classify(actionKind, action)
     var c = current.copy(eventCounter = current.eventCounter + 1)
     val log = mutableListOf<String>()
@@ -217,7 +220,8 @@ object CombatRuntime {
       telegraphRevealed = false,
       opening = max(0, c.opening - if (intent == Intent.READ) 0 else 1)
     )
-    val next = encode(state, c)
+    var next = encode(state, c)
+    next = CharacterProgressionRules.setCurrentHp(next, next.party.leaderId, c.playerHp)
     return Resolution(next, true, log.joinToString(" "))
   }
 
@@ -265,16 +269,17 @@ object CombatRuntime {
   private fun decode(state: GameState): Snapshot? {
     val m = state.metadata
     val key = m["${PREFIX}entityKey"]?.takeIf { it.isNotBlank() } ?: return null
-    val profile = profiles[key] ?: return null
+    val profile = profileFor(state, key) ?: return null
     val maxHp = m["${PREFIX}entityMaxHp"]?.toIntOrNull()?.coerceAtLeast(1) ?: profile.maxHp
     val hp = m["${PREFIX}entityHp"]?.toIntOrNull()?.coerceIn(0, maxHp) ?: maxHp
-    val playerMax = m[PLAYER_MAX_HP]?.toIntOrNull()?.coerceAtLeast(1) ?: 100
+    val projected = CharacterStatRules.project(state, state.party.leaderId)
+    val playerMax = m[PLAYER_MAX_HP]?.toIntOrNull()?.coerceAtLeast(1) ?: projected?.maxHp ?: 50
     return Snapshot(
       encounterId = m["${PREFIX}encounterId"].orEmpty(),
       entityKey = key,
       entityName = m["${PREFIX}entityName"] ?: profile.displayName,
       phase = enumOr(Phase.ACTIVE, m["${PREFIX}phase"]),
-      playerHp = m[PLAYER_HP]?.toIntOrNull()?.coerceIn(0, playerMax) ?: playerMax,
+      playerHp = m[PLAYER_HP]?.toIntOrNull()?.coerceIn(0, playerMax) ?: projected?.currentHp ?: playerMax,
       playerMaxHp = playerMax,
       entityHp = hp,
       entityMaxHp = maxHp,

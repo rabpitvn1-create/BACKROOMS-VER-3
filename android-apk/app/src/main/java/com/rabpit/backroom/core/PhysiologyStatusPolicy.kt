@@ -29,9 +29,9 @@ data class DerivedPhysiologyStatus(
  * standard human survival model is not applicable or has not been established yet.
  */
 object PhysiologyStatusPolicy {
-  private const val FOOD_CRITICAL_MINUTES = 72L * 60L
-  private const val WATER_CRITICAL_MINUTES = 48L * 60L
-  private const val REST_CRITICAL_MINUTES = 36L * 60L
+  const val FOOD_CRITICAL_MINUTES = 72L * 60L
+  const val WATER_CRITICAL_MINUTES = 48L * 60L
+  const val REST_CRITICAL_MINUTES = 36L * 60L
 
   fun derive(state: PhysiologyState): DerivedPhysiologyStatus = DerivedPhysiologyStatus(
     hunger = hungerBand(state.minutesSinceFood),

@@ -1,5 +1,9 @@
 package com.rabpit.backroom.core
 
+import com.rabpit.backroom.core.gameplay.CharacterProgressionState
+import com.rabpit.backroom.core.gameplay.CoreResourceState
+import com.rabpit.backroom.core.gameplay.LevelRuntimeState
+
 const val CURRENT_SAVE_VERSION = 3
 const val KAI_ID = "kai"
 const val KAI_WHITE_WRAITH_ID = "kai:white-wraith-magnum"
@@ -96,7 +100,8 @@ data class CharacterState(
   val equipmentId: String = id,
   val statusIds: Set<String> = emptySet(),
   val physiology: PhysiologyState = PhysiologyState(),
-  val metadata: Map<String, String> = emptyMap()
+  val metadata: Map<String, String> = emptyMap(),
+  val progression: CharacterProgressionState = CharacterProgressionState()
 )
 
 data class PartyState(val leaderId: String = KAI_ID, val memberIds: List<String> = listOf(KAI_ID), val maxMembers: Int = 4)
@@ -143,7 +148,9 @@ data class GameState(
   val time: GameTimeState = GameTimeState(),
   val world: Map<String, String> = emptyMap(),
   val saveVersion: Int = CURRENT_SAVE_VERSION,
-  val metadata: Map<String, String> = emptyMap()
+  val metadata: Map<String, String> = emptyMap(),
+  val coreResource: CoreResourceState = CoreResourceState(),
+  val levelRuntime: LevelRuntimeState = LevelRuntimeState()
 ) {
   companion object {
     fun initial(): GameState = GameState(

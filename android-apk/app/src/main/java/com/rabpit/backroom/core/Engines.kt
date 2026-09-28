@@ -1,9 +1,14 @@
 package com.rabpit.backroom.core
 
+import com.rabpit.backroom.core.gameplay.CharacterProgressionRules
+import com.rabpit.backroom.core.gameplay.CharacterStatRules
+import com.rabpit.backroom.core.gameplay.GameplayCatalog
+import kotlin.math.max
+
 // CharacterStatEngine.applyCompletedTurnRegen is invoked by TurnCoordinator after a completed turn.
 
 private fun addItem(inventory: InventoryState, rawItem: ItemStack): InventoryState {
-  val item = ItemContentRules.normalize(rawItem)
+  val item = GameplayCatalog.decorate(ItemContentRules.normalize(rawItem))
   val old = inventory.items[item.itemId]?.let(ItemContentRules::normalize)
   val merged = if (old == null) item else {
     if (!ItemContentRules.sameStackState(old, item)) return inventory.copy(items = inventory.items + (item.itemId to item))
@@ -57,10 +62,55 @@ private fun finishItemUse(
   return inventoryResult.copy(state = current, events = events)
 }
 
+private fun restoreCounter(value: Long?, criticalMinutes: Long, percentPoints: Int): Long? {
+  if (value == null || percentPoints <= 0) return value
+  return max(0L, value - criticalMinutes * percentPoints.toLong() / 100L)
+}
+
+private fun useCatalogItem(
+  state: GameState,
+  source: InventoryState,
+  command: ItemCommand,
+  item: com.rabpit.backroom.core.gameplay.GameplayItem
+): ExecutionResult {
+  val projection = CharacterStatRules.project(state, command.actorId)
+  if (item.effect.hp > 0 && command.actorId != state.party.leaderId && (projection?.currentHp ?: 0) <= 0) {
+    return invalid(state, "companion_downed")
+  }
+  val nextInventory = removeItem(source, command.itemId, command.quantity)
+    ?: return invalid(state, "insufficient_item_quantity")
+  var next = state.copy(inventories = state.inventories + (command.actorId to nextInventory))
+  val character = next.characters[command.actorId] ?: return invalid(state, "actor_unknown")
+  val factor = command.quantity.coerceAtLeast(1)
+  val physiology = character.physiology.copy(
+    minutesSinceFood = restoreCounter(
+      character.physiology.minutesSinceFood,
+      PhysiologyStatusPolicy.FOOD_CRITICAL_MINUTES,
+      item.effect.hunger * factor
+    ),
+    minutesSinceWater = restoreCounter(
+      character.physiology.minutesSinceWater,
+      PhysiologyStatusPolicy.WATER_CRITICAL_MINUTES,
+      item.effect.thirst * factor
+    )
+  )
+  next = next.copy(characters = next.characters + (command.actorId to character.copy(physiology = physiology)))
+  val events = mutableListOf("item_consumed")
+  if (item.effect.hunger > 0) events += "physiology_food_restored"
+  if (item.effect.thirst > 0) events += "physiology_water_restored"
+  if (item.effect.hp > 0) {
+    val healed = CharacterProgressionRules.heal(next, command.actorId, item.effect.hp * factor)
+    next = healed.first
+    if (healed.second > 0) events += "hp_restored"
+  }
+  return ExecutionResult(next, applied = true, events = events)
+}
+
 private fun useItem(state: GameState, source: InventoryState, command: ItemCommand): ExecutionResult {
   val ownedRaw = source.items[command.itemId] ?: return invalid(state, "item_not_owned")
   if (ownedRaw.quantity < command.quantity) return invalid(state, "insufficient_item_quantity")
   val owned = ItemContentRules.normalize(ownedRaw)
+  GameplayCatalog.itemFor(owned)?.let { return useCatalogItem(state, source, command, it) }
   val physiologyEffects = parsePhysiologyEffects(owned.metadata["physiologyEffect"])
     ?: return invalid(state, "physiology_effect_invalid")
   if (owned.contentState == ContentState.EMPTY) return invalid(state, "item_content_empty")
@@ -91,7 +141,9 @@ object InventoryEngine {
     if (command.quantity <= 0) return invalid(state, "quantity_must_be_positive")
     if (ItemContentRules.hasForbiddenPreciseAmount(command.itemName)) return invalid(state, "precise_content_amount_forbidden")
     val source = state.inventories[command.actorId] ?: InventoryState(command.actorId)
-    val item = ItemContentRules.normalize(ItemStack(command.itemId, command.itemName, command.quantity, metadata = command.metadata))
+    val item = GameplayCatalog.decorate(ItemContentRules.normalize(
+      ItemStack(command.itemId, command.itemName, command.quantity, metadata = command.metadata)
+    ))
     return when (command.operation) {
       ItemCommand.Operation.PICKUP -> {
         val validation = InventoryPolicy.validateAddition(state, command.actorId, source, item, command.quantity)
