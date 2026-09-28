@@ -25,7 +25,7 @@ class GameplayPortTest {
     assertEquals(225, CharacterProgressionRules.scaledCoreReward(100, 2))
 
     val initialCaoMinh = GameState.initial()
-    assertEquals(6, initialCaoMinh.saveVersion)
+    assertEquals(7, initialCaoMinh.saveVersion)
     assertEquals("Cao Minh", initialCaoMinh.characters.getValue(PLAYER_ID).name)
     assertEquals("file:///android_asset/avatars/cao_minh_avatar.jpg", initialCaoMinh.characters.getValue(PLAYER_ID).avatarRef)
     assertEquals(
@@ -44,7 +44,14 @@ class GameplayPortTest {
     assertEquals(550, CharacterStatRules.project(upgraded, PLAYER_ID)!!.maxHp)
     assertEquals(55, CharacterStatRules.project(upgraded, PLAYER_ID)!!.currentHp)
 
+    assertEquals(5, GameplayCatalog.CHEST_SPAWN_RATE_PERCENT)
+    assertEquals(100, GameplayCatalog.ENTITY_DROP_RATE_PERCENT)
     assertEquals(8, GameplayCatalog.chestPool.size)
+    assertEquals(
+      listOf("almond-water", "bandage", "first-aid-kit", "lavie-water", "coconut-water", "banh-mi-thit", "hot-soy-milk", "com-tam-suon-bi-cha"),
+      GameplayCatalog.chestPool.map { it.id }
+    )
+    assertEquals(listOf("almond-water", "bandage"), GameplayCatalog.entityDropPool.map { it.id })
     assertEquals(35, GameplayCatalog.item("first-aid-kit")!!.effect.hp)
     assertEquals(150, GameplayCatalog.entity("hound")!!.baseMaxHp)
     assertEquals(3, GameplayCatalog.entity("hound")!!.skills.size)
@@ -70,6 +77,30 @@ class GameplayPortTest {
     ],"edges":[{"from":"0","to":"0.1"}]}""")
     assertTrue(graph.allows("0", "0.1"))
     assertFalse(graph.allows("0.1", "0"))
+  }
+
+  @Test fun v2LootAuthorityRejectsAiAndEntityVictoryDropsExactlyOneCatalogItem() {
+    val denied = StateReducer.execute(GameState.initial(), ItemCommand(
+      commandId = "gemini-loot",
+      turnId = "TURN_1",
+      actorId = PLAYER_ID,
+      source = CommandSource.GEMINI,
+      operation = ItemCommand.Operation.PICKUP,
+      itemId = "almond-water",
+      itemName = "Almond Water"
+    ))
+    assertFalse(denied.applied)
+    assertEquals("player_pickup_unavailable", denied.validation.reason)
+
+    val before = GameState.initial()
+    val beforeQuantity = before.inventories.getValue(PLAYER_ID).items.values.sumOf { it.quantity }
+    val rewarded = ExplorationRuntime.entityVictoryRewards(before, "hound")
+    val afterQuantity = rewarded.inventories.getValue(PLAYER_ID).items.values.sumOf { it.quantity }
+    assertEquals(beforeQuantity + 1, afterQuantity)
+    assertTrue(rewarded.inventories.getValue(PLAYER_ID).items.keys.any {
+      it == "almond-water" || it == "bandage"
+    })
+    assertEquals(2, rewarded.coreResource.quantity)
   }
 
   @Test fun reducerOwnsUpgradeSharedConsumableAndJoinSurvivalBaseline() {
