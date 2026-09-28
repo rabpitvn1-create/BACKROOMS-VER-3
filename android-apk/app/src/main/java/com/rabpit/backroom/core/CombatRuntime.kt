@@ -340,7 +340,8 @@ object CombatRuntime {
     put("telegraph", if (c.telegraphRevealed) c.telegraph else "UNKNOWN")
     put("telegraphRevealed", c.telegraphRevealed)
     readDice(state, c.seed).let { dice ->
-      put("dice", JSONObject().apply {
+      put("rngSequence", readRngSequence(state))
+      put("diceState", JSONObject().apply {
         put("values", org.json.JSONArray(dice.values))
         put("held", org.json.JSONArray(dice.held))
         put("hasRolled", dice.hasRolled)
@@ -349,7 +350,6 @@ object CombatRuntime {
         put("finalized", dice.finalized)
         put("resolved", dice.resolved)
         put("hand", dice.hand)
-        put("token", PokerDiceRules.fromV2Name(dice.hand).token)
       })
     }
   } }
@@ -427,13 +427,15 @@ object CombatRuntime {
   private fun readDice(state: GameState, seed: Long): PokerDiceState {
     val metadata = state.metadata
     val values = metadata["${PREFIX}dice.values"]?.split(',')?.mapNotNull(String::toIntOrNull)
+      ?: throw IllegalStateException("Combat dice state bị thiếu.")
     val held = metadata["${PREFIX}dice.held"]?.split(',')?.map { it == "1" }
+      ?: throw IllegalStateException("Combat dice state bị thiếu.")
     val hasRolled = metadata["${PREFIX}dice.hasRolled"].toBoolean()
-    if (values?.size != PokerDiceRules.DICE_COUNT || held?.size != PokerDiceRules.DICE_COUNT) {
-      return PokerDiceRuntime.newState()
+    if (values.size != PokerDiceRules.DICE_COUNT || held.size != PokerDiceRules.DICE_COUNT) {
+      throw IllegalStateException("Combat dice state không hợp lệ.")
     }
     if (values.any { it !in 0..6 } || (hasRolled && values.any { it !in 1..6 })) {
-      return PokerDiceRuntime.newState()
+      throw IllegalStateException("Combat dice state không hợp lệ.")
     }
     return PokerDiceState(
       values = values,
