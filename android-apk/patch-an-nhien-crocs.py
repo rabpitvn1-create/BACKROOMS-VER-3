@@ -4,7 +4,7 @@ import runpy
 ROOT = Path(__file__).resolve().parent
 CORE = ROOT / "app/src/main/java/com/rabpit/backroom/core"
 
-canon_path = CORE / "AnNhienCanon.kt"
+canon_path = CORE / "legacy/character/AnNhienCanon.kt"
 canon = canon_path.read_text(encoding="utf-8")
 
 old_id = 'const val AN_NHIEN_FOOTWEAR_ID = "an-nhien:baby-tree-pink-slippers"'
