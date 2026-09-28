@@ -43,7 +43,7 @@ object StateReducer {
       }
     }
     if (!result.applied) return result
-    val rememberedItemId = (command as? ItemCommand)?.let { rememberedItemAfter(state, result.state, it) }
+    val rememberedItemId = (command as? ItemCommand)?.itemId
     val nextMetadata = if (rememberedItemId != null) result.state.metadata + ("lastReferencedItemId" to rememberedItemId) else result.state.metadata
     return result.copy(state = result.state.copy(
       metadata = nextMetadata,
@@ -51,8 +51,6 @@ object StateReducer {
     ))
   }
 
-  private fun rememberedItemAfter(before: GameState, after: GameState, command: ItemCommand): String =
-    command.itemId
 
   fun executeAll(state: GameState, commands: List<GameCommand>): ExecutionResult {
     var current = state
