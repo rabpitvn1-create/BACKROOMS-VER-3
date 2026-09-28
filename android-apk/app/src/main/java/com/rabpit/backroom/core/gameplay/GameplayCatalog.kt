@@ -66,7 +66,7 @@ object GameplayCatalog {
     EntityDefinition("tam_ma_cao_minh","Tâm Ma Cao Minh",300,30,4.0,true,true,(0..6).toSet(),es(Triple("Tâm Ma Trảm",120,35),Triple("Huyết Ảnh Phản Kích",115,40),Triple("Ma Hổ Phệ",110,45))),
     EntityDefinition("jane_the_killer","Jane",270,20),
     EntityDefinition("slenderman","Slenderman",360,23),
-    EntityDefinition("diep_minh","Diệp Minh",1200,42)
+    EntityDefinition("diep_minh","Diệp Minh",1200,42,3.5,true,levels=(0..6).toSet(),skills=es(Triple("Golden Sword Slash",110,32),Triple("Demonic Claw",115,32),Triple("Sword-Claw Assault",120,21)))
   ).associateBy { it.key }
 
   private val activeSkills = mapOf(
