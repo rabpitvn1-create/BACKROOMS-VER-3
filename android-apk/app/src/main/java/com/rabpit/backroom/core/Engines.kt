@@ -10,12 +10,9 @@ import kotlin.math.max
 // CharacterStatEngine.applyCompletedTurnRegen is invoked by TurnCoordinator after a completed turn.
 
 private fun addItem(inventory: InventoryState, rawItem: ItemStack): InventoryState {
-  val item = GameplayCatalog.decorate(ItemContentRules.normalize(rawItem))
-  val old = inventory.items[item.itemId]?.let(ItemContentRules::normalize)
-  val merged = if (old == null) item else {
-    if (!ItemContentRules.sameStackState(old, item)) return inventory.copy(items = inventory.items + (item.itemId to item))
-    old.copy(quantity = old.quantity + item.quantity)
-  }
+  val item = GameplayCatalog.decorate(rawItem)
+  val old = inventory.items[item.itemId]
+  val merged = if (old == null) item else old.copy(quantity = old.quantity + item.quantity)
   return inventory.copy(items = inventory.items + (item.itemId to merged))
 }
 
@@ -25,48 +22,6 @@ private fun removeItem(inventory: InventoryState, itemId: String, quantity: Int)
   val items = if (old.quantity == quantity) inventory.items - itemId
   else inventory.items + (itemId to old.copy(quantity = old.quantity - quantity))
   return inventory.copy(items = items)
-}
-
-private fun parsePhysiologyEffects(raw: String?): Set<String>? {
-  if (raw == null) return emptySet()
-  val effects = raw.split(',', ';', '|').map { it.trim().uppercase() }.filter { it.isNotEmpty() }
-  if (effects.isEmpty() || effects.any { it !in setOf("WATER", "FOOD") }) return null
-  return effects.toSet()
-}
-
-private fun finishItemUse(
-  originalState: GameState,
-  inventoryResult: ExecutionResult,
-  command: ItemCommand,
-  physiologyEffects: Set<String>
-): ExecutionResult {
-  if (!inventoryResult.applied || physiologyEffects.isEmpty()) return inventoryResult
-  var current = inventoryResult.state
-  val events = inventoryResult.events.toMutableList()
-  physiologyEffects.forEachIndexed { index, effect ->
-    val operation = when (effect) {
-      "WATER" -> PhysiologyCommand.Operation.RECORD_WATER
-      "FOOD" -> PhysiologyCommand.Operation.RECORD_FOOD
-      else -> return ExecutionResult(originalState, false, validation = ValidationResult(false, "physiology_effect_invalid"))
-    }
-    val physiology = PhysiologyEngine.execute(current, PhysiologyCommand(
-      commandId = "${command.commandId}:PHYS:$index",
-      turnId = command.turnId,
-      actorId = command.actorId,
-      targetId = command.actorId,
-      source = CommandSource.SYSTEM,
-      operation = operation
-    ))
-    if (!physiology.applied) return ExecutionResult(originalState, false, validation = physiology.validation)
-    current = physiology.state
-    events += physiology.events
-  }
-  return inventoryResult.copy(state = current, events = events)
-}
-
-private fun restoreCounter(value: Long?, criticalMinutes: Long, percentPoints: Int): Long? {
-  if (value == null || percentPoints <= 0) return value
-  return max(0L, value - criticalMinutes * percentPoints.toLong() / 100L)
 }
 
 private fun useCatalogItem(
@@ -110,41 +65,19 @@ private fun useCatalogItem(
 }
 
 private fun useItem(state: GameState, source: InventoryState, command: ItemCommand): ExecutionResult {
-  val ownedRaw = source.items[command.itemId] ?: return invalid(state, "item_not_owned")
-  if (ownedRaw.quantity < command.quantity) return invalid(state, "insufficient_item_quantity")
-  val owned = ItemContentRules.normalize(ownedRaw)
-  GameplayCatalog.itemFor(owned)?.let { return useCatalogItem(state, source, command, it) }
-  val physiologyEffects = parsePhysiologyEffects(owned.metadata["physiologyEffect"])
-    ?: return invalid(state, "physiology_effect_invalid")
-  if (owned.contentState == ContentState.EMPTY) return invalid(state, "item_content_empty")
-  if (owned.contentState == ContentState.FULL || owned.contentState == ContentState.LOW) {
-    val nextVariant = ItemContentRules.nextAfterUse(owned) ?: return invalid(state, "item_content_empty")
-    var nextInventory = removeItem(source, command.itemId, command.quantity) ?: return invalid(state, "insufficient_item_quantity")
-    nextInventory = addItem(nextInventory, nextVariant.copy(quantity = command.quantity))
-    val inventoryResult = changed(
-      state.copy(inventories = state.inventories + (command.actorId to nextInventory)),
-      if (nextVariant.contentState == ContentState.EMPTY) "item_content_emptied" else "item_content_reduced"
-    )
-    return finishItemUse(state, inventoryResult, command, physiologyEffects)
-  }
-  val consumedOnUse = owned.metadata["consumedOnUse"].equals("true", true) ||
-    (owned.metadata["consumable"].equals("true", true) && !owned.metadata["containerPersistent"].equals("true", true))
-  if (consumedOnUse) {
-    val next = removeItem(source, command.itemId, command.quantity) ?: return invalid(state, "insufficient_item_quantity")
-    val inventoryResult = changed(state.copy(inventories = state.inventories + (command.actorId to next)), "item_consumed")
-    return finishItemUse(state, inventoryResult, command, physiologyEffects)
-  }
-  return finishItemUse(state, changed(state, "item_used"), command, physiologyEffects)
+  val owned = source.items[command.itemId] ?: return invalid(state, "item_not_owned")
+  if (owned.quantity < command.quantity) return invalid(state, "insufficient_item_quantity")
+  val item = GameplayCatalog.itemFor(owned) ?: return invalid(state, "item_not_consumable")
+  return useCatalogItem(state, source, command, item)
 }
 
 object InventoryEngine {
   fun execute(state: GameState, command: ItemCommand): ExecutionResult {
     if (command.quantity <= 0) return invalid(state, "quantity_must_be_positive")
-    if (ItemContentRules.hasForbiddenPreciseAmount(command.itemName)) return invalid(state, "precise_content_amount_forbidden")
     val source = state.inventories[command.actorId] ?: InventoryState(command.actorId)
-    val item = GameplayCatalog.decorate(ItemContentRules.normalize(
+    val item = GameplayCatalog.decorate(
       ItemStack(command.itemId, command.itemName, command.quantity, metadata = command.metadata)
-    ))
+    )
     return when (command.operation) {
       ItemCommand.Operation.PICKUP -> {
         changed(state.copy(inventories = state.inventories + (command.actorId to addItem(source, item))), "inventory_pickup")
@@ -161,7 +94,7 @@ object InventoryEngine {
         val owned = source.items[command.itemId] ?: return invalid(state, "item_not_owned")
         if (owned.quantity < command.quantity) return invalid(state, "insufficient_item_quantity")
         if (EquipmentRules.isEquipped(state, command.actorId, command.itemId)) return invalid(state, "item_equipped")
-        val transferred = ItemContentRules.normalize(owned).copy(quantity = command.quantity)
+        val transferred = owned.copy(quantity = command.quantity)
         val targetInventory = state.inventories[targetId] ?: InventoryState(targetId)
         val from = removeItem(source, command.itemId, command.quantity) ?: return invalid(state, "insufficient_item_quantity")
         val to = addItem(targetInventory, transferred)
