@@ -60,12 +60,9 @@ class RuleIntentInterpreter : IntentInterpreter {
   private data class Rule(val intent: GameIntent, val regex: Regex)
 
   private val rules = listOf(
-    Rule(GameIntent.TRANSFER_ITEM, Regex("(?i:đưa|trao|chuyển)(?:.*(?i:cho|sang)\\s+\\p{L}+|\\s+\\p{Lu}\\p{L}+)") ),
     Rule(GameIntent.PICKUP_ITEM, Regex("(?:^|\\s)(?:nhặt|lượm|cầm lên|lấy lên)(?:\\s|$)", RegexOption.IGNORE_CASE)),
     Rule(GameIntent.DROP_ITEM, Regex("(?:^|\\s)(?:vứt|thả|bỏ xuống)(?:\\s|$)", RegexOption.IGNORE_CASE)),
     Rule(GameIntent.USE_ITEM, Regex("(?:^|\\s)(?:dùng|sử dụng|uống|ăn)(?:\\s|$)", RegexOption.IGNORE_CASE)),
-    Rule(GameIntent.EQUIP_ITEM, Regex("(?:trang bị|đeo|mặc|cầm làm vũ khí)(?:\\s|$)", RegexOption.IGNORE_CASE)),
-    Rule(GameIntent.UNEQUIP_ITEM, Regex("(?:tháo|cởi|bỏ trang bị)(?:\\s|$)", RegexOption.IGNORE_CASE)),
     Rule(GameIntent.PARTY_JOIN_REQUEST, Regex("(?:vào|gia nhập|tham gia)\\s+(?:party|đội|nhóm)", RegexOption.IGNORE_CASE)),
     Rule(GameIntent.PARTY_REMOVE, Regex("(?:rời|đuổi khỏi|loại khỏi)\\s+(?:party|đội|nhóm)", RegexOption.IGNORE_CASE)),
     Rule(GameIntent.INVENTORY_QUERY, Regex("(?:inventory|kho đồ|túi đồ).*(?:gì|xem|kiểm tra|hiện tại)|(?:xem|kiểm tra).*(?:inventory|kho đồ|túi đồ)", RegexOption.IGNORE_CASE)),
