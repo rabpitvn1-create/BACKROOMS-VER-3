@@ -171,8 +171,197 @@ public class MainActivity extends Activity {
     throw last != null ? last : new Exception("Không có Gemini API key trong APK.");
   }
 
+  private boolean haikuConfigured() {
+    return BuildConfig.HAIKU_API_KEY != null && !BuildConfig.HAIKU_API_KEY.trim().isEmpty()
+        && BuildConfig.HAIKU_MODEL != null && !BuildConfig.HAIKU_MODEL.trim().isEmpty()
+        && BuildConfig.HAIKU_BASE_URL != null && !BuildConfig.HAIKU_BASE_URL.trim().isEmpty();
+  }
+
+  private String haikuModel() throws Exception {
+    String model = BuildConfig.HAIKU_MODEL == null ? "" : BuildConfig.HAIKU_MODEL.trim();
+    if (model.isEmpty()) throw new Exception("HAIKU_MODEL chưa được cấu hình.");
+    return model;
+  }
+
+  private String haikuBaseUrl() throws Exception {
+    String base = BuildConfig.HAIKU_BASE_URL == null ? "" : BuildConfig.HAIKU_BASE_URL.trim();
+    if (base.isEmpty()) throw new Exception("HAIKU_BASE_URL chưa được cấu hình.");
+    if (!base.toLowerCase(java.util.Locale.ROOT).startsWith("https://")) {
+      throw new Exception("HAIKU_BASE_URL phải dùng HTTPS.");
+    }
+    while (base.endsWith("/") && base.length() > "https://".length()) {
+      base = base.substring(0, base.length() - 1);
+    }
+    return base;
+  }
+
+  private String haikuEndpoint(String suffix) throws Exception {
+    String base = haikuBaseUrl();
+    if (base.endsWith(suffix)) return base;
+    if (base.endsWith("/v1")) return base + suffix;
+    if ("/messages".equals(suffix) && !base.contains("/v1")) return base + "/v1/messages";
+    return base + suffix;
+  }
+
+  private String postJsonHaiku(String endpoint, JSONObject payload, boolean anthropic) throws Exception {
+    HttpURLConnection connection = (HttpURLConnection) new URL(endpoint).openConnection();
+    connection.setRequestMethod("POST");
+    connection.setConnectTimeout(20000);
+    connection.setReadTimeout(60000);
+    connection.setDoOutput(true);
+    connection.setRequestProperty("Content-Type", "application/json");
+    if (anthropic) {
+      connection.setRequestProperty("x-api-key", BuildConfig.HAIKU_API_KEY);
+      connection.setRequestProperty("anthropic-version", "2023-06-01");
+    } else {
+      connection.setRequestProperty("Authorization", "Bearer " + BuildConfig.HAIKU_API_KEY);
+    }
+    try (OutputStream output = connection.getOutputStream()) {
+      output.write(payload.toString().getBytes("UTF-8"));
+    }
+
+    int status = connection.getResponseCode();
+    InputStream stream = status >= 200 && status < 300 ? connection.getInputStream() : connection.getErrorStream();
+    StringBuilder body = new StringBuilder();
+    if (stream != null) {
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"))) {
+        String line;
+        while ((line = reader.readLine()) != null) body.append(line);
+      }
+    }
+    connection.disconnect();
+
+    if (status < 200 || status >= 300) {
+      String detail = body.length() > 220 ? body.substring(0, 220) : body.toString();
+      throw new HttpError(status, "Haiku HTTP " + status + (detail.isEmpty() ? "" : ": " + detail));
+    }
+    return body.toString();
+  }
+
+  private String haikuAnthropicText(String prompt) throws Exception {
+    JSONObject body = new JSONObject()
+        .put("model", haikuModel())
+        .put("max_tokens", 2048)
+        .put("temperature", 0.6)
+        .put("messages", new JSONArray().put(
+            new JSONObject().put("role", "user").put("content", prompt)));
+    JSONObject result = new JSONObject(postJsonHaiku(haikuEndpoint("/messages"), body, true));
+    JSONArray content = result.optJSONArray("content");
+    StringBuilder text = new StringBuilder();
+    if (content != null) {
+      for (int i = 0; i < content.length(); i++) {
+        JSONObject part = content.optJSONObject(i);
+        String piece = part == null ? "" : part.optString("text", "").trim();
+        if (!piece.isEmpty()) {
+          if (text.length() > 0) text.append('\n');
+          text.append(piece);
+        }
+      }
+    }
+    if (text.length() == 0) throw new Exception("Haiku không trả nội dung.");
+    return text.toString();
+  }
+
+  private String haikuOpenAiText(String prompt) throws Exception {
+    JSONObject body = new JSONObject()
+        .put("model", haikuModel())
+        .put("temperature", 0.6)
+        .put("max_tokens", 2048)
+        .put("messages", new JSONArray().put(
+            new JSONObject().put("role", "user").put("content", prompt)));
+    JSONObject result = new JSONObject(postJsonHaiku(haikuEndpoint("/chat/completions"), body, false));
+    JSONArray choices = result.optJSONArray("choices");
+    if (choices == null || choices.length() == 0) throw new Exception("Haiku không trả nội dung.");
+    JSONObject first = choices.optJSONObject(0);
+    JSONObject message = first == null ? null : first.optJSONObject("message");
+    Object rawContent = message == null ? null : message.opt("content");
+    StringBuilder text = new StringBuilder();
+    if (rawContent instanceof String) {
+      text.append(((String) rawContent).trim());
+    } else if (rawContent instanceof JSONArray) {
+      JSONArray parts = (JSONArray) rawContent;
+      for (int i = 0; i < parts.length(); i++) {
+        JSONObject part = parts.optJSONObject(i);
+        String piece = part == null ? "" : part.optString("text", "").trim();
+        if (!piece.isEmpty()) {
+          if (text.length() > 0) text.append('\n');
+          text.append(piece);
+        }
+      }
+    }
+    if (text.length() == 0) throw new Exception("Haiku không trả nội dung.");
+    return text.toString();
+  }
+
+  private boolean haikuProtocolMismatch(Exception error) {
+    if (!(error instanceof HttpError)) return false;
+    int status = ((HttpError) error).status;
+    return status == 400 || status == 404 || status == 405 || status == 415 || status == 422;
+  }
+
+  private String haikuTextOnce(String prompt) throws Exception {
+    String base = haikuBaseUrl();
+    String output;
+    if (base.endsWith("/chat/completions")) {
+      output = haikuOpenAiText(prompt);
+    } else if (base.endsWith("/messages") || base.contains("api.anthropic.com")) {
+      output = haikuAnthropicText(prompt);
+    } else {
+      try {
+        output = haikuOpenAiText(prompt);
+      } catch (Exception openAiError) {
+        if (!haikuProtocolMismatch(openAiError)) throw openAiError;
+        output = haikuAnthropicText(prompt);
+      }
+    }
+    parseModelJson(output);
+    return output;
+  }
+
+  private String haikuText(String prompt) throws Exception {
+    if (!haikuConfigured()) throw new Exception("Haiku fallback chưa được cấu hình đầy đủ.");
+    Exception last = null;
+    for (int attempt = 0; attempt < 2; attempt++) {
+      try {
+        return haikuTextOnce(prompt);
+      } catch (Exception error) {
+        last = error;
+        int status = error instanceof HttpError ? ((HttpError) error).status : 0;
+        boolean retry = attempt == 0 && (status == 0 || status == 408 || status == 500
+            || status == 502 || status == 503 || status == 504);
+        if (!retry) break;
+        try {
+          Thread.sleep(800);
+        } catch (InterruptedException interrupted) {
+          Thread.currentThread().interrupt();
+          break;
+        }
+      }
+    }
+    throw last != null ? last : new Exception("Haiku không khả dụng.");
+  }
+
+  private String providerErrorSummary(Exception error) {
+    if (error == null) return "không xác định";
+    String message = error.getMessage();
+    if (message == null || message.trim().isEmpty()) return error.getClass().getSimpleName();
+    return message.length() > 220 ? message.substring(0, 220) : message;
+  }
+
   private String generateText(String prompt) throws Exception {
-    return geminiText(prompt);
+    Exception geminiError;
+    try {
+      return geminiText(prompt);
+    } catch (Exception error) {
+      geminiError = error;
+    }
+
+    try {
+      return haikuText(prompt);
+    } catch (Exception haikuError) {
+      throw new Exception("5 Gemini key và Haiku fallback đều không khả dụng. Gemini: "
+          + providerErrorSummary(geminiError) + " | Haiku: " + providerErrorSummary(haikuError));
+    }
   }
 
   private JSONObject parseModelJson(String raw) throws Exception {
