@@ -5,20 +5,20 @@ import org.junit.Test
 
 class CharacterDetailProjectionTest {
   @Test fun partyProjectionKeepsPartyOrderLeaderAndSubjectiveTime() {
-    val player = CharacterState(KAI_ID, "Player", avatarRef = "avatars/player.png")
+    val player = CharacterState(PLAYER_ID, "Player", avatarRef = "avatars/player.png")
     val companion = CharacterState("companion", "Companion", avatarRef = "avatars/companion.png")
     val state = GameState.initial().copy(
-      characters = linkedMapOf(KAI_ID to player, "companion" to companion),
-      party = PartyState(leaderId = KAI_ID, memberIds = listOf(KAI_ID, "companion"), maxMembers = 4),
+      characters = linkedMapOf(PLAYER_ID to player, "companion" to companion),
+      party = PartyState(leaderId = PLAYER_ID, memberIds = listOf(PLAYER_ID, "companion"), maxMembers = 4),
       time = GameTimeState(elapsedSubjectiveMinutes = 845L)
     )
 
     val projected = CharacterDetailProjector.projectParty(state)
 
-    assertEquals(KAI_ID, projected.leaderId)
+    assertEquals(PLAYER_ID, projected.leaderId)
     assertEquals(4, projected.maxMembers)
     assertEquals(845L, projected.elapsedSubjectiveMinutes)
-    assertEquals(listOf(KAI_ID, "companion"), projected.members.map { it.id })
+    assertEquals(listOf(PLAYER_ID, "companion"), projected.members.map { it.id })
     assertTrue(projected.members[0].isLeader)
     assertFalse(projected.members[1].isLeader)
   }
@@ -43,17 +43,17 @@ class CharacterDetailProjectionTest {
       )
     )
     val state = GameState.initial().copy(
-      characters = mapOf(KAI_ID to GameState.initial().characters.getValue(KAI_ID), "companion" to companion),
-      party = PartyState(memberIds = listOf(KAI_ID, "companion")),
+      characters = mapOf(PLAYER_ID to GameState.initial().characters.getValue(PLAYER_ID), "companion" to companion),
+      party = PartyState(memberIds = listOf(PLAYER_ID, "companion")),
       inventories = mapOf(
-        KAI_ID to InventoryState(KAI_ID, mapOf("player-item" to ItemStack("player-item", "Player Item"))),
+        PLAYER_ID to InventoryState(PLAYER_ID, mapOf("player-item" to ItemStack("player-item", "Player Item"))),
         "companion-pack" to InventoryState("companion-pack", mapOf(
           "b" to ItemStack("b", "Zeta"),
           "a" to ItemStack("a", "Alpha")
         ))
       ),
       equipment = mapOf(
-        KAI_ID to GameState.initial().equipment.getValue(KAI_ID),
+        PLAYER_ID to GameState.initial().equipment.getValue(PLAYER_ID),
         "companion-kit" to EquipmentState("companion-kit", mapOf("weapon" to "ivory", "armor" to "argus"))
       ),
       statuses = mapOf(injury.id to injury, unrelated.id to unrelated)
@@ -76,8 +76,8 @@ class CharacterDetailProjectionTest {
   @Test fun projectionDoesNotInventMissingData() {
     val unknown = CharacterState("survivor", "Survivor")
     val state = GameState.initial().copy(
-      characters = mapOf(KAI_ID to GameState.initial().characters.getValue(KAI_ID), "survivor" to unknown),
-      party = PartyState(memberIds = listOf(KAI_ID, "survivor"))
+      characters = mapOf(PLAYER_ID to GameState.initial().characters.getValue(PLAYER_ID), "survivor" to unknown),
+      party = PartyState(memberIds = listOf(PLAYER_ID, "survivor"))
     )
 
     val projected = CharacterDetailProjector.projectCharacter(state, "survivor")!!
