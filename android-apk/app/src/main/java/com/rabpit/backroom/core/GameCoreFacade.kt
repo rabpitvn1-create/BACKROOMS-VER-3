@@ -358,7 +358,6 @@ class GameCoreFacade private constructor(
     if (value.isBlank()) return null
     state.characters[value]?.let { return it.id }
     val normalized = value.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), "_").trim('_')
-    if (normalized in setOf("cao_minh", "kai", "twilight")) return state.party.leaderId
     return state.characters.values.firstOrNull { character ->
       character.id.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), "_").trim('_') == normalized ||
         character.name.lowercase().replace(Regex("[^\\p{L}\\p{N}]+"), "_").trim('_') == normalized
@@ -422,7 +421,7 @@ class GameCoreFacade private constructor(
     state.world["title"]?.let { output.put("title", it) }
     state.world["levelJson"]?.let { output.put("level", JSONObject(it)) }
     state.world["flagsJson"]?.let { output.put("flags", JSONObject(it)) }
-    state.metadata["legacyPlayerJson"]?.let { output.put("player", JSONObject(it)) }
+    state.metadata["playerJson"]?.let { output.put("player", JSONObject(it)) }
     return output
   }
 
