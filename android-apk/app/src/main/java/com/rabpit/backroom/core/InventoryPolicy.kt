@@ -1,5 +1,7 @@
 package com.rabpit.backroom.core
 
+import com.rabpit.backroom.core.gameplay.EquipmentRules
+
 data class InventoryProfile(val maxTypes: Int, val maxPerType: Int)
 
 object InventoryPolicy {
@@ -21,7 +23,8 @@ object InventoryPolicy {
     val old = inventory.items[normalized.itemId]
     val resultingQuantity = (old?.quantity ?: 0) + quantity
     if (resultingQuantity > profile.maxPerType) return "inventory_stack_limit"
-    if (old == null && inventory.items.size >= profile.maxTypes) return "inventory_slot_limit"
+    val carriedTypes = inventory.items.keys.count { !EquipmentRules.isEquipped(state, ownerId, it) }
+    if (old == null && carriedTypes >= profile.maxTypes) return "inventory_slot_limit"
     return null
   }
 

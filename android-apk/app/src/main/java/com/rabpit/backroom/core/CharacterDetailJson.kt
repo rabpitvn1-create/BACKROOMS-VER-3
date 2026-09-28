@@ -61,6 +61,7 @@ object CharacterDetailJson {
           put(stat.name, JSONObject().apply {
             put("base", line.base)
             put("passiveBonus", line.passiveBonus)
+            put("equipmentBonus", line.equipmentBonus)
             put("temporaryModifier", line.temporaryModifier)
             put("effective", line.effective)
             put("nextCoreCost", line.nextCoreCost)

@@ -3,6 +3,7 @@ package com.rabpit.backroom.core
 import com.rabpit.backroom.core.gameplay.CharacterProgressionRules
 import com.rabpit.backroom.core.gameplay.CharacterStat
 import com.rabpit.backroom.core.gameplay.CharacterStatRules
+import com.rabpit.backroom.core.gameplay.EquipmentRules
 import com.rabpit.backroom.core.gameplay.GameplayCatalog
 import kotlin.math.max
 
@@ -153,6 +154,7 @@ object InventoryEngine {
         changed(state.copy(inventories = state.inventories + (command.actorId to addItem(source, item))), "inventory_pickup")
       }
       ItemCommand.Operation.DROP -> {
+        if (EquipmentRules.isEquipped(state, command.actorId, command.itemId)) return invalid(state, "item_equipped")
         val next = removeItem(source, command.itemId, command.quantity) ?: return invalid(state, "insufficient_item_quantity")
         changed(state.copy(inventories = state.inventories + (command.actorId to next)), "inventory_remove")
       }
@@ -162,6 +164,7 @@ object InventoryEngine {
         if (!state.characters.containsKey(targetId)) return invalid(state, "target_unknown")
         val owned = source.items[command.itemId] ?: return invalid(state, "item_not_owned")
         if (owned.quantity < command.quantity) return invalid(state, "insufficient_item_quantity")
+        if (EquipmentRules.isEquipped(state, command.actorId, command.itemId)) return invalid(state, "item_equipped")
         if (command.actorId == KAI_ID && InventoryPolicy.isKaiSignatureEquipment(state, owned)) return invalid(state, "signature_equipment_locked")
         val transferred = ItemContentRules.normalize(owned).copy(quantity = command.quantity)
         val targetInventory = state.inventories[targetId] ?: InventoryState(targetId)
@@ -172,16 +175,23 @@ object InventoryEngine {
         changed(state.copy(inventories = state.inventories + (command.actorId to from) + (targetId to to)), "inventory_transfer")
       }
       ItemCommand.Operation.EQUIP -> {
-        if ((source.items[command.itemId]?.quantity ?: 0) < command.quantity) return invalid(state, "item_not_owned")
-        val slot = command.slot ?: return invalid(state, "equipment_slot_required")
+        val owned = source.items[command.itemId] ?: return invalid(state, "item_not_owned")
+        if (owned.quantity < 1) return invalid(state, "item_not_owned")
+        val targetSlots = EquipmentRules.occupiedSlots(owned, command.slot)
+        if (targetSlots.isEmpty()) return invalid(state, "equipment_slot_required")
         val equipment = state.equipment[command.actorId] ?: EquipmentState(command.actorId)
-        changed(state.copy(equipment = state.equipment + (command.actorId to equipment.copy(slots = equipment.slots + (slot to command.itemId)))), "item_equipped")
+        val slots = equipment.slots.toMutableMap()
+        targetSlots.forEach { slots[it.key] = command.itemId }
+        val equipped = state.copy(equipment = state.equipment + (command.actorId to equipment.copy(slots = slots)))
+        changed(EquipmentRules.preserveMissingHp(state, equipped, command.actorId), "item_equipped")
       }
       ItemCommand.Operation.UNEQUIP -> {
-        val slot = command.slot ?: return invalid(state, "equipment_slot_required")
         val equipment = state.equipment[command.actorId] ?: return invalid(state, "equipment_missing")
-        if (equipment.slots[slot] != command.itemId) return invalid(state, "item_not_equipped")
-        changed(state.copy(equipment = state.equipment + (command.actorId to equipment.copy(slots = equipment.slots - slot))), "item_unequipped")
+        if (command.itemId !in equipment.slots.values) return invalid(state, "item_not_equipped")
+        val unequipped = state.copy(equipment = state.equipment + (
+          command.actorId to equipment.copy(slots = equipment.slots.filterValues { it != command.itemId })
+        ))
+        changed(EquipmentRules.preserveMissingHp(state, unequipped, command.actorId), "item_unequipped")
       }
       ItemCommand.Operation.STORE, ItemCommand.Operation.WITHDRAW -> invalid(state, "use_omnivault_command")
     }

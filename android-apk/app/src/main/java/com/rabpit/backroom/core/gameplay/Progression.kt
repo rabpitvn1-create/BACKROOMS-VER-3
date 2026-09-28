@@ -56,6 +56,7 @@ data class CoreResourceState(
 data class StatLine(
   val base: Int,
   val passiveBonus: Int,
+  val equipmentBonus: Int,
   val temporaryModifier: Int,
   val effective: Int,
   val nextCoreCost: Int
@@ -224,24 +225,27 @@ object CharacterStatRules {
       character.id == "cao_minh" ||
       character.metadata["passive.ma-ton"].equals("true", ignoreCase = true)
     ) MA_TON_STAT_BONUS else 0
+    val equipment = EquipmentRules.bonuses(state, characterId)
     val effective = CharacterStat.entries.associateWith {
-      effectiveStat(character, state.statuses.values, it, passive)
+      effectiveStat(character, state.statuses.values, it, passive, equipment.forStat(it))
     }
     val maxHp = CharacterProgressionRules.maxHpFor(
       character.progression.baseMaxHp.coerceAtLeast(1),
       effective.getValue(CharacterStat.VIT)
-    )
+    ) + equipment.hp.coerceAtLeast(0)
     val currentHp = character.progression.currentHp.coerceIn(0, maxHp)
     val lines = CharacterStat.entries.associateWith { stat ->
       val raw = base.value(stat)
       val value = effective.getValue(stat)
-      StatLine(raw, passive, value - raw - passive, value, CharacterProgressionRules.upgradeCost(raw))
+      val equipmentBonus = equipment.forStat(stat)
+      StatLine(raw, passive, equipmentBonus, value - raw - passive - equipmentBonus, value, CharacterProgressionRules.upgradeCost(raw))
     }
     val str = effective.getValue(CharacterStat.STR)
     val def = effective.getValue(CharacterStat.DEF)
     val skl = effective.getValue(CharacterStat.SKL)
     val vit = effective.getValue(CharacterStat.VIT)
-    val baseAttack = character.metadata["baseAttack"]?.toIntOrNull()?.coerceAtLeast(1) ?: 30
+    val baseAttack = character.metadata["baseAttack"]?.toIntOrNull()?.coerceAtLeast(1)
+      ?: EquipmentRules.weaponDamage(state, characterId, 30)
     return CharacterStatProjection(
       currentHp, maxHp, character.progression.baseMaxHp.coerceAtLeast(1), lines,
       CombatStatProjection(
@@ -259,7 +263,8 @@ object CharacterStatRules {
     character: CharacterState,
     statuses: Collection<StatusEffect>,
     stat: CharacterStat,
-    passiveBonus: Int
+    passiveBonus: Int,
+    equipmentBonus: Int = 0
   ): Int {
     val base = character.progression.stats.normalized().value(stat)
     val derived = PhysiologyStatusPolicy.derive(character.physiology)
@@ -281,7 +286,7 @@ object CharacterStatRules {
           ?: it.metadata["modifier.${stat.name}"]?.toIntOrNull()
           ?: 0).coerceIn(-5, 5)
       }
-    return (base + passiveBonus + survival + temporary).coerceIn(1, CharacterProgressionRules.MAX_STAT)
+    return (base + passiveBonus + equipmentBonus + survival + temporary).coerceIn(1, CharacterProgressionRules.MAX_STAT)
   }
 
   fun defendPercent(def: Int): Double {

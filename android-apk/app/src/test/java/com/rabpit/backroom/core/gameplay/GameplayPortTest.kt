@@ -112,4 +112,66 @@ class GameplayPortTest {
   }
 
   }
+  @Test fun equipmentUsesOwnedItemReferencesAndPreservesMissingHp() {
+    var state = GameState.initial()
+    val armor = ItemCommand(
+      commandId = "grant-armor",
+      turnId = state.turn.currentTurnId,
+      actorId = KAI_ID,
+      source = CommandSource.SYSTEM,
+      operation = ItemCommand.Operation.PICKUP,
+      itemId = "field-armor",
+      itemName = "Field Armor",
+      metadata = mapOf(
+        "equipmentSlot" to "armor",
+        "bonus.VIT" to "2",
+        "bonus.HP" to "20"
+      )
+    )
+    state = StateReducer.execute(state, armor).state
+    val equip = StateReducer.execute(state, ItemCommand(
+      commandId = "equip-armor",
+      turnId = state.turn.currentTurnId,
+      actorId = KAI_ID,
+      source = CommandSource.UI,
+      operation = ItemCommand.Operation.EQUIP,
+      itemId = "field-armor",
+      itemName = "Field Armor",
+      slot = "armor"
+    ))
+    assertTrue(equip.applied)
+    val equippedStats = CharacterStatRules.project(equip.state, KAI_ID)!!
+    assertEquals(80, equippedStats.maxHp)
+    assertEquals(80, equippedStats.currentHp)
+    assertEquals(2, equippedStats.stats.getValue(CharacterStat.VIT).equipmentBonus)
+    assertTrue(equip.state.inventories.getValue(KAI_ID).items.containsKey("field-armor"))
+
+    val dropEquipped = StateReducer.execute(equip.state, ItemCommand(
+      commandId = "drop-equipped",
+      turnId = equip.state.turn.currentTurnId,
+      actorId = KAI_ID,
+      source = CommandSource.UI,
+      operation = ItemCommand.Operation.DROP,
+      itemId = "field-armor",
+      itemName = "Field Armor"
+    ))
+    assertFalse(dropEquipped.applied)
+    assertEquals("item_equipped", dropEquipped.validation.reason)
+
+    val unequip = StateReducer.execute(equip.state, ItemCommand(
+      commandId = "unequip-armor",
+      turnId = equip.state.turn.currentTurnId,
+      actorId = KAI_ID,
+      source = CommandSource.UI,
+      operation = ItemCommand.Operation.UNEQUIP,
+      itemId = "field-armor",
+      itemName = "Field Armor",
+      slot = "armor"
+    ))
+    assertTrue(unequip.applied)
+    val plainStats = CharacterStatRules.project(unequip.state, KAI_ID)!!
+    assertEquals(50, plainStats.maxHp)
+    assertEquals(50, plainStats.currentHp)
+  }
+
 }
