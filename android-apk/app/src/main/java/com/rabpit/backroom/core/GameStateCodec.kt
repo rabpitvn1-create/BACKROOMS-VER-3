@@ -180,21 +180,17 @@ object GameStateCodec {
   }
 
   private fun item(value: ItemStack) = JSONObject().apply {
-    val normalized = ItemContentRules.normalize(value)
-    put("itemId", normalized.itemId); put("name", normalized.name); put("quantity", normalized.quantity)
-    putNullable("condition", normalized.condition); put("metadata", stringMap(normalized.metadata))
-    put("archetypeId", normalized.archetypeId); put("contentState", normalized.contentState.name)
+    put("itemId", value.itemId); put("name", value.name); put("quantity", value.quantity)
+    putNullable("condition", value.condition); put("metadata", stringMap(value.metadata))
   }
 
-  private fun decodeItem(json: JSONObject): ItemStack = ItemContentRules.normalize(ItemStack(
+  private fun decodeItem(json: JSONObject): ItemStack = ItemStack(
     itemId = json.optString("itemId"),
     name = json.optString("name"),
     quantity = json.optInt("quantity", 1).coerceAtLeast(1),
     condition = json.nullableString("condition"),
-    metadata = json.optJSONObject("metadata").stringsMap(),
-    archetypeId = json.optString("archetypeId", json.optString("itemId")),
-    contentState = enumOr(ContentState.NONE, json.optString("contentState"))
-  ))
+    metadata = json.optJSONObject("metadata").stringsMap()
+  )
 
   private fun itemMap(json: JSONObject?): Map<String, ItemStack> {
     if (json == null) return emptyMap()
@@ -202,13 +198,13 @@ object GameStateCodec {
     json.keys().forEach { key ->
       val decoded = json.optJSONObject(key)?.let(::decodeItem) ?: return@forEach
       val old = result[decoded.itemId]
-      result[decoded.itemId] = if (old != null && ItemContentRules.sameStackState(old, decoded)) old.copy(quantity = old.quantity + decoded.quantity) else decoded
+      result[decoded.itemId] = if (old == null) decoded else old.copy(quantity = old.quantity + decoded.quantity)
     }
     return result
   }
 
   private fun inventory(value: InventoryState) = JSONObject().apply {
-    put("ownerId", value.ownerId); put("items", JSONObject().apply { value.items.values.forEach { stack -> put(ItemContentRules.normalize(stack).itemId, item(stack)) } })
+    put("ownerId", value.ownerId); put("items", JSONObject().apply { value.items.values.forEach { stack -> put(stack.itemId, item(stack)) } })
   }
 
   private fun decodeInventory(json: JSONObject) = InventoryState(json.optString("ownerId"), itemMap(json.optJSONObject("items")))
