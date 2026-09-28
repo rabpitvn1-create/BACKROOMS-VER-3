@@ -43,7 +43,7 @@ public class LevelCoreChainExplorerTest {
     JSONObject state = start();
     resolve(state, 20);
     state.put("location", "Level 0 / hành lang xa lạ");
-    resolve(state, 80);
+    resolve(state, 150);
     JSONObject route = state.getJSONObject("levelRoute");
     assertEquals(0, route.getInt("streak"));
     assertEquals(LevelCore.LEVEL_ZERO_START_LOCATION, state.getString("location"));
@@ -53,9 +53,46 @@ public class LevelCoreChainExplorerTest {
 
   @Test public void onePercentRollAddsThree() throws Exception {
     JSONObject state = start();
-    resolve(state, 0);
+    resolve(state, 99);
     assertEquals(3, state.getJSONObject("levelRoute").getInt("streak"));
     assertTrue(core.promptContext(state).contains("OUTCOME THIS TURN: SUCCESS"));
+  }
+
+  @Test public void allTwoHundredRollsHaveExactBonusAndResetDistribution() throws Exception {
+    int[] counts = new int[6];
+    for (int roll = 0; roll < 200; roll++) {
+      JSONObject state = start();
+      final int value = roll;
+      state.put("turn", 2);
+      core.rollRouteForExplorerAction(state, "Tiếp tục khám phá", bound -> {
+        assertEquals(200, bound);
+        return value;
+      });
+      JSONObject route = state.getJSONObject("levelRoute");
+      int gained = route.getInt("streak");
+      counts[gained]++;
+      assertEquals(gained == 0 ? "RESET" : "SUCCESS", route.getString("lastResult"));
+    }
+    assertEquals(97, counts[1]); // 48.5%
+    assertEquals(2, counts[2]);  // 1%
+    assertEquals(2, counts[3]);  // 1%
+    assertEquals(1, counts[5]);  // 0.5%
+    assertEquals(98, counts[0]); // 49%
+    assertEquals(200, counts[0] + counts[1] + counts[2] + counts[3] + counts[5]);
+  }
+
+  @Test public void oldSixChainExitIsLockedUntilTenAndBonusCapsAtTen() throws Exception {
+    JSONObject state = start();
+    state.put("levelRoute", new JSONObject().put("levelKey", "0").put("streak", 6)
+        .put("exitAvailable", true));
+    core.normalizeState(state);
+    assertEquals(6, state.getJSONObject("levelRoute").getInt("streak"));
+    assertFalse(state.getJSONObject("levelRoute").getBoolean("exitAvailable"));
+    assertFalse(core.applyPlayerTransitionIfRequested(state, "Đi qua lối ra"));
+    resolve(state, 101);
+    assertEquals(10, state.getJSONObject("levelRoute").getInt("streak"));
+    assertTrue(state.getJSONObject("levelRoute").getBoolean("exitAvailable"));
+    assertTrue(core.promptContext(state).contains("OUTCOME THIS TURN: EXIT_AVAILABLE"));
   }
 
   @Test public void exitOpensAtRequiredStreakAndTransitionsOnlyWhenRequested() throws Exception {
@@ -99,7 +136,7 @@ public class LevelCoreChainExplorerTest {
     reset.getJSONObject("levelRoute").put("streak", 1)
         .put("originLocation", LevelCore.LEVEL_ZERO_START_LOCATION);
     resolve(success, 20);
-    resolve(reset, 80);
+    resolve(reset, 150);
     observation.put("turn", 2);
     core.rollRouteForExplorerAction(observation, "Quan sát kỹ", bound -> {
       throw new AssertionError("Non-exploration branch must not roll");

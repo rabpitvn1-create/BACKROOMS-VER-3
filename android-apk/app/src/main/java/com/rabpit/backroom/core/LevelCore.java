@@ -20,10 +20,7 @@ final class LevelCore {
 
   static final String ROUTE_STATE = "levelRoute";
   static final String LEVEL_KEY = "currentLevelKey";
-  static final int ROUTE_SUCCESS_PERCENT = 50;
-  static final int ROUTE_TRIPLE_SUCCESS_PERCENT = 1;
-  static final int ROUTE_TRIPLE_SUCCESS_INCREMENT = 3;
-  static final int ROUTE_REQUIRED_STREAK = 6;
+  static final int ROUTE_REQUIRED_STREAK = 10;
   static final String LEVEL_ZERO_START_LOCATION =
       "Level 0 / The Lobby — khu phòng vàng ban đầu sau khi đi qua cổng không gian";
 
@@ -48,7 +45,12 @@ final class LevelCore {
   private static final String LEGACY_KNOWLEDGE_ASSET = "knowledge/knowledge_db.json";
   private static final String SNAPSHOT_MANIFEST_ASSET = "level_snapshots/drive/manifest.json";
   private static final int LEVEL_MISMATCH = -2;
-  private static final int ROUTE_ROLL_BOUND = 100;
+  // Each of 200 deterministic outcomes represents 0.5%.
+  private static final int ROUTE_ROLL_BOUND = 200;
+  private static final int ROUTE_PLUS_ONE_END = 97;   // 48.5%
+  private static final int ROUTE_PLUS_TWO_END = 99;   // 1%
+  private static final int ROUTE_PLUS_THREE_END = 101; // 1%
+  private static final int ROUTE_PLUS_FIVE_END = 102;  // 0.5%; remaining 49% reset
   static final int MAX_KNOWLEDGE_CONTEXT_CHARS = 3200;
 
   private final Map<String, JSONObject> knowledgeByLevelKey = new LinkedHashMap<>();
@@ -124,10 +126,10 @@ final class LevelCore {
     int roll = nextRoll(turnRng, ROUTE_ROLL_BOUND);
     route.put("lastRollTurn", turn);
 
-    if (roll < ROUTE_SUCCESS_PERCENT) {
-      int increment = roll < ROUTE_TRIPLE_SUCCESS_PERCENT
-          ? ROUTE_TRIPLE_SUCCESS_INCREMENT
-          : 1;
+    if (roll < ROUTE_PLUS_FIVE_END) {
+      int increment = roll < ROUTE_PLUS_ONE_END ? 1
+          : roll < ROUTE_PLUS_TWO_END ? 2
+          : roll < ROUTE_PLUS_THREE_END ? 3 : 5;
       streak = Math.min(ROUTE_REQUIRED_STREAK, streak + increment);
       route.put("streak", streak);
       route.remove("returnLocation");
