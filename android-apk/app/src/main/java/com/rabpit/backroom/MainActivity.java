@@ -39,7 +39,6 @@ public class MainActivity extends Activity {
     webView.setWebViewClient(new WebViewClient() {
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        installUiEnhancements();
       }
     });
     webView.addJavascriptInterface(new GameBridge(), "Android");
@@ -52,24 +51,6 @@ public class MainActivity extends Activity {
     io.shutdownNow();
     if (webView != null) webView.destroy();
     super.onDestroy();
-  }
-
-  private void installUiEnhancements() {
-    String script =
-      "(function(){" +
-      "if(window.__backroomEnhancements)return;window.__backroomEnhancements=true;" +
-      "var st=document.createElement('style');" +
-      "st.textContent='button{transition:transform 80ms ease,background 120ms ease,border-color 120ms ease;touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,255,255,.12)}button:active:not(:disabled){transform:scale(.965);background:#303840;border-color:#77828c}button:disabled{opacity:.48;cursor:not-allowed}.snapshot-placeholder{display:grid;place-items:center;gap:7px;text-align:center;color:#69737c}.snapshot-placeholder b{font-size:12px;letter-spacing:.16em}.snapshot-placeholder small{color:#56616a}.message.pending{opacity:.72}.message.pending .text{color:#aeb7be}.snapshot{position:relative;overflow:hidden;isolation:isolate}.snapshot>img.snapshot-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}.snapshot>img.cao-minh-overlay{position:absolute;right:2.5%;top:8%;width:auto;height:84%;max-width:95%;max-height:none;object-fit:contain;object-position:right bottom;z-index:2;pointer-events:none;filter:drop-shadow(0 0 10px rgba(0,0,0,.48))}';" +
-      "document.head.appendChild(st);" +
-      "function scrollBottom(){var l=document.getElementById('log');if(l)requestAnimationFrame(function(){l.scrollTop=l.scrollHeight;});}" +
-      "function appendCaoMinhOverlay(box){var img=document.createElement('img');img.className='cao-minh-overlay';img.src=state&&state.combat&&state.combat.active?'file:///android_asset/cao_minh_entity_overlay.png':'file:///android_asset/cao_minh_snapshot_overlay.png';img.alt='Cao Minh';box.appendChild(img);}function renderSnapshot(){var box=document.getElementById('snapshot');if(!box)return;box.textContent='';var r=null;try{if(window.Android&&typeof Android.levelSnapshot==='function')r=JSON.parse(Android.levelSnapshot(Number(state&&state.turn)||1));}catch(e){}if(r&&r.path){var img=document.createElement('img');img.className='snapshot-bg';img.src=r.path;img.alt='Level '+r.level+' Snapshot';box.appendChild(img);}else{var p=document.createElement('div');p.className='snapshot-placeholder';p.innerHTML='<b>LEVEL SNAPSHOT</b><small>Không có ảnh local cho Level hiện tại.</small>';box.appendChild(p);}appendCaoMinhOverlay(box);}" +
-      "var oldRender=window.render;if(typeof oldRender==='function'){window.render=function(){oldRender();renderSnapshot();scrollBottom();};}" +
-      "var oldTurn=window.backroomTurn;window.backroomTurn=function(json){if(typeof oldTurn==='function')oldTurn(json);document.querySelectorAll('[data-pending=\"1\"]').forEach(function(n){n.remove();});renderSnapshot();scrollBottom();};" +
-      "var oldError=window.backroomError;window.backroomError=function(message){document.querySelectorAll('[data-pending=\"1\"]').forEach(function(n){n.remove();});if(typeof oldError==='function')oldError(message);scrollBottom();};" +
-      "var f=document.getElementById('form');if(f){f.addEventListener('submit',function(){var a=document.getElementById('action');var text=a?a.value.trim():'';if(!text)return;var l=document.getElementById('log');if(!l)return;var player=document.createElement('article');player.className='message player pending';player.setAttribute('data-pending','1');player.innerHTML='<div class=\"role\">BẠN</div><div class=\"text\"></div>';player.querySelector('.text').textContent=text;l.appendChild(player);var gm=document.createElement('article');gm.className='message pending';gm.setAttribute('data-pending','1');gm.innerHTML='<div class=\"role\">GAME MASTER</div><div class=\"text\">Đang xử lý lượt…</div>';l.appendChild(gm);scrollBottom();},true);}" +
-      "try{localStorage.removeItem('backroom-apk-snapshot');}catch(e){}renderSnapshot();scrollBottom();" +
-      "})();";
-    webView.evaluateJavascript(script, null);
   }
 
   private boolean retryable(int code) {
@@ -437,20 +418,33 @@ public class MainActivity extends Activity {
       return gameCore.combatState(stateJson);
     }
 
+    private void emitCombatState(String resultJson, String callback) {
+      try {
+        JSONObject result = new JSONObject(resultJson);
+        if (!result.optBoolean("handled", false)) {
+          throw new Exception(result.optString("error", "Combat action failed."));
+        }
+        emit(callback, result.getJSONObject("state").toString());
+      } catch (Exception e) {
+        emit("backroomError", e.getMessage() == null ? "Combat action failed." : e.getMessage());
+      }
+    }
+
     @JavascriptInterface public void combatHold(String stateJson, int dieIndex, boolean held) {
-      io.execute(() -> emit("backroomCombat", gameCore.combatHold(stateJson, dieIndex, held)));
+      io.execute(() -> emitCombatState(
+          gameCore.combatHold(stateJson, dieIndex, held), "backroomCombatDiceState"));
     }
 
     @JavascriptInterface public void combatRoll(String stateJson) {
-      io.execute(() -> emit("backroomCombat", gameCore.combatRoll(stateJson)));
+      io.execute(() -> emitCombatState(gameCore.combatRoll(stateJson), "backroomCombatDiceState"));
     }
 
     @JavascriptInterface public void combatFinish(String stateJson) {
-      io.execute(() -> emit("backroomCombat", gameCore.combatFinish(stateJson)));
+      io.execute(() -> emitCombatState(gameCore.combatFinish(stateJson), "backroomCombatDiceState"));
     }
 
     @JavascriptInterface public void combatResolve(String stateJson) {
-      io.execute(() -> emit("backroomCombat", gameCore.combatResolve(stateJson)));
+      io.execute(() -> emitCombatState(gameCore.combatResolve(stateJson), "backroomCombatTurn"));
     }
 
     @JavascriptInterface public void exploreGameplay(String stateJson, String action) {
@@ -461,8 +455,21 @@ public class MainActivity extends Activity {
       io.execute(() -> emit("backroomGameplay", gameCore.openChest(stateJson)));
     }
 
-    @JavascriptInterface public String levelSnapshot(int turn) {
-      return gameCore.levelSnapshotDescriptor(turn);
+    @JavascriptInterface public String levelSnapshot(String stateJson) {
+      try {
+        JSONObject state = new JSONObject(stateJson);
+        return gameCore.levelSnapshotDescriptor(Math.max(1, state.optInt("turn", 1)));
+      } catch (Exception e) {
+        return gameCore.levelSnapshotDescriptor(1);
+      }
+    }
+
+    @JavascriptInterface public String normalizeState(String stateJson) {
+      return gameCore.normalizeState(stateJson);
+    }
+
+    @JavascriptInterface public String startNewGame(String initialJson) {
+      return gameCore.startNewGame(initialJson);
     }
   }
 
