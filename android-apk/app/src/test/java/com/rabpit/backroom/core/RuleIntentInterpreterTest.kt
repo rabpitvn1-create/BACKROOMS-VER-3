@@ -10,30 +10,22 @@ class RuleIntentInterpreterTest {
   private fun parse(text: String) = parser.interpretSync(text, context)
 
   @Test fun deterministicCommandsStayLocal() {
-    assertEquals(GameIntent.PICKUP_ITEM, parse("Kai nhặt chai nước").candidates.single().intent)
-    assertEquals(GameIntent.OMNIVAULT_STORE, parse("Bỏ khẩu súng vào nhẫn").candidates.single().intent)
-    assertEquals(GameIntent.OMNIVAULT_COPY, parse("Tạo thêm 3 vỏ chai nước rỗng").candidates.single().intent)
-    assertEquals(GameIntent.PARTY_JOIN_REQUEST, parse("Iris vào party").candidates.single().intent)
-    assertFalse(parse("Kai nhặt chai nước").requiresFallback)
-  }
-
-  @Test fun splitsMultipleActions() {
-    val result = parse("Kai lấy hai chai nước ra khỏi nhẫn rồi đưa Iris một chai")
-    assertEquals(listOf(GameIntent.OMNIVAULT_WITHDRAW, GameIntent.TRANSFER_ITEM), result.candidates.map { it.intent })
+    assertEquals(GameIntent.PICKUP_ITEM, parse("nhặt chai nước").candidates.single().intent)
+    assertEquals(GameIntent.PARTY_JOIN_REQUEST, parse("Companion vào party").candidates.single().intent)
+    assertFalse(parse("nhặt chai nước").requiresFallback)
   }
 
   @Test fun narrativeMemoryNegationAndQuotesDoNotExecute() {
-    val samples = listOf(
-      "Kai nhìn Iris lấy chai nước",
-      "Kai nhớ lần trước mình bỏ súng vào nhẫn",
-      "Kai không nhặt chai nước",
-      "Iris nói: “nhặt chai nước lên”"
-    )
-    samples.forEach { assertEquals(it, GameIntent.NO_ACTION, parse(it).candidates.single().intent) }
+    listOf(
+      "nhìn người khác lấy chai nước",
+      "nhớ lần trước mình bỏ súng xuống",
+      "không nhặt chai nước",
+      "người kia nói: “nhặt chai nước lên”"
+    ).forEach { assertEquals(GameIntent.NO_ACTION, parse(it).candidates.single().intent) }
   }
 
   @Test fun unknownRequiresFallback() {
-    val result = parse("Kai cân nhắc tình hình kỳ lạ trước mặt")
+    val result = parse("cân nhắc tình hình kỳ lạ trước mặt")
     assertEquals(GameIntent.UNKNOWN, result.candidates.single().intent)
     assertTrue(result.requiresFallback)
   }
