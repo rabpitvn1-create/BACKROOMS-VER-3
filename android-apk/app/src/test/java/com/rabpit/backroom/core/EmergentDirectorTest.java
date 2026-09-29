@@ -43,6 +43,11 @@ public class EmergentDirectorTest {
     JSONArray first = new JSONArray();
     engine.applyDirectorSelection(state, first, "setup", setup);
     commit(state, "setup", first, setup);
+    JSONObject significance = state.getJSONObject("emergent").getJSONArray("historicalFacts")
+        .getJSONObject(0).getJSONObject("significance");
+    assertEquals("ENVIRONMENTAL", significance.getString("stakeType"));
+    assertEquals(2, significance.getInt("importance"));
+    assertTrue(significance.getBoolean("unresolved"));
     assertTrue("anomaly setup should create environmental pressure",
         CampaignSkeleton.axisScore(state.getJSONObject("emergent"), "environmental_exposure") > 0.0d);
 
