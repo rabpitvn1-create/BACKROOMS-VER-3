@@ -817,5 +817,5 @@
 
   window.render();
   scrollForCurrentMode();
-  window.backroomPrefetchChoices();
+  // Legacy prefetch hook remains callable, but no speculative A/B/C request starts by default.
 })();
