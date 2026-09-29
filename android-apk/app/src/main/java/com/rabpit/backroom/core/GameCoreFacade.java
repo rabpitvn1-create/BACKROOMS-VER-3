@@ -183,15 +183,27 @@ public final class GameCoreFacade implements AutoCloseable {
               .put("observedByPlayer", true),
           null));
 
+      // Explicit responses can resolve earlier setups; they are part of this Core turn, not narration.
+      emergentTurnEngine.applyPlayerEventResponse(working, events, turnId, text);
+
       JSONArray candidates = new JSONArray();
       appendAll(candidates, emergentTurnEngine.schedulerCandidates(
           working, Math.max(1, working.optInt("turn", 1))));
-      appendAll(candidates, entityCore.situationCandidates(working));
+      JSONArray entityCandidates = entityCore.situationCandidates(working);
+      if (working.optInt("turn", 1) <= emergentTurnEngine.ambientAlertUntilTurn(working)) {
+        for (int i = 0; i < entityCandidates.length(); i++) {
+          JSONObject entity = entityCandidates.optJSONObject(i);
+          if (entity != null) entity.put("chancePercent",
+              Math.min(99.0d, entity.optDouble("chancePercent", 0.0d) * 1.3d));
+        }
+      }
+      appendAll(candidates, entityCandidates);
       if (!openedChest) {
         JSONObject chestCandidate = itemCore.explorationChestCandidate(working);
         if (chestCandidate != null) candidates.put(chestCandidate);
       }
       appendAll(candidates, characterEncounterCore.situationCandidates(working));
+      appendAll(candidates, emergentTurnEngine.directorCandidates(working, text));
 
       JSONObject selected = emergentTurnEngine.selectCandidate(
           working, candidates, turnRng, Math.max(1, working.optInt("turn", 1)));
@@ -362,6 +374,11 @@ public final class GameCoreFacade implements AutoCloseable {
         .put("causedBy", "world")
         .put("situationKey", selected.optString("situationKey", ""))
         .put("worldProposal", new JSONObject(proposal.toString()));
+
+    if ("DIRECTOR".equals(kind)) {
+      emergentTurnEngine.applyDirectorSelection(working, events, turnId, selected);
+      return;
+    }
 
     if ("ENTITY".equals(kind)) {
       entityCore.activateEncounterCandidate(working, payload);
