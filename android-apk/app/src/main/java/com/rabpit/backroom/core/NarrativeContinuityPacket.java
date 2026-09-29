@@ -124,7 +124,9 @@ final class NarrativeContinuityPacket {
       int age = Math.max(0, turn - fact.optInt("turn", turn));
       if (age > 40) continue;
       String ref = fact.optString("subjectRef");
-      int priority = 7 + Math.max(0, 9 - age)
+      JSONObject significance = fact.optJSONObject("significance");
+      int importance = significance == null ? 0 : Math.min(3, Math.max(0, significance.optInt("importance", 0)));
+      int priority = 7 + importance * 2 + Math.max(0, 9 - age)
           + ((level.equals(ref) || present(state.optJSONArray("party"), ref)) ? 10 : 0);
       output.add(new Item(id, priority, "FACT " + type + " subject=" + ref
           + "; relevant now=previous committed consequence"));
