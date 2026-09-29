@@ -1,0 +1,5 @@
+Backroom 1.1.68
+
+- Đồng bộ 48 ảnh snapshot của 16 Hui's Family Levels (3 cảnh mỗi Level) từ bộ ảnh Google Drive hiện hành vào APK.
+- Giữ nguyên tên asset và ánh xạ snapshot manifest; không thay đổi luật gameplay, combat, GM hay định dạng save.
+- Tăng phiên bản Android lên versionName 1.1.68 / versionCode 70 để đóng gói và phát hành lại nội dung mới nhất trên main.

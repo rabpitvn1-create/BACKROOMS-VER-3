@@ -210,35 +210,24 @@
   }
 
   function fallbackExplorerChoices() {
-    var level = state && (state.currentLevelKey || state.currentLevel || '0');
-    var levelText = 'Level ' + level;
-    var exitAvailable = !!(state && state.levelRoute && state.levelRoute.exitAvailable === true);
     return [
-      {id:'A',text:'Quan sát kỹ khu vực xung quanh',action:'Quan sát kỹ khu vực xung quanh'},
-      {id:'B',text:'Kiểm tra các lối đi hoặc điểm bất thường gần nhất',action:'Kiểm tra các lối đi hoặc điểm bất thường gần nhất'},
-      exitAvailable
-        ? {id:'C',text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'}
-        : {id:'C',text:'Tiếp tục khám phá ' + levelText,action:'Tiếp tục khám phá ' + levelText,highlights:[{text:levelText,type:'location'}]}
+      {id:'A',text:'Quan sát dãy tường vàng',action:'Quan sát dãy tường vàng'},
+      {id:'B',text:'Lắng nghe tiếng đèn trên trần',action:'Lắng nghe tiếng đèn trên trần'},
+      {id:'C',text:'Kiểm tra lối đi gần nhất',action:'Kiểm tra lối đi gần nhất'}
     ];
   }
 
   function displayedExplorerChoices(entry) {
     var choices = Array.isArray(entry && entry.choices) ? entry.choices.slice(0, 3) : [];
-    var fallbacks = fallbackExplorerChoices();
+    if (state && Array.isArray(state.log) && state.log.length === 1 && entry === state.log[0])
+      choices = fallbackExplorerChoices();
     if (state && state.levelRoute && state.levelRoute.exitAvailable === true) {
-      choices = choices.filter(function(choice){ return String(choice.action || choice.text || '').trim() !== fallbacks[2].action; }).slice(0, 2);
-      fallbacks.slice(0, 2).forEach(function(fallback){
-        if (choices.length < 2 && !choices.some(function(choice){
-          return String(choice.action || choice.text || '').trim() === fallback.action;
-        })) choices.push(fallback);
-      });
-      choices.push(fallbacks[2]);
+      var exitChoice = {text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'};
+      choices = choices.filter(function(choice){
+        return String(choice.action || choice.text || '').trim() !== exitChoice.action;
+      }).slice(0, 2);
+      choices.push(exitChoice);
     }
-    fallbacks.forEach(function(fallback){
-      if (choices.length < 3 && !choices.some(function(choice){
-        return String(choice.action || choice.text || '').trim() === fallback.action;
-      })) choices.push(fallback);
-    });
     return choices.map(function(choice, index){
       return Object.assign({}, choice, {id:String.fromCharCode(65 + index)});
     });

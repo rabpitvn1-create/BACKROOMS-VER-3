@@ -199,18 +199,25 @@ public class MainActivity extends Activity {
           output.append("\nGOOD EXAMPLE ").append(i + 1).append("\n");
           output.append("PLAYER: ").append(player).append("\n");
           output.append("GM: ").append(gm).append("\n");
+          JSONArray choices = example.optJSONArray("choices");
+          if (choices != null) output.append("CHOICES: ").append(choices).append("\n");
         }
       }
 
-      JSONObject bad = root.optJSONObject("badExample");
-      if (bad != null) {
+      JSONArray badExamples = root.optJSONArray("badExamples");
+      if (badExamples == null) badExamples = new JSONArray().put(root.optJSONObject("badExample"));
+      for (int i = 0; i < badExamples.length(); i++) {
+        JSONObject bad = badExamples.optJSONObject(i);
+        if (bad == null) continue;
         String player = bad.optString("player", "").trim();
         String gm = bad.optString("gm", "").trim();
         String why = bad.optString("why", "").trim();
         if (!player.isEmpty() && !gm.isEmpty()) {
-          output.append("\nBAD EXAMPLE — DO NOT IMITATE\n");
+          output.append("\nBAD EXAMPLE ").append(i + 1).append(" — DO NOT IMITATE\n");
           output.append("PLAYER: ").append(player).append("\n");
           output.append("GM: ").append(gm).append("\n");
+          JSONArray choices = bad.optJSONArray("choices");
+          if (choices != null) output.append("BAD CHOICES: ").append(choices).append("\n");
           if (!why.isEmpty()) output.append("WHY BAD: ").append(why).append("\n");
         }
       }
@@ -826,9 +833,20 @@ public class MainActivity extends Activity {
       if (reply.isEmpty()) {
         reply = "Cao Minh tiếp tục quan sát " + location + "; chưa có gì cắt ngang bước chân của anh.";
       }
+      JSONArray fallbackDialogue = new JSONArray();
+      JSONObject encounter = state == null ? null : state.optJSONObject("characterEncounter");
+      JSONArray pending = encounter == null ? null : encounter.optJSONArray("pendingIntro");
+      if (pending != null && pending.length() > 0) {
+        String id = pending.optString(0, "");
+        String name = "lucia".equals(id) ? "Lucia Lục"
+            : "luc_tram".equals(id) ? "Lục Trầm"
+            : "syvial".equals(id) ? "Syvial" : "Người đồng hành";
+        fallbackDialogue.put(name + " cất tiếng khi Cao Minh đến gần.");
+        fallbackDialogue.put("Cả hai trao đổi vài lời rồi tiếp tục quan sát khu vực.");
+      }
       generated.put("reply", reply)
           .put("choices", new JSONArray())
-          .put("encounterDialogue", new JSONArray());
+          .put("encounterDialogue", fallbackDialogue);
     } catch (Exception ignored) {}
     return generated;
   }
@@ -933,9 +951,12 @@ public class MainActivity extends Activity {
               hit = false;
             }
             if (!hit) generated = parseModelJson(generateText(narrationPrompt(state, action)));
-            String narrationViolation = NarrationGuard.validate(generated, state, action);
-            if (!narrationViolation.isEmpty())
-              throw new Exception("Narration validation failed: " + narrationViolation);
+            final JSONObject narrationState = state;
+            generated = NarrationGuard.regenerateIfInvalid(generated, state, action, violation ->
+                parseModelJson(generateText(narrationPrompt(narrationState, action)
+                    + "\nVALIDATION REJECTED: " + violation
+                    + "\nRewrite only reply and choices, preserving encounterDialogue and world state. "
+                    + "Return only valid JSON.")));
             reply = generated.optString("reply", "").trim();
             narrationValidated = true;
           } catch (Exception narrationError) {
@@ -943,6 +964,7 @@ public class MainActivity extends Activity {
                 + providerErrorSummary(narrationError));
             generated = narrationFallback(state, replyHint);
             reply = generated.optString("reply", "");
+            narrationValidated = NarrationGuard.validate(generated, state, action).isEmpty();
           }
 
           JSONArray encounterDialogue = generated.optJSONArray("encounterDialogue");
