@@ -16,7 +16,17 @@
       "name": "Đường vòng được kể bằng dấu hiệu quan sát được",
       "player": "Cao Minh đi theo lối rẽ rồi nhìn quanh.",
       "gm": "Qua mấy khúc ngoặt, Cao Minh lại thấy vệt ố cạnh chân tường. Cùng dãy đèn chập chờn ấy rọi xuống tấm thảm sờn; lối vừa đi đã đưa hắn trở về ngã rẽ cũ.",
-      "choices": ["Kiểm tra vệt ố trên tường", "Lắng nghe phía lối rẽ tối", "Đánh dấu chỗ giao nhau"]
+      "choices": [
+        "Kiểm tra vệt ố trên tường"
+      ]
+    },
+    {
+      "name": "Lời kể sau chiến đấu, không thông báo hệ thống",
+      "player": "Cao Minh quan sát hành lang sau khi giao chiến.",
+      "gm": "Cao Minh đưa mắt dọc những bức tường vàng nhạt. Ánh đèn huỳnh quang vẫn phủ xuống hành lang nơi trận đấu vừa kết thúc; trước mắt hắn chưa có dấu hiệu rõ ràng nào để xác định hướng đi.",
+      "choices": [
+        "Lắng nghe tiếng động dọc hành lang"
+      ]
     }
   ],
   "badExamples": [
@@ -33,8 +43,15 @@
     {
       "player": "Cao Minh quan sát ngã rẽ.",
       "gm": "Cao Minh đứng cạnh ngã rẽ.",
-      "choices": ["Tiếp tục khám phá Level 0"],
+      "choices": [
+        "Tiếp tục khám phá Level 0"
+      ],
       "why": "Lựa chọn chung chung, không nêu hướng đi hay đối tượng hành động. Các lựa chọn tốt hơn ở cảnh có dấu hiệu tương ứng: 'Kiểm tra vệt ố trên tường', 'Lắng nghe phía lối rẽ tối', 'Đánh dấu chỗ giao nhau'."
+    },
+    {
+      "player": "Cao Minh quan sát hành lang sau giao chiến.",
+      "gm": "Cao Minh tiếp tục quan sát Hành lang vàng nhạt — khu vực chưa xác định; chưa có gì cắt ngang bước chân của anh.",
+      "why": "Lời kể dự phòng lặp khuôn và chèn nhãn địa điểm máy móc; thay bằng hành động, chi tiết bối cảnh đã xác nhận và góc nhìn Cao Minh."
     }
   ]
 }
