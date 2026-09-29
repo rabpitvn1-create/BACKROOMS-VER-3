@@ -35,14 +35,24 @@ public final class GameCoreFacade implements AutoCloseable {
   private final Map<String, PreparedTurn> preparedTurns = new LinkedHashMap<>();
 
   private GameCoreFacade(Context context, boolean debugLogging) {
-    Context appContext = context.getApplicationContext();
-    this.preferences = appContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+    this(context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE),
+        new LevelCore(context.getApplicationContext()), new EntityCore(context.getApplicationContext()),
+        debugLogging);
+  }
+
+  // Full-flow JVM simulation injects only storage and the same shipped rule registries.
+  GameCoreFacade(SharedPreferences preferences, LevelCore levelCore,
+                 EntityCore entityCore, boolean debugLogging) {
+    if (preferences == null || levelCore == null || entityCore == null) {
+      throw new IllegalArgumentException("Core dependencies are required");
+    }
+    this.preferences = preferences;
     String checkpoint = preferences.getString(MANUAL_SAVE_KEY, "");
     this.liveStateJson = checkpoint != null && !checkpoint.isEmpty()
         ? checkpoint : preferences.getString(STATE_KEY, "{}");
     this.debugLogging = debugLogging;
-    this.levelCore = new LevelCore(appContext);
-    this.entityCore = new EntityCore(appContext);
+    this.levelCore = levelCore;
+    this.entityCore = entityCore;
     this.itemCore = new ItemCore();
     this.characterEncounterCore = new CharacterEncounterCore();
     this.characterProgressionCore = new CharacterProgressionCore();
