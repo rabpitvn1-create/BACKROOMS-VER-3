@@ -57,6 +57,7 @@ public final class GmNarrativePacket {
         + "MARKDOWN CANON (read-only; apply only to committed scene, never override Core state):\n"
         + safe(canonText) + "\n"
         + situationContext(state) + "\n"
+        + NarrativeContinuityPacket.build(state) + "\n"
         + "RECENT CONTEXT (chỉ giữ continuity, không lặp nguyên văn):\n" + recent + "\n"
         + "READ-ONLY STATE: " + promptState.toString() + "\n"
         + "PLAYER ACTION: " + safe(action) + "\n"
