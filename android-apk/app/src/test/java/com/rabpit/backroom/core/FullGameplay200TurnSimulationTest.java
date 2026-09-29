@@ -78,7 +78,7 @@ public class FullGameplay200TurnSimulationTest {
         String turnId = prepared.getString("turnId");
         JSONObject selected = prepared.getJSONObject("selectedCandidate");
         JSONObject committed = new JSONObject(core.completePreparedTurn(turnId, "{}"));
-        assertTrue("Core did not commit explorer action " + step + ": " + committed,
+        assertTrue("Core commit failed at action " + step + ": " + committed.optString("error"),
             committed.optBoolean("handled", false));
         state = committed.getJSONObject("state");
         assertEquals("At least one event must commit with each world action",
@@ -101,6 +101,10 @@ public class FullGameplay200TurnSimulationTest {
 
         String entity = state.optJSONObject("flags") == null ? ""
             : state.getJSONObject("flags").optString("entityEncounterKey", "");
+        if ("ENTITY".equals(selected.optString("kind"))) {
+          assertFalse("Every committed Entity must survive narration and start an actual battle"
+              + " (action " + step + ")", entity.isEmpty());
+        }
         if (!entity.isEmpty()) {
           assertTrue("Only real registered combat entities can start fights",
               CombatChoiceEngine.isKnownEntity(entity));
@@ -114,7 +118,7 @@ public class FullGameplay200TurnSimulationTest {
           for (int hand = 0; hand < COMBAT_HAND_LIMIT; hand++) {
             state = new JSONObject(core.combatFinishRuntime());
             JSONObject resolved = new JSONObject(core.processCombatResolution(state.toString()));
-            assertTrue("Real combat resolution rejected: " + resolved,
+            assertTrue("Real combat resolution rejected: " + resolved.optString("error"),
                 resolved.optBoolean("handled", false));
             state = resolved.getJSONObject("state");
             result.countCommit(state);
@@ -158,6 +162,8 @@ public class FullGameplay200TurnSimulationTest {
               result.finalTurn - thread.optInt("lastTouchedTurn", result.finalTurn));
         }
       }
+      assertEquals("No phantom Entity event may exist without a real combat",
+          result.event.getOrDefault("ENTITY_ENCOUNTER_STARTED", 0), result.entityEncounters);
       result.partyMembers = end.optJSONArray("party") == null ? 0 : end.getJSONArray("party").length();
       JSONObject pressures = root.getJSONObject("director").getJSONObject("pressures");
       result.environmentPressure = pressures.optDouble("environmental", 0.0d);
