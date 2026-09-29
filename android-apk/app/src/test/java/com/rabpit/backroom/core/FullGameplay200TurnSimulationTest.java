@@ -233,7 +233,7 @@ public class FullGameplay200TurnSimulationTest {
     Path file = Files.isRegularFile(direct) ? direct : fromRoot;
     assertTrue("Simulation requires real shipped asset " + name + " in " + Paths.get("").toAbsolutePath(),
         Files.isRegularFile(file));
-    return Files.readString(file, StandardCharsets.UTF_8);
+    return new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
   }
 
   private static final class Result {
