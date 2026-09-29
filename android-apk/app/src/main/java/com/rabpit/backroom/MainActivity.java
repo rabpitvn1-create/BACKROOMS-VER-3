@@ -817,8 +817,11 @@ public class MainActivity extends Activity {
       }
       JSONObject emergent = state == null ? null : state.optJSONObject("emergent");
       JSONObject selection = emergent == null ? null : emergent.optJSONObject("lastSelection");
-      if (reply.isEmpty() && selection != null && !selection.optBoolean("selectedNone", false)) {
-        reply = selection.optString("publicSummary", "").trim();
+      if (selection != null && !selection.optBoolean("selectedNone", false)) {
+        String committedSummary = selection.optString("publicSummary", "").trim();
+        if (!committedSummary.isEmpty() && !reply.contains(committedSummary)) {
+          reply = reply.isEmpty() ? committedSummary : reply + " " + committedSummary;
+        }
       }
       if (reply.isEmpty()) {
         reply = "Cao Minh tiếp tục quan sát " + location + "; chưa có gì cắt ngang bước chân của anh.";
