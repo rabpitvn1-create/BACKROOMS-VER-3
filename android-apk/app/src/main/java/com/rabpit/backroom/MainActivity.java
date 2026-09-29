@@ -860,21 +860,21 @@ public class MainActivity extends Activity {
       if (reply.isEmpty()) {
         String submittedAction = action == null ? "" : action.trim().toLowerCase(java.util.Locale.ROOT);
         if (levelZero && submittedAction.contains("sau trận chiến")) {
-          reply = "Sau trận chiến, Cao Minh đưa mắt rà soát " + location
-              + ". Dãy tường vàng nhạt vẫn trải dài dưới ánh đèn huỳnh quang;"
+          reply = "Sau trận chiến, Cao Minh đưa mắt rà soát những bức tường vàng nhạt."
+              + " Dãy hành lang vẫn trải dài dưới ánh đèn huỳnh quang;"
               + " lúc này, anh chưa nhận ra dấu hiệu nào đủ rõ để chọn hướng đi.";
         } else if (levelZero && (submittedAction.contains("lắng nghe")
             || submittedAction.contains("nghe "))) {
-          reply = "Cao Minh dừng lại lắng nghe giữa " + location
-              + ". Tiếng đèn huỳnh quang đều đều phía trên hòa vào khoảng không;"
+          reply = "Cao Minh dừng lại lắng nghe giữa dãy hành lang vàng nhạt."
+              + " Tiếng đèn huỳnh quang đều đều phía trên hòa vào khoảng không;"
               + " chưa có âm thanh nào giúp anh xác định điều gì chờ ở đoạn tiếp theo.";
         } else if (levelZero) {
-          reply = "Cao Minh nhìn dọc những bức tường vàng nhạt ở " + location
-              + ". Ánh đèn huỳnh quang phủ lên đoạn hành lang trước mắt;"
+          reply = "Cao Minh nhìn dọc những bức tường vàng nhạt."
+              + " Ánh đèn huỳnh quang phủ lên đoạn hành lang trước mắt;"
               + " những gì nhìn thấy vẫn chưa đủ để anh biết lối nào dẫn ra ngoài.";
         } else {
-          reply = "Cao Minh chậm lại, đưa mắt quan sát " + location
-              + ". Những gì ở ngay trước mắt vẫn chưa đem đến manh mối rõ ràng"
+          reply = "Trước mắt Cao Minh là " + location
+              + ". Quang cảnh nơi đây vẫn chưa đem đến manh mối rõ ràng"
               + " về hướng anh có thể tìm hiểu tiếp.";
         }
       }
