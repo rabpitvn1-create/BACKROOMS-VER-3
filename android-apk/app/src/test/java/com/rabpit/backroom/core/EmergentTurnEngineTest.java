@@ -115,6 +115,10 @@ public class EmergentTurnEngineTest {
             .put(new JSONObject().put("b", 2).put("a", 1))
             .put(new JSONObject().put("y", 4).put("x", 3)))
         .put("player", new JSONObject().put("name", "Cao Minh").put("hp", 10));
+    same.getJSONObject("player").put("hp", 10L);
+    same.getJSONArray("history").getJSONObject(0).put("a", 1L);
+    assertTrue("Numeric JSON values must survive a deserialize/serialize roundtrip",
+        AuthoritativeStatePatch.isEmpty(AuthoritativeStatePatch.diff(first, same)));
     assertTrue("Object insertion order does not change authoritative state",
         AuthoritativeStatePatch.isEmpty(AuthoritativeStatePatch.diff(first, same)));
     JSONObject changed = new JSONObject(same.toString());
