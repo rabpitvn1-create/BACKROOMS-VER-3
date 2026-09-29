@@ -71,11 +71,12 @@ public class ChainNarrationFallbackTest {
   }
   @Test public void postCombatFallbackUsesGroundedSceneInsteadOfStatusText() throws Exception {
     JSONObject levelZero = state("SUCCESS", 1).put("currentLevelKey", "0")
-        .put("location", "Hành lang vàng nhạt");
+        .put("location", "Hành lang vàng nhạt — khu vực chưa xác định");
     String reply = MainActivity.narrationFallback(levelZero, "",
         "Quan sát khu vực sau trận chiến").getString("reply");
     assertTrue(reply.contains("Sau trận chiến"));
     assertTrue(reply.contains("tường vàng"));
+    assertFalse(reply.contains("khu vực chưa xác định"));
     assertFalse(reply.contains("Inventory"));
     assertFalse(reply.contains("trạng thái"));
     String following = MainActivity.narrationFallback(levelZero, "",
