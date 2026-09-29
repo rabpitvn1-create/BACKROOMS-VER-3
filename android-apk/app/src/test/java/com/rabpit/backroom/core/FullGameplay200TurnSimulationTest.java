@@ -163,7 +163,7 @@ public class FullGameplay200TurnSimulationTest {
         }
       }
       assertEquals("No phantom Entity event may exist without a real combat",
-          result.event.getOrDefault("ENTITY_ENCOUNTER_STARTED", 0), result.entityEncounters);
+          result.event.getOrDefault("ENTITY_ENCOUNTER_STARTED", 0).intValue(), result.entityEncounters);
       result.partyMembers = end.optJSONArray("party") == null ? 0 : end.getJSONArray("party").length();
       JSONObject pressures = root.getJSONObject("director").getJSONObject("pressures");
       result.environmentPressure = pressures.optDouble("environmental", 0.0d);
