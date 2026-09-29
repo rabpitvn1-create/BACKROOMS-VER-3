@@ -1,0 +1,31 @@
+name: V3 Emergent Validation
+
+on:
+  push:
+    branches:
+      - codex/ponytail-abc-prefetch-v3
+    paths:
+      - 'android-apk/**'
+      - '.github/workflows/v3-emergent-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Validate choice UI
+        run: node android-apk/app/src/test/js/gm-choice-ui.test.cjs
+      - name: Unit tests (including 200-turn Director simulation) and debug APK
+        working-directory: android-apk
+        run: gradle :app:testDebugUnitTest :app:assembleDebug --no-daemon --info
