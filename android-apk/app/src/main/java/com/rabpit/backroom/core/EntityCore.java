@@ -30,6 +30,10 @@ final class EntityCore {
     loadRegistry(context);
   }
 
+  EntityCore(String registryJson) throws Exception {
+    loadRegistryText(registryJson);
+  }
+
   @Deprecated
   void prepareEncounter(JSONObject state) {
     throw new IllegalStateException(
@@ -150,7 +154,12 @@ final class EntityCore {
 
   private void loadRegistry(Context context) {
     try {
-      JSONObject root = new JSONObject(readAsset(context, REGISTRY_ASSET));
+      loadRegistryText(readAsset(context, REGISTRY_ASSET));
+    } catch (Exception ignored) {}
+  }
+
+  private void loadRegistryText(String jsonText) throws Exception {
+      JSONObject root = new JSONObject(jsonText);
       if (!"independent_per_entity".equals(root.optString("rollMode"))) return;
       JSONArray records = root.optJSONArray("entities");
       if (records == null) return;
@@ -182,7 +191,6 @@ final class EntityCore {
           legacyEntities.put(key, new LegacyEntityDefinition(key, name, canon));
         }
       }
-    } catch (Exception ignored) {}
   }
 
   private String readAsset(Context context, String path) throws Exception {
