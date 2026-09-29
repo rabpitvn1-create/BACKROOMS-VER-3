@@ -43,6 +43,8 @@ public class EmergentDirectorTest {
     JSONArray first = new JSONArray();
     engine.applyDirectorSelection(state, first, "setup", setup);
     commit(state, "setup", first, setup);
+    assertTrue("anomaly setup should create environmental pressure",
+        CampaignSkeleton.axisScore(state.getJSONObject("emergent"), "environmental_exposure") > 0.0d);
 
     state.put("turn", 6);
     JSONObject payoff = family(engine.directorCandidates(state, "đi tiếp"), "ANOMALY_PAYOFF");
@@ -121,6 +123,27 @@ public class EmergentDirectorTest {
     commit(state, "talk", talk, null);
     JSONArray threads = state.getJSONObject("emergent").getJSONArray("threads");
     assertEquals("RESOLVED", threads.getJSONObject(0).getString("status"));
+  }
+
+  @Test public void quietEventReducesCommittedDangerPressure() throws Exception {
+    JSONObject state = state(2);
+    engine.normalizeState(state);
+    JSONArray fights = new JSONArray();
+    for (int i = 0; i < 2; i++) {
+      fights.put(engine.event("combat", fights, "COMBAT_HAND_RESOLVED", "LOCAL", "hound",
+          new JSONObject().put("observedByPlayer", true), null));
+    }
+    commit(state, "combat", fights, null);
+    double before = CampaignSkeleton.axisScore(state.getJSONObject("emergent"), "entity_attention");
+    assertTrue(before > 0.0d);
+    state.put("turn", 3);
+    JSONObject quiet = family(engine.directorCandidates(state, "nghỉ"), "QUIET");
+    assertTrue(quiet != null);
+    JSONArray relief = new JSONArray();
+    engine.applyDirectorSelection(state, relief, "quiet", quiet);
+    commit(state, "quiet", relief, quiet);
+    double after = CampaignSkeleton.axisScore(state.getJSONObject("emergent"), "entity_attention");
+    assertTrue("quiet beat should actually release pressure", after < before);
   }
 
   @Test public void emptyOrBlockedCandidatesNeverCommitUninventedEffects() throws Exception {
@@ -207,6 +230,7 @@ public class EmergentDirectorTest {
     }
     assertEquals(200, state.getJSONObject("emergent").getInt("commitSequence"));
     assertTrue("At least one emergent event expected", families.size() > 1);
+    assertTrue("emergent events should contribute to pressure", pressure > 0);
     String log = "families=" + families + ", quiet=" + quiet + ", combatFixtures=" + combat
         + ", relationship=" + relationship + ", consequence=" + consequence
         + ", cumulativePressure=" + pressure + ", unresolvedDebt=" + debt;
