@@ -351,6 +351,11 @@ public final class GameCoreFacade implements AutoCloseable {
   }
 
   public synchronized String commitNarration(String stateJson, boolean acknowledgePendingIntro) {
+    return commitNarration(stateJson, acknowledgePendingIntro, false);
+  }
+
+  public synchronized String commitNarration(String stateJson, boolean acknowledgePendingIntro,
+                                              boolean validatedNarration) {
     JSONObject submitted = parseState(stateJson);
     JSONObject state = parseState(liveStateJson);
     try {
@@ -358,6 +363,7 @@ public final class GameCoreFacade implements AutoCloseable {
       JSONArray log = submitted.optJSONArray("log");
       if (log != null) state.put("log", new JSONArray(log.toString()));
       if (acknowledgePendingIntro) characterEncounterCore.acknowledgePendingIntro(state);
+      if (validatedNarration) NarrativeContinuityPacket.acknowledgeValidatedNarration(state);
       persist(state);
       return clientSafeState(state).toString();
     } catch (Exception e) {
