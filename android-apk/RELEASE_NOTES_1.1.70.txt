@@ -1,0 +1,9 @@
+Backroom 1.1.70
+
+- Tích hợp bản sửa Issue #11 đã merge qua PR #12: GAME MASTER chỉ gợi ý tối đa một hành động mỗi lượt ở prompt, xác thực, nhật ký và WebView, kể cả khi tải save cũ chứa ba lựa chọn.
+- Giữ thao tác mở lối thoát/rương đã được Core xác nhận tách biệt với gợi ý của GM; hiện một gợi ý phù hợp ngay sau chiến thắng combat.
+- Thay phông chữ trang trí trong giao diện GAME MASTER bằng Pretendard/phông hệ thống để văn bản, nhấn mạnh, nút lựa chọn và nhãn combat thống nhất.
+- Hiển thị trạng thái đang xử lý khi chọn gợi ý hoặc nhập Player Action tự do, đồng thời phục hồi giao diện nếu Android bridge phát sinh lỗi.
+- Giới hạn thời gian đợi bước kể chuyện phụ thuộc nhà cung cấp AI ở mức 30 giây; hủy tác vụ còn treo và hoàn tất lượt Core đã commit bằng lời kể dự phòng xác định, tránh khóa hành động và nâng cấp chỉ số quá lâu.
+- Đã có CI xanh cho PR #12 (Node UI regression, Gradle JVM tests bao gồm mô phỏng 200 hành động và debug APK); việc kiểm tra trên thiết bị thật và độ trễ AI ngoài thực tế vẫn cần thực hiện riêng.
+- Không thay đổi định dạng save hay quy tắc phần thưởng combat.
