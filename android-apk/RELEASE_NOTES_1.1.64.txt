@@ -1,8 +1,0 @@
-Backroom 1.1.64 Debug
-
-- V3 builds directly from checked-in Android/Kotlin source; the historical Python patch chain was removed.
-- Gameplay architecture is being rebuilt from V2 as typed Kotlin modules, without importing V2 GM/canon architecture.
-- Old An Nhiên and MadGod character systems were removed from the active tree; Git history is the recovery source if needed later.
-- Game Master uses the five-key Gemini pool, with Haiku fallback via HAIKU_API_KEY, HAIKU_MODEL and HAIKU_BASE_URL.
-- LiteRT remains removed.
-- Luna remains removed.
