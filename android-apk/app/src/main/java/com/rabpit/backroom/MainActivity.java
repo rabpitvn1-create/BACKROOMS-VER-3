@@ -958,7 +958,7 @@ public class MainActivity extends Activity {
           boolean acknowledgePendingIntro = narrationValidated
               && encounterDialogue.length() >= 2 && encounterDialogue.length() <= 5;
           state = new JSONObject(
-              gameCore.commitNarration(state.toString(), acknowledgePendingIntro));
+              gameCore.commitNarration(state.toString(), acknowledgePendingIntro, narrationValidated));
 
           if (CombatChoiceEngine.isKnownEntity(newEncounter)) {
             state = new JSONObject(
