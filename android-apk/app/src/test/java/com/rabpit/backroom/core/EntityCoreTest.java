@@ -1,8 +1,10 @@
 package com.rabpit.backroom.core;
 
 import org.junit.Test;
+import org.json.JSONObject;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class EntityCoreTest {
@@ -30,6 +32,26 @@ public class EntityCoreTest {
     assertTrue(EntityCore.validTreasureAutoSpawnRatePercent(4.0d));
     assertFalse(EntityCore.validTreasureAutoSpawnRatePercent(0.0d));
     assertFalse(EntityCore.validTreasureAutoSpawnRatePercent(4.01d));
+  }
+
+  @Test public void completedCombatCannotEraseNextCommittedEncounter() throws Exception {
+    EntityCore core = new EntityCore(
+        "{\"rollMode\":\"independent_per_entity\",\"entities\":["
+            + "{\"key\":\"hound\",\"name\":\"Hound\",\"ratePercent\":3.5,\"canon\":\"hunts\"}]}");
+    JSONObject state = new JSONObject()
+        .put("turn", 8).put("currentLevel", 0).put("flags", new JSONObject())
+        .put("combat", new JSONObject().put("active", false).put("outcome", "victory")
+            .put("entity", new JSONObject().put("key", "hound")));
+    core.activateEncounterCandidate(state, "hound");
+    assertFalse("Terminal combat must be retired when a new encounter commits", state.has("combat"));
+    CombatChoiceEngine.normalizeTerminalEncounter(state);
+    assertEquals("hound", state.getJSONObject("flags").getString("entityEncounterKey"));
+    try {
+      core.activateEncounterCandidate(state, "hound");
+      org.junit.Assert.fail("A second encounter must be rejected while the first is active");
+    } catch (IllegalStateException expected) {
+      assertTrue(expected.getMessage().contains("already active"));
+    }
   }
 
   @Test public void legacyBossPromptCarriesCanonWithoutAutoSpawnSemantics() {

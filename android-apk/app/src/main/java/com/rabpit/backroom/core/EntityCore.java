@@ -30,6 +30,10 @@ final class EntityCore {
     loadRegistry(context);
   }
 
+  EntityCore(String registryJson) throws Exception {
+    loadRegistryText(registryJson);
+  }
+
   @Deprecated
   void prepareEncounter(JSONObject state) {
     throw new IllegalStateException(
@@ -87,8 +91,16 @@ final class EntityCore {
     EntityDefinition entity = entities.get(normalized);
     if (entity == null) throw new IllegalArgumentException("Unknown Entity candidate: " + normalized);
     JSONObject currentFlags = flags(state);
-    if (!currentFlags.optString(ENCOUNTER_KEY, "").trim().isEmpty()) {
+    if (!currentFlags.optString(ENCOUNTER_KEY, "").trim().isEmpty()
+        || CombatChoiceEngine.isActive(state)) {
       throw new IllegalStateException("An Entity encounter is already active");
+    }
+    // The terminal result remains useful to the previous battle, but cannot own the
+    // next encounter's flags. Retire it when Core commits a genuinely new encounter.
+    JSONObject previousCombat = state.optJSONObject("combat");
+    if (previousCombat != null && !previousCombat.optBoolean("active", false)) {
+      String outcome = previousCombat.optString("outcome", "");
+      if ("victory".equals(outcome) || "defeat".equals(outcome)) state.remove("combat");
     }
     activateEncounter(state, currentFlags, entity, state.optInt("currentLevel", 0), "candidate_selector");
   }
@@ -150,7 +162,12 @@ final class EntityCore {
 
   private void loadRegistry(Context context) {
     try {
-      JSONObject root = new JSONObject(readAsset(context, REGISTRY_ASSET));
+      loadRegistryText(readAsset(context, REGISTRY_ASSET));
+    } catch (Exception ignored) {}
+  }
+
+  private void loadRegistryText(String jsonText) throws Exception {
+      JSONObject root = new JSONObject(jsonText);
       if (!"independent_per_entity".equals(root.optString("rollMode"))) return;
       JSONArray records = root.optJSONArray("entities");
       if (records == null) return;
@@ -182,7 +199,6 @@ final class EntityCore {
           legacyEntities.put(key, new LegacyEntityDefinition(key, name, canon));
         }
       }
-    } catch (Exception ignored) {}
   }
 
   private String readAsset(Context context, String path) throws Exception {

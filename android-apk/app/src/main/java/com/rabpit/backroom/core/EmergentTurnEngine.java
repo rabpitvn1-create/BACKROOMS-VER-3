@@ -238,6 +238,29 @@ final class EmergentTurnEngine {
     }
     JSONObject normalizedParams = params == null ? new JSONObject() : new JSONObject(params.toString());
     if (!safe(subjectRef).isEmpty()) normalizedParams.put("subjectRef", subjectRef);
+    if (safe(eventType).startsWith("EMERGENT_") && !normalizedParams.has("significance")) {
+      String stake = eventType.contains("PARTY") ? "RELATIONSHIP"
+          : eventType.contains("RESOURCE") ? "RESOURCE"
+          : eventType.contains("QUIET") ? "PACING" : "ENVIRONMENTAL";
+      boolean unresolved = "EMERGENT_ANOMALY_FOUND".equals(eventType)
+          || "EMERGENT_PARTY_REQUEST".equals(eventType);
+      int importance = "EMERGENT_ANOMALY_PAYOFF".equals(eventType)
+          || "EMERGENT_ANOMALY_INVESTIGATED".equals(eventType) ? 3
+          : "EMERGENT_QUIET_BEAT".equals(eventType) ? 1 : 2;
+      JSONArray actors = new JSONArray();
+      if ("player".equals(normalizedParams.optString("causedBy"))) actors.put("cao_minh");
+      JSONArray affected = new JSONArray().put("cao_minh");
+      if (!safe(subjectRef).isEmpty() && !"cao_minh".equals(subjectRef)) affected.put(subjectRef);
+      normalizedParams.put("significance", new JSONObject()
+          .put("consequenceType", eventType)
+          .put("stakeType", stake)
+          .put("importance", importance)
+          .put("unresolved", unresolved)
+          .put("actorRefs", actors)
+          .put("subjectRefs", safe(subjectRef).isEmpty()
+              ? new JSONArray() : new JSONArray().put(subjectRef))
+          .put("affectedRefs", affected));
+    }
     JSONObject event = new JSONObject()
         .put("eventId", turnId + ":e" + seq)
         .put("eventSeq", seq)
@@ -505,6 +528,280 @@ final class EmergentTurnEngine {
     return changed;
   }
 
+
+  /**
+   * Generate canon-safe event candidates from committed history. The existing selector handles
+   * weights, cooldown and scoped RNG; this method cannot commit or mutate persistent state.
+   */
+  JSONArray directorCandidates(JSONObject state, String action) throws Exception {
+    normalizeState(state);
+    JSONArray candidates = new JSONArray();
+    JSONObject root = state.getJSONObject(ROOT_KEY);
+    JSONObject flags = state.optJSONObject("flags");
+    JSONObject encounter = state.optJSONObject("characterEncounter");
+    JSONArray pendingIntro = encounter == null ? null : encounter.optJSONArray("pendingIntro");
+    if ((flags != null && (!flags.optString("entityEncounterKey", "").isEmpty()
+            || flags.optBoolean("chestPresent", false)))
+        || (pendingIntro != null && pendingIntro.length() > 0)
+        || CombatChoiceEngine.isActive(state)) return candidates;
+
+    int turn = Math.max(1, state.optInt("turn", 1));
+    String level = state.optString("currentLevelKey", String.valueOf(state.optInt("currentLevel", 0)));
+    JSONArray threads = root.getJSONArray("threads");
+    JSONObject anomaly = activeThread(threads, "ENVIRONMENTAL_MYSTERY", level);
+    boolean investigating = isAnomalyInvestigation(action);
+
+    if (anomaly == null && turn >= 2 && turn - latestEventTurn(root, "EMERGENT_ANOMALY_FOUND") >= 10) {
+      int cycle = 1;
+      JSONArray facts = root.getJSONArray("historicalFacts");
+      for (int i = 0; i < facts.length(); i++) {
+        JSONObject fact = facts.optJSONObject(i);
+        if (fact != null && "world_anomaly_detected".equals(fact.optString("predicate"))
+            && level.equals(fact.optString("subjectRef"))) cycle++;
+      }
+      String key = "anomaly:" + level + ":" + cycle;
+      candidates.put(candidate("DIRECTOR", "director:anomaly:" + level, "ENVIRONMENTAL",
+              9.0d, "Cao Minh phát hiện một dấu hiệu dị thường chưa được giải thích.", key, false)
+          .put("family", "ANOMALY_SETUP").put("source", "DIRECTOR")
+          .put("cooldownTurns", 10).put("keyRefs", new JSONArray().put(level)));
+    } else if (anomaly != null && !investigating) {
+      int age = Math.max(0, turn - anomaly.optInt("lastTouchedTurn", turn));
+      if (age >= 3) {
+        candidates.put(candidate("DIRECTOR", "director:payoff:" + anomaly.optString("threadId"),
+                "CONSEQUENCE", Math.min(68.0d, 13.0d + age * 5.0d),
+                "Dấu hiệu dị thường chưa giải quyết tạo ra mối nguy mới.", anomaly.optString("threadId"), false)
+            .put("family", "ANOMALY_PAYOFF").put("source", "DIRECTOR")
+            .put("payoffDebt", age).put("keyRefs", new JSONArray().put(level)));
+      }
+    }
+
+    // Echoes are grounded in an actual prior chest action, once per committed source fact.
+    JSONArray facts = root.getJSONArray("historicalFacts");
+    for (int i = facts.length() - 1; i >= 0; i--) {
+      JSONObject fact = facts.optJSONObject(i);
+      if (fact == null || !"chest_opened".equals(fact.optString("predicate"))
+          || !level.equals(fact.optString("subjectRef"))) continue;
+      int age = turn - fact.optInt("turn", turn);
+      if (age < 2 || age > 8 || echoed(root, fact.optString("factId"))) continue;
+      String sourceId = fact.optString("factId");
+      candidates.put(candidate("DIRECTOR", "director:echo:" + sourceId, "CONSEQUENCE",
+              Math.min(50.0d, 9.0d + age * 5.0d),
+              "Việc mở rương trước đó để lại dấu vết thu hút sự chú ý.", sourceId, false)
+          .put("family", "RESOURCE_ECHO").put("source", "DIRECTOR")
+          .put("payoffDebt", age).put("keyRefs", new JSONArray().put(level)));
+      break;
+    }
+
+    JSONArray party = state.optJSONArray("party");
+    if (party != null && party.length() > 0) {
+      JSONObject companion = party.optJSONObject(0);
+      String actor = companion == null ? "" : companion.optString("id", "");
+      if (!actor.isEmpty() && activeThread(threads, "PARTY_RELATIONSHIP", actor) == null) {
+        candidates.put(candidate("DIRECTOR", "director:party:" + actor, "SOCIAL", 8.0d,
+                "Một người đồng hành muốn trao đổi về những quyết định gần đây.", actor, false)
+            .put("family", "RELATIONSHIP_BEAT").put("source", "DIRECTOR")
+            .put("cooldownTurns", 14).put("keyRefs", new JSONArray().put(actor)));
+      }
+    }
+
+    JSONObject director = root.optJSONObject("director");
+    JSONObject metrics = director == null ? null : director.optJSONObject("recentEventMetrics");
+    if (metrics != null && metrics.optInt("combat", 0) >= 2
+        && turn - latestEventTurn(root, "EMERGENT_QUIET_BEAT") > 4) {
+      candidates.put(candidate("DIRECTOR", "director:quiet", "ENVIRONMENTAL", 32.0d,
+              "Không gian tạm lắng sau chuỗi nguy hiểm; Cao Minh có khoảng nghỉ ngắn.", level, false)
+          .put("family", "QUIET").put("source", "DIRECTOR").put("cooldownTurns", 4));
+    }
+    return candidates;
+  }
+
+  /** Player agency: investigate a planted clue or answer a companion instead of ignoring it. */
+  void applyPlayerEventResponse(JSONObject state, JSONArray events, String turnId, String action)
+      throws Exception {
+    normalizeState(state);
+    JSONObject root = state.getJSONObject(ROOT_KEY);
+    int turn = Math.max(1, state.optInt("turn", 1));
+    String level = state.optString("currentLevelKey", String.valueOf(state.optInt("currentLevel", 0)));
+    JSONObject anomaly = activeThread(root.getJSONArray("threads"), "ENVIRONMENTAL_MYSTERY", level);
+    if (anomaly != null && isAnomalyInvestigation(action)) {
+      JSONObject flags = state.optJSONObject("flags");
+      if (flags == null) flags = new JSONObject();
+      int insight = Math.min(5, Math.max(0, flags.optInt("anomalyInsight", 0)) + 1);
+      flags.put("anomalyInsight", insight)
+          .put("ambientAlertUntilTurn", Math.max(flags.optInt("ambientAlertUntilTurn", 0), turn + 2));
+      state.put("flags", flags);
+      events.put(event(turnId, events, "EMERGENT_ANOMALY_INVESTIGATED", "REGIONAL", level,
+          new JSONObject().put("factPredicate", "world_anomaly_investigated")
+              .put("factValue", anomaly.optString("threadId"))
+              .put("causedBy", "player").put("observedByPlayer", true),
+          new JSONArray().put(threadEffect("ENVIRONMENTAL_MYSTERY",
+              anomaly.optJSONArray("keyRefs"), "TERMINATE", "RESOLVED"))));
+    }
+
+    JSONArray party = state.optJSONArray("party");
+    if (party == null || action == null) return;
+    String text = action.toLowerCase(Locale.ROOT);
+    if (!(text.contains("trò chuyện") || text.contains("nói chuyện") || text.contains("lắng nghe"))) return;
+    for (int i = 0; i < party.length(); i++) {
+      JSONObject member = party.optJSONObject(i);
+      String id = member == null ? "" : member.optString("id", "");
+      String alias = "luc_tram".equals(id) ? "lục trầm" : id;
+      if (id.isEmpty() || (!text.contains(id.replace('_', ' ')) && !text.contains(alias))) continue;
+      JSONObject request = activeThread(root.getJSONArray("threads"), "PARTY_RELATIONSHIP", id);
+      if (request == null) continue;
+      events.put(event(turnId, events, "EMERGENT_PARTY_HEARD", "SOCIAL", id,
+          new JSONObject().put("factPredicate", "party_request_answered")
+              .put("factValue", id).put("causedBy", "player").put("observedByPlayer", true),
+          new JSONArray().put(threadEffect("PARTY_RELATIONSHIP",
+              request.optJSONArray("keyRefs"), "TERMINATE", "RESOLVED"))));
+      break;
+    }
+  }
+
+  /** Apply only the family and references already chosen by the deterministic Core selector. */
+  void applyDirectorSelection(JSONObject state, JSONArray events, String turnId, JSONObject selected)
+      throws Exception {
+    normalizeState(state);
+    JSONObject root = state.getJSONObject(ROOT_KEY);
+    JSONObject flags = state.optJSONObject("flags");
+    if (flags == null) flags = new JSONObject();
+    String family = selected.optString("family", "");
+    String value = selected.optString("payloadKey", "");
+    int turn = Math.max(1, state.optInt("turn", 1));
+    String level = state.optString("currentLevelKey", String.valueOf(state.optInt("currentLevel", 0)));
+    JSONObject params = new JSONObject().put("observedByPlayer", true).put("causedBy", "world");
+    JSONArray effects = null;
+    String type;
+    String scope = "REGIONAL";
+    String subject = level;
+
+    switch (family) {
+      case "ANOMALY_SETUP":
+        if (activeThread(root.getJSONArray("threads"), "ENVIRONMENTAL_MYSTERY", level) != null
+            || !value.startsWith("anomaly:" + level + ":")) throw new IllegalStateException("Stale anomaly setup");
+        type = "EMERGENT_ANOMALY_FOUND";
+        params.put("factPredicate", "world_anomaly_detected").put("factValue", value);
+        effects = new JSONArray().put(threadEffect("ENVIRONMENTAL_MYSTERY",
+            new JSONArray().put(level).put(value), "SEED_OR_ADVANCE", null));
+        break;
+      case "ANOMALY_PAYOFF":
+        JSONObject anomaly = activeThread(root.getJSONArray("threads"), "ENVIRONMENTAL_MYSTERY", level);
+        if (anomaly == null || !value.equals(anomaly.optString("threadId"))) {
+          throw new IllegalStateException("Stale anomaly payoff");
+        }
+        type = "EMERGENT_ANOMALY_PAYOFF";
+        int insight = Math.max(0, flags.optInt("anomalyInsight", 0));
+        flags.put("ambientAlertUntilTurn", Math.max(flags.optInt("ambientAlertUntilTurn", 0),
+            turn + Math.max(1, 4 - insight)));
+        params.put("factPredicate", "world_anomaly_payoff").put("factValue", value);
+        effects = new JSONArray().put(threadEffect("ENVIRONMENTAL_MYSTERY",
+            anomaly.optJSONArray("keyRefs"), "TERMINATE", "RESOLVED"));
+        break;
+      case "RESOURCE_ECHO":
+        JSONObject source = findBy(root.getJSONArray("historicalFacts"), "factId", value);
+        if (source == null || !"chest_opened".equals(source.optString("predicate"))
+            || echoed(root, value) || !level.equals(source.optString("subjectRef"))) {
+          throw new IllegalStateException("Stale resource echo");
+        }
+        type = "EMERGENT_RESOURCE_ECHO";
+        flags.put("ambientAlertUntilTurn", Math.max(flags.optInt("ambientAlertUntilTurn", 0),
+            turn + Math.max(1, 3 - Math.max(0, flags.optInt("anomalyInsight", 0)))));
+        params.put("factPredicate", "world_resource_echo").put("factValue", value);
+        break;
+      case "RELATIONSHIP_BEAT":
+        JSONArray party = state.optJSONArray("party");
+        boolean present = false;
+        if (party != null) for (int i = 0; i < party.length(); i++) {
+          JSONObject member = party.optJSONObject(i);
+          if (member != null && value.equals(member.optString("id"))) present = true;
+        }
+        if (!present || activeThread(root.getJSONArray("threads"), "PARTY_RELATIONSHIP", value) != null) {
+          throw new IllegalStateException("Stale relationship beat");
+        }
+        type = "EMERGENT_PARTY_REQUEST";
+        scope = "SOCIAL";
+        subject = value;
+        params.put("factPredicate", "party_request").put("factValue", value);
+        effects = new JSONArray().put(threadEffect("PARTY_RELATIONSHIP",
+            new JSONArray().put(value), "SEED_OR_ADVANCE", null));
+        break;
+      case "QUIET":
+        type = "EMERGENT_QUIET_BEAT";
+        scope = "LOCAL";
+        flags.put("ambientAlertUntilTurn", Math.min(turn - 1, flags.optInt("ambientAlertUntilTurn", 0)));
+        params.put("factPredicate", "danger_released").put("factValue", turn);
+        break;
+      default:
+        throw new IllegalStateException("Unknown Director family: " + family);
+    }
+    state.put("flags", flags);
+    events.put(event(turnId, events, type, scope, subject, params, effects));
+  }
+
+  /**
+   * One eligible exploration turn to recover after a resolved real fight. This uses the
+   * existing replayed terminal-combat cooldown; it does not rewrite entity spawn rates.
+   */
+  boolean postCombatRecoveryTurn(JSONObject state, int selectionTurn) {
+    JSONObject root = state == null ? null : state.optJSONObject(ROOT_KEY);
+    JSONObject director = root == null ? null : root.optJSONObject("director");
+    JSONObject cooldowns = director == null ? null : director.optJSONObject("activeCooldowns");
+    int until = cooldowns == null ? 0 : cooldowns.optInt("DANGER_UNTIL_TURN", 0);
+    return until >= 3 && selectionTurn <= until - 2;
+  }
+
+  int ambientAlertUntilTurn(JSONObject state) {
+    JSONObject flags = state == null ? null : state.optJSONObject("flags");
+    return flags == null ? 0 : Math.max(0, flags.optInt("ambientAlertUntilTurn", 0));
+  }
+
+  private static boolean isAnomalyInvestigation(String action) {
+    String text = action == null ? "" : action.toLowerCase(Locale.ROOT);
+    return (text.contains("điều tra") || text.contains("khảo sát"))
+        && (text.contains("dị thường") || text.contains("dấu hiệu"));
+  }
+
+  private static JSONObject activeThread(JSONArray threads, String type, String ref) {
+    if (threads == null || ref == null || ref.isEmpty()) return null;
+    for (int i = threads.length() - 1; i >= 0; i--) {
+      JSONObject thread = threads.optJSONObject(i);
+      if (thread == null || !type.equals(thread.optString("threadType"))) continue;
+      String status = thread.optString("status");
+      if (!"ACTIVE".equals(status) && !"DORMANT".equals(status)) continue;
+      JSONArray refs = thread.optJSONArray("keyRefs");
+      if (refs != null && refs.length() > 0 && ref.equals(refs.optString(0))) return thread;
+    }
+    return null;
+  }
+
+  private static boolean echoed(JSONObject root, String sourceFactId) {
+    JSONArray facts = root.optJSONArray("historicalFacts");
+    if (facts == null || sourceFactId.isEmpty()) return false;
+    for (int i = facts.length() - 1; i >= 0; i--) {
+      JSONObject fact = facts.optJSONObject(i);
+      if (fact != null && "world_resource_echo".equals(fact.optString("predicate"))
+          && sourceFactId.equals(fact.optString("value"))) return true;
+    }
+    return false;
+  }
+
+  private static int latestEventTurn(JSONObject root, String eventType) {
+    JSONArray commits = root.optJSONArray("commitLog");
+    if (commits == null) return -100000;
+    for (int i = commits.length() - 1; i >= 0; i--) {
+      JSONObject commit = commits.optJSONObject(i);
+      JSONArray events = commit == null ? null : commit.optJSONArray("events");
+      if (events == null) continue;
+      for (int e = events.length() - 1; e >= 0; e--) {
+        JSONObject event = events.optJSONObject(e);
+        if (event != null && eventType.equals(event.optString("eventType"))) {
+          return commit.optInt("turn", 0);
+        }
+      }
+    }
+    return -100000;
+  }
+
   JSONArray schedulerCandidates(JSONObject state, int currentTurn) throws Exception {
     normalizeState(state);
     return SchedulerProjection.dueCandidates(state, currentTurn);
@@ -655,6 +952,8 @@ final class EmergentTurnEngine {
         .put("impactScope", event.optString("impactScope", "LOCAL"))
         .put("causedBy", params.optString("causedBy", ""))
         .put("impactEligible", params.optBoolean("impactEligible", true));
+    JSONObject significance = params.optJSONObject("significance");
+    if (significance != null) fact.put("significance", new JSONObject(significance.toString()));
     root.getJSONArray("historicalFacts").put(fact);
     BeliefResolver.project(root, event, fact, turn);
   }
@@ -781,8 +1080,8 @@ final class EmergentTurnEngine {
     }
 
     director.put("tagWeightModifiers", modifiers)
-        .put("authority", "WEIGHT_ONLY")
-        .put("canCreateCandidates", false)
+        .put("authority", "CORE_EVENT_GENERATOR")
+        .put("canCreateCandidates", true)
         .put("canUnlockEligibility", false)
         .put("derivedFromCommitSeq", root.optInt("commitSequence", 0))
         .put("activeCooldowns", new JSONObject().put("DANGER_UNTIL_TURN", dangerCooldownUntil))
@@ -855,8 +1154,8 @@ final class EmergentTurnEngine {
       director.put("tagWeightModifiers", new JSONObject());
     }
     if (!(director.opt("pressures") instanceof JSONObject)) director.put("pressures", new JSONObject());
-    director.put("authority", "WEIGHT_ONLY")
-        .put("canCreateCandidates", false)
+    director.put("authority", "CORE_EVENT_GENERATOR")
+        .put("canCreateCandidates", true)
         .put("canUnlockEligibility", false)
         .put("derivedFromCommitSeq", Math.max(0, director.optInt("derivedFromCommitSeq", 0)));
     root.put("director", director);

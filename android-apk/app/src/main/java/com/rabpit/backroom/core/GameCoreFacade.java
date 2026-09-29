@@ -35,14 +35,24 @@ public final class GameCoreFacade implements AutoCloseable {
   private final Map<String, PreparedTurn> preparedTurns = new LinkedHashMap<>();
 
   private GameCoreFacade(Context context, boolean debugLogging) {
-    Context appContext = context.getApplicationContext();
-    this.preferences = appContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+    this(context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE),
+        new LevelCore(context.getApplicationContext()), new EntityCore(context.getApplicationContext()),
+        debugLogging);
+  }
+
+  // Full-flow JVM simulation injects only storage and the same shipped rule registries.
+  GameCoreFacade(SharedPreferences preferences, LevelCore levelCore,
+                 EntityCore entityCore, boolean debugLogging) {
+    if (preferences == null || levelCore == null || entityCore == null) {
+      throw new IllegalArgumentException("Core dependencies are required");
+    }
+    this.preferences = preferences;
     String checkpoint = preferences.getString(MANUAL_SAVE_KEY, "");
     this.liveStateJson = checkpoint != null && !checkpoint.isEmpty()
         ? checkpoint : preferences.getString(STATE_KEY, "{}");
     this.debugLogging = debugLogging;
-    this.levelCore = new LevelCore(appContext);
-    this.entityCore = new EntityCore(appContext);
+    this.levelCore = levelCore;
+    this.entityCore = entityCore;
     this.itemCore = new ItemCore();
     this.characterEncounterCore = new CharacterEncounterCore();
     this.characterProgressionCore = new CharacterProgressionCore();
@@ -183,15 +193,32 @@ public final class GameCoreFacade implements AutoCloseable {
               .put("observedByPlayer", true),
           null));
 
+      // Explicit responses can resolve earlier setups; they are part of this Core turn, not narration.
+      emergentTurnEngine.applyPlayerEventResponse(working, events, turnId, text);
+
       JSONArray candidates = new JSONArray();
       appendAll(candidates, emergentTurnEngine.schedulerCandidates(
           working, Math.max(1, working.optInt("turn", 1))));
-      appendAll(candidates, entityCore.situationCandidates(working));
+      // One breather after a completed fight; an active world-alert consequence overrides it.
+      boolean recoveryTurn = emergentTurnEngine.postCombatRecoveryTurn(
+          working, Math.max(1, working.optInt("turn", 1)))
+          && working.optInt("turn", 1) > emergentTurnEngine.ambientAlertUntilTurn(working);
+      JSONArray entityCandidates = recoveryTurn ? new JSONArray()
+          : entityCore.situationCandidates(working);
+      if (working.optInt("turn", 1) <= emergentTurnEngine.ambientAlertUntilTurn(working)) {
+        for (int i = 0; i < entityCandidates.length(); i++) {
+          JSONObject entity = entityCandidates.optJSONObject(i);
+          if (entity != null) entity.put("chancePercent",
+              Math.min(99.0d, entity.optDouble("chancePercent", 0.0d) * 1.3d));
+        }
+      }
+      appendAll(candidates, entityCandidates);
       if (!openedChest) {
         JSONObject chestCandidate = itemCore.explorationChestCandidate(working);
         if (chestCandidate != null) candidates.put(chestCandidate);
       }
       appendAll(candidates, characterEncounterCore.situationCandidates(working));
+      appendAll(candidates, emergentTurnEngine.directorCandidates(working, text));
 
       JSONObject selected = emergentTurnEngine.selectCandidate(
           working, candidates, turnRng, Math.max(1, working.optInt("turn", 1)));
@@ -339,6 +366,11 @@ public final class GameCoreFacade implements AutoCloseable {
   }
 
   public synchronized String commitNarration(String stateJson, boolean acknowledgePendingIntro) {
+    return commitNarration(stateJson, acknowledgePendingIntro, false);
+  }
+
+  public synchronized String commitNarration(String stateJson, boolean acknowledgePendingIntro,
+                                              boolean validatedNarration) {
     JSONObject submitted = parseState(stateJson);
     JSONObject state = parseState(liveStateJson);
     try {
@@ -346,6 +378,7 @@ public final class GameCoreFacade implements AutoCloseable {
       JSONArray log = submitted.optJSONArray("log");
       if (log != null) state.put("log", new JSONArray(log.toString()));
       if (acknowledgePendingIntro) characterEncounterCore.acknowledgePendingIntro(state);
+      if (validatedNarration) NarrativeContinuityPacket.acknowledgeValidatedNarration(state);
       persist(state);
       return clientSafeState(state).toString();
     } catch (Exception e) {
@@ -362,6 +395,11 @@ public final class GameCoreFacade implements AutoCloseable {
         .put("causedBy", "world")
         .put("situationKey", selected.optString("situationKey", ""))
         .put("worldProposal", new JSONObject(proposal.toString()));
+
+    if ("DIRECTOR".equals(kind)) {
+      emergentTurnEngine.applyDirectorSelection(working, events, turnId, selected);
+      return;
+    }
 
     if ("ENTITY".equals(kind)) {
       entityCore.activateEncounterCandidate(working, payload);

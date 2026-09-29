@@ -103,6 +103,35 @@ public class EmergentTurnEngineTest {
     assertFalse(patch.getJSONObject("set").has(EmergentTurnEngine.ROOT_KEY));
   }
 
+  @Test public void authoritativePatchIgnoresJsonObjectKeyOrderButPreservesArrayOrder()
+      throws Exception {
+    JSONObject first = new JSONObject()
+        .put("player", new JSONObject().put("hp", 10).put("name", "Cao Minh"))
+        .put("history", new JSONArray()
+            .put(new JSONObject().put("a", 1).put("b", 2))
+            .put(new JSONObject().put("x", 3).put("y", 4)));
+    JSONObject same = new JSONObject()
+        .put("history", new JSONArray()
+            .put(new JSONObject().put("b", 2).put("a", 1))
+            .put(new JSONObject().put("y", 4).put("x", 3)))
+        .put("player", new JSONObject().put("name", "Cao Minh").put("hp", 10));
+    same.getJSONObject("player").put("hp", 10L);
+    same.getJSONArray("history").getJSONObject(0).put("a", 1L);
+    assertTrue("Numeric JSON values must survive a deserialize/serialize roundtrip",
+        AuthoritativeStatePatch.isEmpty(AuthoritativeStatePatch.diff(first, same)));
+    assertTrue("Object insertion order does not change authoritative state",
+        AuthoritativeStatePatch.isEmpty(AuthoritativeStatePatch.diff(first, same)));
+    JSONObject changed = new JSONObject(same.toString());
+    changed.put("history", new JSONArray()
+        .put(new JSONObject().put("x", 3).put("y", 4))
+        .put(new JSONObject().put("a", 1).put("b", 2)));
+    JSONObject patch = AuthoritativeStatePatch.diff(first, changed);
+    assertFalse("Array ordering remains authoritative", AuthoritativeStatePatch.isEmpty(patch));
+    assertTrue("Patch must replay exactly",
+        AuthoritativeStatePatch.isEmpty(AuthoritativeStatePatch.diff(
+            AuthoritativeStatePatch.apply(first, patch), changed)));
+  }
+
   @Test public void structuredThreadPredicateResolvesOnlyWhenStateMatches() throws Exception {
     JSONArray conditions = ThreadPredicateEngine.conditionsForThreadType(
         "CHEST_AVAILABLE", new JSONArray().put("0"));
@@ -433,8 +462,8 @@ public class EmergentTurnEngineTest {
     JSONObject root = state.getJSONObject(EmergentTurnEngine.ROOT_KEY);
     assertEquals(0.0d, NarrativeSkeleton.attentionStrength(root, "DANGER"), 0.000001d);
     JSONObject director = root.getJSONObject("director");
-    assertEquals("WEIGHT_ONLY", director.getString("authority"));
-    assertFalse(director.getBoolean("canCreateCandidates"));
+    assertEquals("CORE_EVENT_GENERATOR", director.getString("authority"));
+    assertTrue(director.getBoolean("canCreateCandidates"));
     assertFalse(director.getBoolean("canUnlockEligibility"));
     assertEquals(0, engine.schedulerCandidates(state, 6).length());
 
