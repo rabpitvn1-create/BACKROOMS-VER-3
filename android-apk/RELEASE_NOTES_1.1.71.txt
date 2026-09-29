@@ -1,0 +1,7 @@
+Backroom 1.1.71
+
+- Tích hợp PR #13: giữ một gợi ý hành động trên các lượt khám phá hợp lệ, kể cả lượt tiếp theo sau lựa chọn hậu chiến khi AI không trả danh sách lựa chọn; vẫn ưu tiên gợi ý hợp lệ do Game Master tạo.
+- Không hiển thị gợi ý khám phá trong combat, khi thực thể đang chờ giao chiến hoặc khi thất bại; giữ lối thoát đã được Java Core xác nhận và Player Action độc lập.
+- Tích hợp PR #14: cải thiện văn kể dự phòng khi nhà cung cấp AI gặp lỗi hoặc quá thời hạn, tránh lời phản hồi giống thông báo hệ thống sau chiến đấu.
+- Bổ sung hướng dẫn văn phong và ví dụ Game Master phù hợp quy tắc tối đa một gợi ý, đồng thời bổ sung kiểm thử hồi quy cho lời kể, lựa chọn hậu chiến và dữ kiện do Core xác nhận.
+- Giữ nguyên cơ chế combat, phần thưởng và định dạng save. Chưa xác định được nguyên nhân nhà cung cấp AI chuyển sang dự phòng trên thiết bị; vẫn cần kiểm tra trực tiếp trên máy và nhật ký provider.
