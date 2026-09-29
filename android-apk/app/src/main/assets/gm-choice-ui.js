@@ -212,19 +212,42 @@
     return [{text:'Quan sát dãy tường vàng',action:'Quan sát dãy tường vàng'}];
   }
 
+  // A missing provider choice must not end the explorer's suggested-action loop.
+  // Use only observable actions: no invented exit, entity, loot, or scene detail.
+  function missingExplorerChoice() {
+    var previousAction = '';
+    if (state && Array.isArray(state.log)) {
+      for (var i = state.log.length - 1; i >= 0; i--) {
+        if (state.log[i] && state.log[i].role === 'player') {
+          previousAction = String(state.log[i].text || '').trim();
+          break;
+        }
+      }
+    }
+    var text = /^(?:cao minh\\s+)?(?:quan sát|nhìn|xem xét|kiểm tra|khảo sát)\\b/i.test(previousAction)
+      ? 'Lắng nghe âm thanh trong khu vực hiện tại'
+      : 'Quan sát khu vực phía trước';
+    return [{text:text,action:text}];
+  }
+
   function displayedExplorerChoices(entry) {
     var choices = Array.isArray(entry && entry.choices) ? entry.choices.slice(0, 1) : [];
     if (state && Array.isArray(state.log) && state.log.length === 1 && entry === state.log[0]) {
       choices = fallbackExplorerChoices();
-    } else if (!choices.length && state && state.combat && state.combat.active === false
-        && state.combat.outcome === 'victory' && Array.isArray(state.log)
-        && state.log[Number(state.combat.logIndex)] === entry) {
-      // The fight's GM entry had no choices; restore one action after victory.
-      choices = [{text:'Quan sát khu vực sau trận chiến',
-                  action:'Quan sát khu vực sau trận chiến'}];
+    } else if (!choices.length && state && Array.isArray(state.log)
+        && !(state.combat && (state.combat.active || state.combat.outcome === 'defeat'))
+        && !(state.flags && state.flags.entityEncounterKey)) {
+      if (state.combat && state.combat.active === false
+          && state.combat.outcome === 'victory'
+          && state.log[Number(state.combat.logIndex)] === entry) {
+        choices = [{text:'Quan sát khu vực sau trận chiến',
+                    action:'Quan sát khu vực sau trận chiến'}];
+      } else {
+        choices = missingExplorerChoice();
+      }
     }
     if (state && state.levelRoute && state.levelRoute.exitAvailable === true) {
-      choices = [{text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'}];
+      choices = [{text:'Đi qua lối ra đến chặng tiếp theo',action:'Đi qua lối ra'}];
     }
     return choices.slice(0, 1).map(function(choice){
       return Object.assign({}, choice, {id:'A'});
