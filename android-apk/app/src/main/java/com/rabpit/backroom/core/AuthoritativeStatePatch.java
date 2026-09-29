@@ -107,10 +107,24 @@ final class AuthoritativeStatePatch {
       return (a == null || JSONObject.NULL.equals(a)) && (b == null || JSONObject.NULL.equals(b));
     }
     if (a instanceof JSONObject && b instanceof JSONObject) {
-      return ((JSONObject) a).toString().equals(((JSONObject) b).toString());
+      JSONObject left = (JSONObject) a;
+      JSONObject right = (JSONObject) b;
+      if (left.length() != right.length()) return false;
+      Iterator<String> keys = left.keys();
+      while (keys.hasNext()) {
+        String key = keys.next();
+        if (!right.has(key) || !jsonEquals(left.opt(key), right.opt(key))) return false;
+      }
+      return true;
     }
     if (a instanceof JSONArray && b instanceof JSONArray) {
-      return ((JSONArray) a).toString().equals(((JSONArray) b).toString());
+      JSONArray left = (JSONArray) a;
+      JSONArray right = (JSONArray) b;
+      if (left.length() != right.length()) return false;
+      for (int i = 0; i < left.length(); i++) {
+        if (!jsonEquals(left.opt(i), right.opt(i))) return false;
+      }
+      return true;
     }
     return a.equals(b);
   }
