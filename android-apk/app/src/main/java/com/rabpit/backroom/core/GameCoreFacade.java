@@ -199,7 +199,12 @@ public final class GameCoreFacade implements AutoCloseable {
       JSONArray candidates = new JSONArray();
       appendAll(candidates, emergentTurnEngine.schedulerCandidates(
           working, Math.max(1, working.optInt("turn", 1))));
-      JSONArray entityCandidates = entityCore.situationCandidates(working);
+      // One breather after a completed fight; an active world-alert consequence overrides it.
+      boolean recoveryTurn = emergentTurnEngine.postCombatRecoveryTurn(
+          working, Math.max(1, working.optInt("turn", 1)))
+          && working.optInt("turn", 1) > emergentTurnEngine.ambientAlertUntilTurn(working);
+      JSONArray entityCandidates = recoveryTurn ? new JSONArray()
+          : entityCore.situationCandidates(working);
       if (working.optInt("turn", 1) <= emergentTurnEngine.ambientAlertUntilTurn(working)) {
         for (int i = 0; i < entityCandidates.length(); i++) {
           JSONObject entity = entityCandidates.optJSONObject(i);
