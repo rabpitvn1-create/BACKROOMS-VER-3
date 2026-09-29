@@ -433,8 +433,8 @@ public class EmergentTurnEngineTest {
     JSONObject root = state.getJSONObject(EmergentTurnEngine.ROOT_KEY);
     assertEquals(0.0d, NarrativeSkeleton.attentionStrength(root, "DANGER"), 0.000001d);
     JSONObject director = root.getJSONObject("director");
-    assertEquals("WEIGHT_ONLY", director.getString("authority"));
-    assertFalse(director.getBoolean("canCreateCandidates"));
+    assertEquals("CORE_EVENT_GENERATOR", director.getString("authority"));
+    assertTrue(director.getBoolean("canCreateCandidates"));
     assertFalse(director.getBoolean("canUnlockEligibility"));
     assertEquals(0, engine.schedulerCandidates(state, 6).length());
 
