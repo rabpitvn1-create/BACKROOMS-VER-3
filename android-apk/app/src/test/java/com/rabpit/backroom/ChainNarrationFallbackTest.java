@@ -30,6 +30,17 @@ public class ChainNarrationFallbackTest {
     }
   }
 
+  @Test public void committedEmergentEventSurvivesProviderFailureAlongsideActionHint()
+      throws Exception {
+    JSONObject state = state("SUCCESS", 2);
+    state.put("emergent", new JSONObject().put("lastSelection",
+        new JSONObject().put("selectedNone", false)
+            .put("publicSummary", "Dấu hiệu dị thường đang tạo thêm nguy hiểm.")));
+    String reply = MainActivity.narrationFallback(state, "Thông tin hành động cũ").getString("reply");
+    assertTrue(reply.contains("tiến sâu hơn"));
+    assertTrue(reply.contains("Dấu hiệu dị thường đang tạo thêm nguy hiểm."));
+  }
+
   @Test public void oldOutcomeDoesNotRepeatOnNextTurn() throws Exception {
     String reply = MainActivity.narrationFallback(state("SUCCESS", 1), "").getString("reply");
     assertFalse(reply.contains("tiến sâu hơn"));
