@@ -22,7 +22,7 @@ public class ChainNarrationFallbackTest {
     String exit = MainActivity.narrationFallback(state("EXIT_AVAILABLE", 2), "").getString("reply");
     assertTrue(success.contains("tiến sâu hơn"));
     assertTrue(success.contains("lối thoát"));
-    assertTrue(reset.contains("trở lại khu vực quen thuộc"));
+    assertTrue(reset.contains("cảnh vật quen thuộc"));
     assertTrue(reset.contains("điểm xuất phát"));
     assertTrue(exit.contains("lối ra"));
     assertTrue(exit.contains("chặng tiếp theo"));
