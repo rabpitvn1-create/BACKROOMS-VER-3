@@ -92,6 +92,8 @@ const turnUi = {
 };
 vm.runInNewContext(turnHandler, turnUi);
 turnUi.window.backroomTurn(JSON.stringify({turn:8,log:[entry]}));
-assert.deepEqual(order, ['render','prefetch'], 'story renders before background prefetch starts');
+assert.deepEqual(order, ['render'], 'actual turn renders without automatic speculative A/B/C');
+assert.equal(source.includes('  window.backroomPrefetchChoices();'), false,
+  'legacy prefetch hook must not run on initial render');
 
 console.log('Current story render order passed');
