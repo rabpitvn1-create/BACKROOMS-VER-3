@@ -151,6 +151,19 @@ public class EmergentDirectorTest {
     assertTrue("quiet beat should actually release pressure", after < before);
   }
 
+  @Test public void completedCombatGrantsExactlyOneRecoveryExplorerTurn() throws Exception {
+    JSONObject state = state(4);
+    engine.normalizeState(state);
+    JSONArray events = new JSONArray().put(
+        engine.event("victory", new JSONArray(), "COMBAT_VICTORY", "LOCAL", "hound",
+            new JSONObject().put("observedByPlayer", true)
+                .put("factPredicate", "combat_resolution").put("factValue", "victory"),
+            null));
+    commit(state, "victory", events, null);
+    assertTrue(engine.postCombatRecoveryTurn(state, 5));
+    assertFalse(engine.postCombatRecoveryTurn(state, 6));
+  }
+
   @Test public void emptyOrBlockedCandidatesNeverCommitUninventedEffects() throws Exception {
     JSONObject state = state(2);
     engine.normalizeState(state);
