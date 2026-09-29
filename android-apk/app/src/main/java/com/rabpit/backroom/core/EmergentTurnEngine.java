@@ -738,6 +738,18 @@ final class EmergentTurnEngine {
     events.put(event(turnId, events, type, scope, subject, params, effects));
   }
 
+  /**
+   * One eligible exploration turn to recover after a resolved real fight. This uses the
+   * existing replayed terminal-combat cooldown; it does not rewrite entity spawn rates.
+   */
+  boolean postCombatRecoveryTurn(JSONObject state, int selectionTurn) {
+    JSONObject root = state == null ? null : state.optJSONObject(ROOT_KEY);
+    JSONObject director = root == null ? null : root.optJSONObject("director");
+    JSONObject cooldowns = director == null ? null : director.optJSONObject("activeCooldowns");
+    int until = cooldowns == null ? 0 : cooldowns.optInt("DANGER_UNTIL_TURN", 0);
+    return until >= 3 && selectionTurn <= until - 2;
+  }
+
   int ambientAlertUntilTurn(JSONObject state) {
     JSONObject flags = state == null ? null : state.optJSONObject("flags");
     return flags == null ? 0 : Math.max(0, flags.optInt("ambientAlertUntilTurn", 0));
