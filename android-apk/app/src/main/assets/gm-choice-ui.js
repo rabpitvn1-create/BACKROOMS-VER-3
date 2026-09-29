@@ -247,7 +247,7 @@
       }
     }
     if (state && state.levelRoute && state.levelRoute.exitAvailable === true) {
-      choices = [{text:'Đi qua lối ra đến chặng tiếp theo',action:'Đi qua lối ra'}];
+      choices = [{text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'}];
     }
     return choices.slice(0, 1).map(function(choice){
       return Object.assign({}, choice, {id:'A'});
