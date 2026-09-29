@@ -91,8 +91,16 @@ final class EntityCore {
     EntityDefinition entity = entities.get(normalized);
     if (entity == null) throw new IllegalArgumentException("Unknown Entity candidate: " + normalized);
     JSONObject currentFlags = flags(state);
-    if (!currentFlags.optString(ENCOUNTER_KEY, "").trim().isEmpty()) {
+    if (!currentFlags.optString(ENCOUNTER_KEY, "").trim().isEmpty()
+        || CombatChoiceEngine.isActive(state)) {
       throw new IllegalStateException("An Entity encounter is already active");
+    }
+    // The terminal result remains useful to the previous battle, but cannot own the
+    // next encounter's flags. Retire it when Core commits a genuinely new encounter.
+    JSONObject previousCombat = state.optJSONObject("combat");
+    if (previousCombat != null && !previousCombat.optBoolean("active", false)) {
+      String outcome = previousCombat.optString("outcome", "");
+      if ("victory".equals(outcome) || "defeat".equals(outcome)) state.remove("combat");
     }
     activateEncounter(state, currentFlags, entity, state.optInt("currentLevel", 0), "candidate_selector");
   }
