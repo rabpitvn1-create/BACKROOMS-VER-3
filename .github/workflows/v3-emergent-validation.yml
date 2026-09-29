@@ -1,6 +1,8 @@
 name: V3 Emergent Validation
 
 on:
+  pull_request:
+    branches: [main]
   push:
     branches:
       - codex/ponytail-abc-prefetch-v3

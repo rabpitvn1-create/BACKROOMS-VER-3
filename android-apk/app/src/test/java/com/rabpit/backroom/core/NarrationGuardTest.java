@@ -97,11 +97,16 @@ public class NarrationGuardTest {
         "Cao Minh mở cửa và phát hiện lối ra"), new JSONObject()).isEmpty());
   }
 
-  @Test public void acceptsThreeDistinctShortActions() throws Exception {
-    JSONObject generated = narration(
-        "Ánh đèn rung nhẹ trên trần, còn vệt nước dưới chân tường kéo về phía ngã rẽ.",
-        "Lắng nghe phía sau bức tường", "Kiểm tra vệt nước", "Rẽ vào hành lang bên trái");
-    assertTrue(NarrationGuard.validate(generated, new JSONObject(), "Đứng quan sát").isEmpty());
+  @Test public void acceptsOnlyOneShortActionAndSanitizesLegacySaves() throws Exception {
+    String reply = "Ánh đèn rung nhẹ trên trần, còn vệt nước dưới chân tường kéo về phía ngã rẽ.";
+    assertTrue(NarrationGuard.validate(narration(reply, "Lắng nghe phía sau bức tường"),
+        new JSONObject(), "Đứng quan sát").isEmpty());
+    assertFalse(NarrationGuard.validate(narration(reply,
+        "Kiểm tra vệt nước", "Rẽ vào hành lang bên trái"), new JSONObject()).isEmpty());
+    JSONArray previous = new JSONArray().put(new JSONObject().put("text", "Kiểm tra vệt nước"))
+        .put(new JSONObject().put("text", "Lắng nghe tiếng đèn"))
+        .put(new JSONObject().put("text", "Rẽ vào hành lang"));
+    assertEquals(1, GmChoiceContract.sanitizeChoices(previous).length());
   }
 
   @Test public void filtersInvalidPrefetchBranchIndependently() throws Exception {
@@ -166,7 +171,7 @@ public class NarrationGuardTest {
     assertTrue(NarrationGuard.validate(narration(
         "Qua vài khúc ngoặt, Cao Minh lại thấy vệt ố cạnh chân tường. "
             + "Dãy tường vàng quen thuộc hiện ra dưới tiếng đèn rền đều.",
-        "Kiểm tra vệt ố", "Lắng nghe phía lối rẽ tối", "Đánh dấu chỗ giao nhau"),
+        "Kiểm tra vệt ố"),
         state, "Đi theo hành lang").isEmpty());
   }
 }
