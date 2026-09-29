@@ -1,0 +1,9 @@
+Backroom 1.1.69
+
+- Tích hợp Emergent Event Director vào Java Core: dị thường môi trường, hậu quả dấu vết, biến cố quan hệ đồng đội và nhịp nghỉ; toàn bộ hiệu ứng được commit trong Core, không giao quyền quyết định gameplay cho AI.
+- Bổ sung Narrative Continuity Packet chỉ sử dụng thông tin Cao Minh được biết, giới hạn độ dài và cooldown sau lời kể thực sự được xác nhận.
+- Bỏ tự động prefetch ba lựa chọn A/B/C ở các lượt chơi; giữ luồng kể chuyện cho hành động thực tế và fallback xác định khi nhà cung cấp AI không khả dụng.
+- Sửa vòng đời combat để encounter Entity mới không bị xóa bởi kết quả trận trước; củng cố tính nhất quán khi replay bản vá state JSON.
+- Cân chỉnh nhịp sau chiến đấu: dành một hành động khám phá để hồi nhịp, trừ khi hậu quả nguy hiểm đang có hiệu lực. Giữ nguyên tỉ lệ spawn gốc của từng Entity.
+- Bổ sung kiểm thử 200 hành động khám phá với encounter và Poker Dice thực tế cho hai kịch bản nhân vật mới/có đồng đội, cùng kiểm thử hồi quy UI và Core.
+- Giữ các cập nhật đã có của 1.1.68: ảnh snapshot Hui's Family, quy tắc kiểm tra chất lượng GM narration và ví dụ phong cách. Không thay đổi định dạng save.
