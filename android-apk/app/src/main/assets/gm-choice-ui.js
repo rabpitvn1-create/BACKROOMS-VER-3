@@ -25,6 +25,7 @@
     ".battle-line{white-space:pre-wrap;line-height:1.45}",
     ".gm-choices{display:grid;gap:7px;margin-top:12px}",
     ".gm-choice{width:100%;text-align:left;padding:11px 12px;background:#171d22;border:1px solid #39424a;color:#f0f3f5;font-family:'Pretendard Std',system-ui,sans-serif;font-weight:400;letter-spacing:normal;text-transform:none;white-space:normal;line-height:1.4;border-radius:8px}",
+    ".gm-choice{background-color:#171812;background-image:linear-gradient(90deg,rgba(8,9,7,.86),rgba(10,10,8,.70)),url('hud/gm_choice_backrooms.jpg');background-size:cover,cover;background-position:center,center 54%;background-repeat:no-repeat;border-color:#5a5437;text-shadow:0 1px 2px #000,0 0 8px #000}",
     ".gm-choice:disabled{opacity:.62}",
     ".gm-system-loading{border-left-color:#65717a;background:#111519}",
     ".gm-system-error{border-left-color:#a95f5f;background:#181112}",
