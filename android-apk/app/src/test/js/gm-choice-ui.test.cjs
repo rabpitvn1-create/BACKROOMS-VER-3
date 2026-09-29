@@ -45,9 +45,30 @@ context.state = {turn:8,log:[{text:'prologue'},postFightEntry],
   combat:{active:false,outcome:'victory',logIndex:1},levelRoute:{exitAvailable:false}};
 assert.deepEqual(Array.from(context.displayedExplorerChoices(postFightEntry),x=>x.action),
   ['Quan sát khu vực sau trận chiến']);
-context.state.log.push({text:'next GM entry'});
-assert.equal(context.displayedExplorerChoices(context.state.log[2]).length, 0,
-  'post-combat fallback must not repeat on later turns');
+const nextGm = {role:'gm', text:'Cao Minh vẫn đứng trong hành lang.', choices:[]};
+context.state.log.push({role:'player', text:'Quan sát khu vực sau trận chiến'}, nextGm);
+assert.deepEqual(Array.from(context.displayedExplorerChoices(nextGm), x => x.action),
+  ['Lắng nghe âm thanh trong khu vực hiện tại'],
+  'the next GM entry still offers a suggestion after the post-combat action');
+const followingGm = {role:'gm', text:'Chưa nghe thấy tiếng động lạ.', choices:[]};
+context.state.log.push({role:'player', text:'Lắng nghe âm thanh trong khu vực hiện tại'}, followingGm);
+assert.deepEqual(Array.from(context.displayedExplorerChoices(followingGm), x => x.action),
+  ['Quan sát khu vực phía trước'],
+  'suggestions continue on subsequent turns without repeating the last action');
+const freshChoice = {role:'gm', text:'Cánh cửa hiện ra.', choices:[{text:'Kiểm tra cánh cửa'}]};
+context.state.log.push({role:'player', text:'Đứng chờ'}, freshChoice);
+assert.deepEqual(Array.from(context.displayedExplorerChoices(freshChoice), x => x.text),
+  ['Kiểm tra cánh cửa'], 'real GM suggestions take priority over deterministic fallback');
+context.state.flags = {entityEncounterKey:'hound'};
+assert.equal(context.displayedExplorerChoices({choices:[]}).length, 0,
+  'do not offer explorer suggestions while an entity encounter is pending');
+delete context.state.flags;
+context.state.combat = {active:true,outcome:'active'};
+assert.equal(context.displayedExplorerChoices({choices:[]}).length, 0,
+  'do not offer explorer suggestions during combat');
+context.state.combat = {active:false,outcome:'defeat'};
+assert.equal(context.displayedExplorerChoices({choices:[]}).length, 0,
+  'do not offer explorer suggestions after defeat');
 assert.equal(source.includes("font-family:'Play'"), false,
   'GAME MASTER text, labels and combat UI must not request the decorative font');
 
