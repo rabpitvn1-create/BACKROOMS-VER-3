@@ -238,6 +238,29 @@ final class EmergentTurnEngine {
     }
     JSONObject normalizedParams = params == null ? new JSONObject() : new JSONObject(params.toString());
     if (!safe(subjectRef).isEmpty()) normalizedParams.put("subjectRef", subjectRef);
+    if (safe(eventType).startsWith("EMERGENT_") && !normalizedParams.has("significance")) {
+      String stake = eventType.contains("PARTY") ? "RELATIONSHIP"
+          : eventType.contains("RESOURCE") ? "RESOURCE"
+          : eventType.contains("QUIET") ? "PACING" : "ENVIRONMENTAL";
+      boolean unresolved = "EMERGENT_ANOMALY_FOUND".equals(eventType)
+          || "EMERGENT_PARTY_REQUEST".equals(eventType);
+      int importance = "EMERGENT_ANOMALY_PAYOFF".equals(eventType)
+          || "EMERGENT_ANOMALY_INVESTIGATED".equals(eventType) ? 3
+          : "EMERGENT_QUIET_BEAT".equals(eventType) ? 1 : 2;
+      JSONArray actors = new JSONArray();
+      if ("player".equals(normalizedParams.optString("causedBy"))) actors.put("cao_minh");
+      JSONArray affected = new JSONArray().put("cao_minh");
+      if (!safe(subjectRef).isEmpty() && !"cao_minh".equals(subjectRef)) affected.put(subjectRef);
+      normalizedParams.put("significance", new JSONObject()
+          .put("consequenceType", eventType)
+          .put("stakeType", stake)
+          .put("importance", importance)
+          .put("unresolved", unresolved)
+          .put("actorRefs", actors)
+          .put("subjectRefs", safe(subjectRef).isEmpty()
+              ? new JSONArray() : new JSONArray().put(subjectRef))
+          .put("affectedRefs", affected));
+    }
     JSONObject event = new JSONObject()
         .put("eventId", turnId + ":e" + seq)
         .put("eventSeq", seq)
@@ -917,6 +940,8 @@ final class EmergentTurnEngine {
         .put("impactScope", event.optString("impactScope", "LOCAL"))
         .put("causedBy", params.optString("causedBy", ""))
         .put("impactEligible", params.optBoolean("impactEligible", true));
+    JSONObject significance = params.optJSONObject("significance");
+    if (significance != null) fact.put("significance", new JSONObject(significance.toString()));
     root.getJSONArray("historicalFacts").put(fact);
     BeliefResolver.project(root, event, fact, turn);
   }
