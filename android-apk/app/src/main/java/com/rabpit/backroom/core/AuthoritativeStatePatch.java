@@ -3,6 +3,8 @@ package com.rabpit.backroom.core;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -125,6 +127,10 @@ final class AuthoritativeStatePatch {
         if (!jsonEquals(left.opt(i), right.opt(i))) return false;
       }
       return true;
+    }
+    // JSON has one number domain: serialization may deserialize Long(5) back to Integer(5).
+    if (a instanceof Number && b instanceof Number) {
+      return new BigDecimal(a.toString()).compareTo(new BigDecimal(b.toString())) == 0;
     }
     return a.equals(b);
   }
