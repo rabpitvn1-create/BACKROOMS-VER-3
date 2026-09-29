@@ -20,7 +20,8 @@ function choices(state, gmChoices = [], initial = false) {
 
 const opening = choices({currentLevelKey: '0', levelRoute: {exitAvailable: false}}, [], true);
 assert.deepEqual(opening.map(choice => choice.action), ['Quan sát dãy tường vàng']);
-assert.equal(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}).length, 0);
+assert.deepEqual(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}).map(x => x.action),
+  ['Quan sát khu vực phía trước'], 'empty GM output must not end normal exploration');
 assert.equal(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}, [
   {text: 'Kiểm tra cửa', action: 'Kiểm tra cửa'}
 ]).length, 1);
