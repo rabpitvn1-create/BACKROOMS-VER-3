@@ -84,9 +84,13 @@ final class LevelCore {
   }
 
   LevelCore(Context context, IntRng rng) {
+    this(context, rng, null);
+  }
+
+  private LevelCore(Context context, IntRng rng, LevelGraph providedGraph) {
     if (rng == null) throw new IllegalArgumentException("rng is required");
     this.rng = rng;
-    this.levelGraph = LevelGraph.load(context);
+    this.levelGraph = providedGraph == null ? LevelGraph.load(context) : providedGraph;
     if (context != null) {
       loadLevelKnowledge(context);
       if (knowledgeByLevelKey.isEmpty()) loadLegacyKnowledge(context);
@@ -96,6 +100,15 @@ final class LevelCore {
 
   static LevelCore withKnowledge(String levelKnowledgeJson, IntRng rng) {
     LevelCore core = new LevelCore((Context)null, rng);
+    core.loadLevelKnowledgeText(levelKnowledgeJson);
+    return core;
+  }
+
+  /** Same shipped level graph and knowledge, supplied as text for provider-free JVM simulation. */
+  static LevelCore withAssets(String levelKnowledgeJson, String graphJson) throws Exception {
+    LevelCore core = new LevelCore((Context)null,
+        bound -> { throw new IllegalStateException("Use scoped TurnRng"); },
+        LevelGraph.fromText(graphJson));
     core.loadLevelKnowledgeText(levelKnowledgeJson);
     return core;
   }
