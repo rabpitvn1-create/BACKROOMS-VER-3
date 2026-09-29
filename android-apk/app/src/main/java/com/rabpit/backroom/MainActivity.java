@@ -823,36 +823,68 @@ public class MainActivity extends Activity {
   }
 
   static JSONObject narrationFallback(JSONObject state, String replyHint) {
+    return narrationFallback(state, replyHint, "");
+  }
+
+  static JSONObject narrationFallback(JSONObject state, String replyHint, String action) {
     JSONObject generated = new JSONObject();
     try {
       String reply = replyHint == null ? "" : replyHint.trim();
       if (reply.startsWith("Rương chứa ")) {
-        reply = "Cao Minh mở rương và tìm thấy "
-            + reply.substring("Rương chứa ".length()).replace("Đã thêm vào Inventory.", "").trim();
+        String contents = reply.substring("Rương chứa ".length())
+            .replace("Đã thêm vào Inventory.", "").trim();
+        int reward = contents.indexOf("Nhận +");
+        if (reward >= 0) contents = contents.substring(0, reward).trim();
+        reply = "Cao Minh mở nắp rương. Bên trong hiện ra " + contents;
       }
       JSONObject route = state == null ? null : state.optJSONObject("levelRoute");
-      String result = route != null && route.optInt("lastRollTurn", -1) == state.optInt("turn", 1)
+      String result = route != null && state != null
+          && route.optInt("lastRollTurn", -1) == state.optInt("turn", 1)
           ? route.optString("lastResult", "") : "";
-      String location = state == null ? "khu vực hiện tại" : state.optString("location", "khu vực hiện tại");
+      String location = state == null ? "khu vực hiện tại"
+          : state.optString("location", "khu vực hiện tại");
+      String levelKey = state == null ? "" : state.optString("currentLevelKey", "");
+      boolean levelZero = "0".equals(levelKey) || location.startsWith("Level 0")
+          || location.toLowerCase(java.util.Locale.ROOT).contains("hành lang vàng");
       if ("SUCCESS".equals(result)) {
-        reply = "Cao Minh lần theo một lối đi mới và tiến sâu hơn trong " + location
-            + ", nhưng vẫn chưa tìm thấy lối thoát.";
+        reply = "Qua những đoạn đường nối tiếp nhau, Cao Minh tiến sâu hơn trong " + location
+            + ". Anh vẫn chưa nhận ra dấu hiệu nào cho thấy lối thoát ở gần.";
       } else if ("RESET".equals(result)) {
-        reply = "Lối đi gập vòng, đưa Cao Minh trở lại khu vực quen thuộc: " + location + ".";
+        reply = "Sau một khúc ngoặt, Cao Minh lại đối diện cảnh vật quen thuộc ở "
+            + location + ". Con đường vừa đi đã vòng trở lại điểm cũ.";
       } else if ("EXIT_AVAILABLE".equals(result)) {
-        reply = "Cao Minh xác định được một lối ra tại " + location
-            + ", có thể dẫn sang chặng tiếp theo.";
+        reply = "Giữa " + location
+            + ", Cao Minh nhận ra một lối ra có thể dẫn sang chặng tiếp theo."
+            + " Phía bên kia lối ra ấy vẫn còn chờ được khám phá.";
+      }
+      if (reply.isEmpty()) {
+        String submittedAction = action == null ? "" : action.trim().toLowerCase(java.util.Locale.ROOT);
+        if (levelZero && submittedAction.contains("sau trận chiến")) {
+          reply = "Sau trận chiến, Cao Minh đưa mắt rà soát những bức tường vàng nhạt."
+              + " Dãy hành lang vẫn trải dài dưới ánh đèn huỳnh quang;"
+              + " lúc này, anh chưa nhận ra dấu hiệu nào đủ rõ để chọn hướng đi.";
+        } else if (levelZero && (submittedAction.contains("lắng nghe")
+            || submittedAction.contains("nghe "))) {
+          reply = "Cao Minh dừng lại lắng nghe giữa dãy hành lang vàng nhạt."
+              + " Tiếng đèn huỳnh quang đều đều phía trên hòa vào khoảng không;"
+              + " chưa có âm thanh nào giúp anh xác định điều gì chờ ở đoạn tiếp theo.";
+        } else if (levelZero) {
+          reply = "Cao Minh nhìn dọc những bức tường vàng nhạt."
+              + " Ánh đèn huỳnh quang phủ lên đoạn hành lang trước mắt;"
+              + " những gì nhìn thấy vẫn chưa đủ để anh biết lối nào dẫn ra ngoài.";
+        } else {
+          reply = "Trước mắt Cao Minh là " + location
+              + ". Quang cảnh nơi đây vẫn chưa đem đến manh mối rõ ràng"
+              + " về hướng anh có thể tìm hiểu tiếp.";
+        }
       }
       JSONObject emergent = state == null ? null : state.optJSONObject("emergent");
       JSONObject selection = emergent == null ? null : emergent.optJSONObject("lastSelection");
       if (selection != null && !selection.optBoolean("selectedNone", false)) {
         String committedSummary = selection.optString("publicSummary", "").trim();
         if (!committedSummary.isEmpty() && !reply.contains(committedSummary)) {
-          reply = reply.isEmpty() ? committedSummary : reply + " " + committedSummary;
+          reply += "\n\n" + committedSummary;
         }
-      }
-      if (reply.isEmpty()) {
-        reply = "Cao Minh tiếp tục quan sát " + location + "; chưa có gì cắt ngang bước chân của anh.";
       }
       JSONArray fallbackDialogue = new JSONArray();
       JSONObject encounter = state == null ? null : state.optJSONObject("characterEncounter");
@@ -983,7 +1015,7 @@ public class MainActivity extends Activity {
           } catch (Exception narrationError) {
             Log.w(TAG, "Narration failed or exceeded its deadline; using deterministic template: "
                 + providerErrorSummary(narrationError));
-            generated = narrationFallback(state, replyHint);
+            generated = narrationFallback(state, replyHint, action);
             reply = generated.optString("reply", "");
             narrationValidated = NarrationGuard.validate(generated, state, action).isEmpty();
           }

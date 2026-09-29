@@ -21,8 +21,8 @@ public class ChainNarrationFallbackTest {
     String reset = MainActivity.narrationFallback(state("RESET", 2), "").getString("reply");
     String exit = MainActivity.narrationFallback(state("EXIT_AVAILABLE", 2), "").getString("reply");
     assertTrue(success.contains("tiến sâu hơn"));
-    assertTrue(success.contains("chưa tìm thấy lối thoát"));
-    assertTrue(reset.contains("trở lại khu vực quen thuộc"));
+    assertTrue(success.contains("lối thoát"));
+    assertTrue(reset.contains("cảnh vật quen thuộc"));
     assertTrue(reset.contains("điểm xuất phát"));
     assertTrue(exit.contains("lối ra"));
     assertTrue(exit.contains("chặng tiếp theo"));
@@ -66,6 +66,52 @@ public class ChainNarrationFallbackTest {
   @Test public void oldOutcomeDoesNotRepeatOnNextTurn() throws Exception {
     String reply = MainActivity.narrationFallback(state("SUCCESS", 1), "").getString("reply");
     assertFalse(reply.contains("tiến sâu hơn"));
-    assertTrue(reply.contains("tiếp tục quan sát"));
+    assertTrue(reply.contains("tường vàng"));
+    assertTrue(reply.contains("huỳnh quang"));
   }
+  @Test public void postCombatFallbackUsesGroundedSceneInsteadOfStatusText() throws Exception {
+    JSONObject levelZero = state("SUCCESS", 1).put("currentLevelKey", "0")
+        .put("location", "Hành lang vàng nhạt — khu vực chưa xác định");
+    String reply = MainActivity.narrationFallback(levelZero, "",
+        "Quan sát khu vực sau trận chiến").getString("reply");
+    assertTrue(reply.contains("Sau trận chiến"));
+    assertTrue(reply.contains("tường vàng"));
+    assertFalse(reply.contains("khu vực chưa xác định"));
+    assertFalse(reply.contains("Inventory"));
+    assertFalse(reply.contains("trạng thái"));
+    String following = MainActivity.narrationFallback(levelZero, "",
+        "Lắng nghe âm thanh trong khu vực hiện tại").getString("reply");
+    assertTrue(following.contains("Tiếng đèn huỳnh quang"));
+    assertFalse(following.equals(reply));
+  }
+
+  @Test public void chestHintPreservesItemButDoesNotReadLikeSystemReward() throws Exception {
+    String reply = MainActivity.narrationFallback(state("", -1),
+        "Rương chứa Almond Water x1. Đã thêm vào Inventory. Nhận +10 Core.").getString("reply");
+    assertTrue(reply.contains("Cao Minh mở nắp rương"));
+    assertTrue(reply.contains("Almond Water x1"));
+    assertFalse(reply.contains("Inventory"));
+    assertFalse(reply.contains("Nhận +10 Core"));
+  }
+
+  @Test public void fallbackOutsideLevelZeroDoesNotInventYellowWalls() throws Exception {
+    JSONObject other = new JSONObject().put("turn", 4)
+        .put("currentLevelKey", "2").put("location", "Phòng chưa xác định");
+    String reply = MainActivity.narrationFallback(other, "", "Quan sát").getString("reply");
+    assertTrue(reply.contains("Phòng chưa xác định"));
+    assertFalse(reply.contains("tường vàng"));
+    assertFalse(reply.contains("huỳnh quang"));
+  }
+
+  @Test public void selectedEmergentEventKeepsNarrativeLeadIn() throws Exception {
+    JSONObject levelZero = state("SUCCESS", 1).put("currentLevelKey", "0");
+    levelZero.put("emergent", new JSONObject().put("lastSelection",
+        new JSONObject().put("selectedNone", false)
+            .put("publicSummary", "Dấu hiệu dị thường đang tạo thêm nguy hiểm.")));
+    String reply = MainActivity.narrationFallback(levelZero, "",
+        "Quan sát").getString("reply");
+    assertTrue(reply.startsWith("Cao Minh nhìn dọc"));
+    assertTrue(reply.contains("Dấu hiệu dị thường đang tạo thêm nguy hiểm."));
+  }
+
 }

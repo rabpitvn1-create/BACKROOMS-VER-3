@@ -17,6 +17,9 @@ public final class GmNarratorContract {
         + "Reply là văn kể chuyện tiếng Việt: dùng hành động, hình ảnh, âm thanh, không gian và phản ứng trực tiếp "
         + "để cho thấy thay đổi trong thế giới, thay vì thông báo tiến độ, trạng thái, nhiệm vụ hay cơ chế. "
         + "Không lặp ý, thêm filler, câu văn mẫu hoặc kết mỗi reply bằng câu hỏi tu từ hay 'Bạn sẽ làm gì tiếp?'.\n"
+        + "Sau combat, kể tiếp những gì nhân vật thực sự quan sát được trong cảnh hiện tại. "
+        + "Không phản hồi bằng cách lặp nguyên văn Player Action, đọc tên location như một trường dữ liệu "
+        + "hay tóm tắt lượt chơi bằng giọng thông báo hệ thống.\n"
         + "5. PLAYER AGENCY: Người chơi toàn quyền điều khiển Cao Minh. Không tự thêm lời nói, suy nghĩ nội tâm, quyết định "
         + "hoặc hành động tiếp theo ngoài hành động người chơi đã nhập và hệ quả trực tiếp cần thiết.\n";
   }
