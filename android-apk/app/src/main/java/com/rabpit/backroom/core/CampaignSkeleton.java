@@ -64,6 +64,7 @@ final class CampaignSkeleton {
         double socialDelta = 0.0d;
         double knowledgeDelta = 0.0d;
         double environmentDelta = 0.0d;
+        boolean quietBeat = false;
         JSONArray events = commit.optJSONArray("events");
         if (events != null) {
           for (int e = 0; e < events.length(); e++) {
@@ -72,6 +73,19 @@ final class CampaignSkeleton {
             String type = event.optString("eventType", "");
             if (type.startsWith("ENTITY_") || type.startsWith("COMBAT_")) entityDelta += 0.08d;
             if (type.startsWith("CHARACTER_")) socialDelta += 0.08d;
+            if ("EMERGENT_PARTY_REQUEST".equals(type) || "EMERGENT_PARTY_HEARD".equals(type)) {
+              socialDelta += 0.06d;
+            }
+            if ("EMERGENT_ANOMALY_FOUND".equals(type) || "EMERGENT_ANOMALY_PAYOFF".equals(type)
+                || "EMERGENT_ANOMALY_INVESTIGATED".equals(type)) {
+              environmentDelta += 0.07d;
+            }
+            if ("EMERGENT_ANOMALY_INVESTIGATED".equals(type)) knowledgeDelta += 0.05d;
+            if ("EMERGENT_RESOURCE_ECHO".equals(type)) {
+              entityDelta += 0.05d;
+              environmentDelta += 0.04d;
+            }
+            if ("EMERGENT_QUIET_BEAT".equals(type)) quietBeat = true;
             if (type.startsWith("ROUTE_") || "LEVEL_TRANSITIONED".equals(type)) {
               knowledgeDelta += 0.04d;
               environmentDelta += 0.03d;
@@ -82,6 +96,10 @@ final class CampaignSkeleton {
         bump(axes, "social_entanglement", Math.min(0.12d, socialDelta), commitTurn);
         bump(axes, "world_knowledge", Math.min(0.12d, knowledgeDelta), commitTurn);
         bump(axes, "environmental_exposure", Math.min(0.12d, environmentDelta), commitTurn);
+        if (quietBeat) {
+          JSONObject danger = axes.getJSONObject("entity_attention");
+          setAxis(axes, "entity_attention", danger.optDouble("score", 0.0d) * 0.70d, commitTurn);
+        }
       }
     }
 
