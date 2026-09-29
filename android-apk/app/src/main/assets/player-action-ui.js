@@ -98,11 +98,17 @@
     }
 
     window.__gmErrorMessage = '';
+    window.__gmEnvironmentLoading = true;
     if (typeof busy !== 'undefined') busy = true;
     if (submit) submit.disabled = true;
     closePlayerAction(true);
     if (typeof window.render === 'function') window.render();
-    Android.submitTurn(JSON.stringify(state), text);
+    try {
+      Android.submitTurn(JSON.stringify(state), text);
+    } catch (error) {
+      if (typeof window.backroomError === 'function')
+        window.backroomError(error && error.message || 'Không thể gửi Player Action.');
+    }
   }, true);
 
   openButton.addEventListener('click', openPlayerAction);

@@ -19,9 +19,7 @@ function choices(state, gmChoices = [], initial = false) {
 }
 
 const opening = choices({currentLevelKey: '0', levelRoute: {exitAvailable: false}}, [], true);
-assert.deepEqual(opening.map(choice => choice.action), [
-  'Quan sát dãy tường vàng', 'Lắng nghe tiếng đèn trên trần', 'Kiểm tra lối đi gần nhất'
-]);
+assert.deepEqual(opening.map(choice => choice.action), ['Quan sát dãy tường vàng']);
 assert.equal(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}).length, 0);
 assert.equal(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}, [
   {text: 'Kiểm tra cửa', action: 'Kiểm tra cửa'}
@@ -30,12 +28,28 @@ assert.equal(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}
 const open = choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: true}}, [
   {text: 'A', action: 'A'}, {text: 'B', action: 'B'}, {text: 'C', action: 'C'}
 ]);
-assert.equal(open.length, 3);
-assert.deepEqual(open.map(choice => choice.id), ['A', 'B', 'C']);
-assert.equal(open[2].action, 'Đi qua lối ra');
+assert.equal(open.length, 1);
+assert.deepEqual(open.map(choice => choice.id), ['A']);
+assert.equal(open[0].action, 'Đi qua lối ra');
 assert.equal(open.some(choice => choice.action === 'Tiếp tục khám phá Level 0.1'), false);
 assert.deepEqual(choices({currentLevelKey: '1.2', levelRoute: {exitAvailable: true}})
   .map(choice => choice.action), ['Đi qua lối ra']);
+
+assert.deepEqual(choices({currentLevelKey:'0',levelRoute:{exitAvailable:false}},[
+  {text:'Quan sát cửa',action:'Quan sát cửa'},
+  {text:'Rẽ trái',action:'Rẽ trái'},
+  {text:'Rẽ phải',action:'Rẽ phải'}
+]).map(choice=>choice.action), ['Quan sát cửa']);
+const postFightEntry = {choices:[]};
+context.state = {turn:8,log:[{text:'prologue'},postFightEntry],
+  combat:{active:false,outcome:'victory',logIndex:1},levelRoute:{exitAvailable:false}};
+assert.deepEqual(Array.from(context.displayedExplorerChoices(postFightEntry),x=>x.action),
+  ['Quan sát khu vực sau trận chiến']);
+context.state.log.push({text:'next GM entry'});
+assert.equal(context.displayedExplorerChoices(context.state.log[2]).length, 0,
+  'post-combat fallback must not repeat on later turns');
+assert.equal(source.includes("font-family:'Play'"), false,
+  'GAME MASTER text, labels and combat UI must not request the decorative font');
 
 console.log('Explorer fallback choices passed');
 
@@ -58,6 +72,7 @@ ui.submitExplorerChoice(entry, {id:'A', action:'Kiểm tra cửa'});
 assert.equal(calls.length, 1, 'double tap dispatches one choice');
 assert.equal(calls[0].kind, 'choice');
 assert.deepEqual(Array.from(calls[0].args.slice(1)), ['Kiểm tra cửa','A',7,0,entry.text]);
+assert.equal(ui.window.__gmEnvironmentLoading,true,'choice submission exposes loading feedback');
 const playerSource = fs.readFileSync(path.resolve(__dirname, '../../main/assets/player-action-ui.js'), 'utf8');
 const customStart = playerSource.indexOf("  form.addEventListener('submit', function(event){");
 const customEnd = playerSource.indexOf('  }, true);', customStart);
@@ -72,6 +87,8 @@ const customUi = {
 vm.runInNewContext(playerSource.slice(customStart, customEnd + '  }, true);'.length), customUi);
 customSubmit({preventDefault(){},stopImmediatePropagation(){}});
 assert.equal(calls[1].kind, 'custom', 'identical free text uses the independent normal bridge');
+assert.equal(customUi.window.__gmEnvironmentLoading,true,
+  'post-combat free text indicates processing instead of appearing frozen');
 
 const prefetchStart = source.indexOf('  window.backroomPrefetchChoices = function(){');
 const prefetchEnd = source.indexOf('\n  window.render();', prefetchStart);
@@ -103,3 +120,16 @@ assert.equal(source.includes('  window.backroomPrefetchChoices();'), false,
   'legacy prefetch hook must not run on initial render');
 
 console.log('Current story render order passed');
+
+const finishStart=source.indexOf('  function finishCombatAnimation(token) {');
+const finishEnd=source.indexOf('  window.backroomCombatTurn = function',finishStart);
+assert.ok(finishStart>=0&&finishEnd>finishStart);
+const resumed={state:{combat:{active:false,outcome:'victory'},turn:9},busy:true,
+  window:{__combatAnimationToken:7,__combatFeedbackBusy:true,__combatBusy:true,render(){}},
+  scrollForCurrentMode(){},status:{textContent:''}};
+vm.runInNewContext(source.slice(finishStart,finishEnd),resumed);
+resumed.finishCombatAnimation(7);
+assert.equal(resumed.busy,false);
+assert.equal(resumed.window.__combatBusy,false,
+  'combat completion unlocks free text and Core stat upgrades');
+console.log('Post-combat unlock passed');

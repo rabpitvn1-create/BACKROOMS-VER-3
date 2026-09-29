@@ -169,6 +169,17 @@ public class FullGameplay200TurnSimulationTest {
       result.environmentPressure = pressures.optDouble("environmental", 0.0d);
       result.resourcePressure = pressures.optDouble("resource", 0.0d);
       result.dangerPressure = pressures.optDouble("danger", 0.0d);
+      if (targetActions == WORLD_ACTIONS && result.combatWins > 0) {
+        int beforeCore = new CharacterProgressionCore().coreCount(end);
+        assertTrue("Real combat victories must grant spendable Core", beforeCore > 0);
+        JSONObject upgrade = new JSONObject(core.processCoreUpgrade(end.toString(), "cao_minh", "STR"));
+        assertTrue("Stat upgrade must work after real combat: " + upgrade,
+            upgrade.optBoolean("handled", false));
+        JSONObject upgraded = upgrade.getJSONObject("state");
+        assertFalse("Completed fight must not lock status upgrades", CombatChoiceEngine.isActive(upgraded));
+        assertTrue("Stat upgrade must debit earned Core",
+            new CharacterProgressionCore().coreCount(upgraded) < beforeCore);
+      }
       return result;
     }
   }

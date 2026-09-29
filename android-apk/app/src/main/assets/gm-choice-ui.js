@@ -5,11 +5,9 @@
 
   var style = document.createElement('style');
   style.textContent = [
-    "@font-face{font-family:'Play';font-style:normal;font-weight:400;src:url('file:///android_asset/fonts/Play-Regular.ttf') format('truetype');font-display:swap}",
-    "@font-face{font-family:'Play';font-style:normal;font-weight:700;src:url('file:///android_asset/fonts/Play-Bold.ttf') format('truetype');font-display:swap}",
-    ".message.gm .role{font-family:'Play','Pretendard Std',system-ui,sans-serif;font-weight:700}",
-    ".message.gm .gm-main-text{font-family:'Play','Pretendard Std',system-ui,sans-serif}",
-    ".semantic{font-family:'Play','Pretendard Std',system-ui,sans-serif;font-weight:700;text-decoration:none}",
+    ".message.gm .role{font-family:'Pretendard Std',system-ui,sans-serif;font-weight:700}",
+    ".message.gm .gm-main-text{font-family:'Pretendard Std',system-ui,sans-serif}",
+    ".semantic{font-family:'Pretendard Std',system-ui,sans-serif;font-weight:700;text-decoration:none}",
     ".semantic-character{color:#67d5ff}",
     ".semantic-entity{color:#ff6b6b}",
     ".semantic-item{color:#f6c85f}",
@@ -26,7 +24,7 @@
     ".battle-log{display:grid;gap:5px;margin-top:10px}",
     ".battle-line{white-space:pre-wrap;line-height:1.45}",
     ".gm-choices{display:grid;gap:7px;margin-top:12px}",
-    ".gm-choice{width:100%;text-align:left;padding:11px 12px;background:#171d22;border:1px solid #39424a;color:#f0f3f5;font-family:'Play','Pretendard Std',system-ui,sans-serif;font-weight:400;letter-spacing:normal;text-transform:none;white-space:normal;line-height:1.4;border-radius:8px}",
+    ".gm-choice{width:100%;text-align:left;padding:11px 12px;background:#171d22;border:1px solid #39424a;color:#f0f3f5;font-family:'Pretendard Std',system-ui,sans-serif;font-weight:400;letter-spacing:normal;text-transform:none;white-space:normal;line-height:1.4;border-radius:8px}",
     ".gm-choice:disabled{opacity:.62}",
     ".gm-system-loading{border-left-color:#65717a;background:#111519}",
     ".gm-system-error{border-left-color:#a95f5f;background:#181112}",
@@ -37,10 +35,10 @@
     ".message.gm{border-left-color:#59646d;border-radius:0}",
     ".battle-separator{height:1px;background:#262d33;margin-top:10px}",
     ".combat-dice-panel[hidden]{display:none}.combat-dice-panel{width:100%;box-sizing:border-box;margin-top:12px;background:#0e1114;border:1px solid #46515a;padding:14px;display:grid;gap:12px;touch-action:manipulation;border-radius:10px}",
-    ".combat-dice-title{font-family:'Play','Pretendard Std',system-ui,sans-serif;font-size:14px;font-weight:700;letter-spacing:.06em}.combat-dice-meta{font-size:11px;color:#9ba6af}",
+    ".combat-dice-title{font-family:'Pretendard Std',system-ui,sans-serif;font-size:14px;font-weight:700;letter-spacing:.06em}.combat-dice-meta{font-size:11px;color:#9ba6af}",
     ".combat-dice-row{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;perspective:720px}.combat-die{padding:1px;aspect-ratio:1/1;border:1px solid #343d45;background:#151a1f;display:grid;place-items:center;min-width:0;border-radius:9px;transform-style:preserve-3d;will-change:transform}.combat-die img{width:104%;height:104%;object-fit:contain;pointer-events:none}.combat-die.held{border-color:#f6c85f;background:#211e14;box-shadow:inset 0 0 0 1px #f6c85f55}.combat-die.rolling{border-color:#72808b;box-shadow:0 0 12px #91a1ad33;animation:combat-die-roll .46s cubic-bezier(.25,.7,.35,1) infinite}.combat-die:disabled{opacity:.85}@keyframes combat-die-roll{0%{transform:rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(.94)}25%{transform:rotateX(120deg) rotateY(70deg) rotateZ(45deg) scale(1.04)}50%{transform:rotateX(230deg) rotateY(160deg) rotateZ(120deg) scale(.96)}75%{transform:rotateX(320deg) rotateY(260deg) rotateZ(220deg) scale(1.04)}100%{transform:rotateX(360deg) rotateY(360deg) rotateZ(360deg) scale(.94)}}@media(prefers-reduced-motion:reduce){.combat-die.rolling{animation:none}}",
-    ".combat-dice-result{min-height:22px;text-align:center;font-family:'Play','Pretendard Std',system-ui,sans-serif;font-size:16px;font-weight:700;color:#f6c85f}",
-    ".combat-dice-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.combat-roll,.combat-finish{width:100%;padding:12px 8px;background:#1b2126;border:1px solid #46515a;color:#f0f3f5;font-family:'Play','Pretendard Std',system-ui,sans-serif;font-weight:700;letter-spacing:.12em;border-radius:8px}.combat-roll:disabled,.combat-finish:disabled{opacity:.45}"
+    ".combat-dice-result{min-height:22px;text-align:center;font-family:'Pretendard Std',system-ui,sans-serif;font-size:16px;font-weight:700;color:#f6c85f}",
+    ".combat-dice-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.combat-roll,.combat-finish{width:100%;padding:12px 8px;background:#1b2126;border:1px solid #46515a;color:#f0f3f5;font-family:'Pretendard Std',system-ui,sans-serif;font-weight:700;letter-spacing:.12em;border-radius:8px}.combat-roll:disabled,.combat-finish:disabled{opacity:.45}"
   ].join('');
   document.head.appendChild(style);
 
@@ -178,6 +176,7 @@
     var sourceIndex = lastGmIndex();
     if (sourceIndex < 0 || state.log[sourceIndex] !== entry) return;
     if (typeof busy !== 'undefined') busy = true;
+    window.__gmEnvironmentLoading = true;
     if (submit) submit.disabled = true;
     if (typeof window.render === 'function') window.render();
     Android.submitChoice(JSON.stringify(state), text, choice.id, state.turn,
@@ -210,26 +209,25 @@
   }
 
   function fallbackExplorerChoices() {
-    return [
-      {id:'A',text:'Quan sát dãy tường vàng',action:'Quan sát dãy tường vàng'},
-      {id:'B',text:'Lắng nghe tiếng đèn trên trần',action:'Lắng nghe tiếng đèn trên trần'},
-      {id:'C',text:'Kiểm tra lối đi gần nhất',action:'Kiểm tra lối đi gần nhất'}
-    ];
+    return [{text:'Quan sát dãy tường vàng',action:'Quan sát dãy tường vàng'}];
   }
 
   function displayedExplorerChoices(entry) {
-    var choices = Array.isArray(entry && entry.choices) ? entry.choices.slice(0, 3) : [];
-    if (state && Array.isArray(state.log) && state.log.length === 1 && entry === state.log[0])
+    var choices = Array.isArray(entry && entry.choices) ? entry.choices.slice(0, 1) : [];
+    if (state && Array.isArray(state.log) && state.log.length === 1 && entry === state.log[0]) {
       choices = fallbackExplorerChoices();
-    if (state && state.levelRoute && state.levelRoute.exitAvailable === true) {
-      var exitChoice = {text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'};
-      choices = choices.filter(function(choice){
-        return String(choice.action || choice.text || '').trim() !== exitChoice.action;
-      }).slice(0, 2);
-      choices.push(exitChoice);
+    } else if (!choices.length && state && state.combat && state.combat.active === false
+        && state.combat.outcome === 'victory' && Array.isArray(state.log)
+        && state.log[Number(state.combat.logIndex)] === entry) {
+      // The fight's GM entry had no choices; restore one action after victory.
+      choices = [{text:'Quan sát khu vực sau trận chiến',
+                  action:'Quan sát khu vực sau trận chiến'}];
     }
-    return choices.map(function(choice, index){
-      return Object.assign({}, choice, {id:String.fromCharCode(65 + index)});
+    if (state && state.levelRoute && state.levelRoute.exitAvailable === true) {
+      choices = [{text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'}];
+    }
+    return choices.slice(0, 1).map(function(choice){
+      return Object.assign({}, choice, {id:'A'});
     });
   }
 
@@ -312,9 +310,9 @@
         !actionable, false, function(){ submitChestChoice(); }));
     }
 
-    choices.slice(0, 3).forEach(function(choice, index){
+    choices.slice(0, 1).forEach(function(choice, index){
       var disabled = !actionable || !!choice.disabled || !!choice.selected;
-      var prefix = String(choice.id || String.fromCharCode(65 + index)).trim().toUpperCase();
+      var prefix = ''; // No A/B/C prefix when only one suggestion is shown.
       box.appendChild(makeChoiceButton(prefix, choice.text || choice.action || '', entry,
         choice.highlights || [], disabled, !!choice.selected,
         function(){ submitExplorerChoice(entry, choice); }));

@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.json.JSONObject;
 import org.junit.Test;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeoutException;
 
 public class ChainNarrationFallbackTest {
   private static JSONObject state(String result, int lastRollTurn) throws Exception {
@@ -39,6 +42,25 @@ public class ChainNarrationFallbackTest {
     String reply = MainActivity.narrationFallback(state, "Thông tin hành động cũ").getString("reply");
     assertTrue(reply.contains("tiến sâu hơn"));
     assertTrue(reply.contains("Dấu hiệu dị thường đang tạo thêm nguy hiểm."));
+  }
+
+  @Test public void providerTimeoutDoesNotKeepGameplayLocked() throws Exception {
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    try {
+      long started = System.nanoTime();
+      try {
+        MainActivity.awaitNarration(executor, () -> {
+          Thread.sleep(5_000L);
+          return new JSONObject();
+        }, 100L);
+        throw new AssertionError("Blocked provider must not delay the Core fallback");
+      } catch (TimeoutException expected) {
+        assertTrue("Timed-out provider must return promptly",
+            java.util.concurrent.TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started) < 2_000L);
+      }
+    } finally {
+      executor.shutdownNow();
+    }
   }
 
   @Test public void oldOutcomeDoesNotRepeatOnNextTurn() throws Exception {

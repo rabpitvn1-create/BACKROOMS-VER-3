@@ -33,6 +33,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.LinkedHashMap;
@@ -49,6 +52,7 @@ public class MainActivity extends Activity {
   private WebView webView;
   private final ExecutorService io = Executors.newSingleThreadExecutor();
   private final ExecutorService prefetchIo = Executors.newSingleThreadExecutor();
+  private final ExecutorService narrationIo = Executors.newSingleThreadExecutor();
   private final AtomicLong prefetchGeneration = new AtomicLong();
   private final AtomicBoolean turnInFlight = new AtomicBoolean();
   private volatile PrefetchCache prefetchCache;
@@ -60,6 +64,7 @@ public class MainActivity extends Activity {
   private static final String HAIKU_DEFAULT_BASE_URL = "https://api.anthropic.com/v1/messages";
   private static final String HAIKU_DEFAULT_MODEL = "claude-haiku-4-5-20251001";
   private static final long HAIKU_RETRY_DELAY_MS = 1_200L;
+  private static final int NARRATION_DEADLINE_SECONDS = 30;
   private static final int[] RETRYABLE = {408, 429, 500, 502, 503, 504};
   private static final String GM_STYLE_EXAMPLES_ASSET = "knowledge/gm_style_examples.json";
   private String gmStyleExamplesCache;
@@ -165,6 +170,7 @@ public class MainActivity extends Activity {
     if (gameCore != null) gameCore.close();
     prefetchGeneration.incrementAndGet();
     prefetchIo.shutdownNow();
+    narrationIo.shutdownNow();
     io.shutdownNow();
     if (webView != null) webView.destroy();
     super.onDestroy();
@@ -314,6 +320,7 @@ public class MainActivity extends Activity {
     String[] keys = geminiKeys();
     boolean configured = false;
     for (int keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+      if (Thread.currentThread().isInterrupted()) throw new InterruptedException("Narration cancelled");
       String key = keys[keyIndex];
       if (key == null || key.trim().isEmpty()) continue;
       configured = true;
@@ -324,6 +331,7 @@ public class MainActivity extends Activity {
         parseModelJson(output);
         return output;
       } catch (Exception error) {
+        if (Thread.currentThread().isInterrupted()) throw error;
         last = error;
         int status = error instanceof HttpError ? ((HttpError)error).status : 0;
         if (keyIndex < keys.length - 1) sleepBeforeNextGeminiKey(keyIndex, status);
@@ -550,9 +558,11 @@ public class MainActivity extends Activity {
     if (!haikuConfigured()) throw new Exception("HAIKU_API chưa được cấu hình.");
     Exception last = null;
     for (int attempt = 0; attempt < 2; attempt++) {
+      if (Thread.currentThread().isInterrupted()) throw new InterruptedException("Narration cancelled");
       try {
         return haikuTextOnce(prompt, maxTokens);
       } catch (Exception error) {
+        if (Thread.currentThread().isInterrupted()) throw error;
         last = error;
         int status = error instanceof HttpError ? ((HttpError)error).status : 0;
         if (attempt == 0 && ProviderRetryPolicy.shouldRetrySameProvider(status, error.getMessage())) {
@@ -583,6 +593,7 @@ public class MainActivity extends Activity {
       // geminiText() rotates through GEMINI_API_KEY_1..5 before it gives up.
       return geminiText(prompt);
     } catch (Exception error) {
+      if (Thread.currentThread().isInterrupted()) throw error;
       geminiError = error;
       Log.w(TAG, "All Gemini keys failed; falling back to Haiku.");
     }
@@ -595,6 +606,16 @@ public class MainActivity extends Activity {
               + providerErrorSummary(geminiError)
               + " | Haiku: "
               + providerErrorSummary(haikuError));
+    }
+  }
+
+  static <T> T awaitNarration(ExecutorService executor, Callable<T> task,
+                              long timeoutMillis) throws Exception {
+    Future<T> pending = executor.submit(task);
+    try {
+      return pending.get(timeoutMillis, TimeUnit.MILLISECONDS);
+    } finally {
+      pending.cancel(true);
     }
   }
 
@@ -945,22 +966,22 @@ public class MainActivity extends Activity {
           String reply;
           boolean narrationValidated = false;
           try {
-            boolean hit = cached != null && cached.outcomeHash.equals(gameCore.currentStateHash());
-            generated = hit ? new JSONObject(cached.narration.toString()) : null;
-            if (hit && !NarrationGuard.validate(generated, state, action).isEmpty()) {
-              hit = false;
-            }
-            if (!hit) generated = parseModelJson(generateText(narrationPrompt(state, action)));
             final JSONObject narrationState = state;
-            generated = NarrationGuard.regenerateIfInvalid(generated, state, action, violation ->
-                parseModelJson(generateText(narrationPrompt(narrationState, action)
-                    + "\nVALIDATION REJECTED: " + violation
-                    + "\nRewrite only reply and choices, preserving encounterDialogue and world state. "
-                    + "Return only valid JSON.")));
+            generated = awaitNarration(narrationIo, () -> {
+              boolean hit = cached != null && cached.outcomeHash.equals(gameCore.currentStateHash());
+              JSONObject draft = hit ? new JSONObject(cached.narration.toString()) : null;
+              if (hit && !NarrationGuard.validate(draft, narrationState, action).isEmpty()) hit = false;
+              if (!hit) draft = parseModelJson(generateText(narrationPrompt(narrationState, action)));
+              return NarrationGuard.regenerateIfInvalid(draft, narrationState, action, violation ->
+                  parseModelJson(generateText(narrationPrompt(narrationState, action)
+                      + "\nVALIDATION REJECTED: " + violation
+                      + "\nRewrite only reply and choices, preserving encounterDialogue and world state. "
+                      + "Return only valid JSON.")));
+            }, TimeUnit.SECONDS.toMillis(NARRATION_DEADLINE_SECONDS));
             reply = generated.optString("reply", "").trim();
             narrationValidated = true;
           } catch (Exception narrationError) {
-            Log.w(TAG, "Narration provider failed or contradicted committed authority; using deterministic template: "
+            Log.w(TAG, "Narration failed or exceeded its deadline; using deterministic template: "
                 + providerErrorSummary(narrationError));
             generated = narrationFallback(state, replyHint);
             reply = generated.optString("reply", "");
