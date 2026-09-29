@@ -224,7 +224,7 @@
         }
       }
     }
-    var text = /^(?:cao minh\\s+)?(?:quan sát|nhìn|xem xét|kiểm tra|khảo sát)\\b/i.test(previousAction)
+    var text = /^(?:cao minh\s+)?(?:quan sát|nhìn|xem xét|kiểm tra|khảo sát)\b/i.test(previousAction)
       ? 'Lắng nghe âm thanh trong khu vực hiện tại'
       : 'Quan sát khu vực phía trước';
     return [{text:text,action:text}];
