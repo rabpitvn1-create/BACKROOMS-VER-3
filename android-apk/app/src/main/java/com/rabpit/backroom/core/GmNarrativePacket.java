@@ -47,7 +47,7 @@ public final class GmNarrativePacket {
         + "Chỉ kể Level và vị trí đã commit. Nếu Core context không xác nhận một sự kiện, không được kể nó như đã xảy ra.\n"
         + "EPISTEMIC: READ-ONLY STATE đã được lọc theo góc nhìn Cao Minh. Belief confidence=CONFIRMED chỉ có nghĩa actor tin chắc; "
         + "không tự coi belief là objective truth nếu không có confirmedFactId/fact tương ứng. Không suy ra hidden state bị thiếu khỏi context.\n"
-        + "EXPLORER CHOICES: trả 0-3 gợi ý hành động ngắn, cụ thể và phù hợp với tình huống hiện tại; "
+        + "EXPLORER CHOICES: trả tối đa 1 gợi ý hành động ngắn, cụ thể và phù hợp với tình huống hiện tại; "
         + "mỗi lựa chọn là một hành động khác biệt, có mục tiêu/hướng rõ, không phải lời kể, outcome, "
         + "thông tin Cao Minh chưa biết hay cách nói chung chung như khám phá Level. "
         + "Không nhắc lại gần nguyên văn PLAYER ACTION. Đây là gợi ý của GM, không phải nhánh kịch bản cố định. "
@@ -65,7 +65,7 @@ public final class GmNarrativePacket {
         + "READ-ONLY STATE: " + promptState.toString() + "\n"
         + "PLAYER ACTION: " + safe(action) + "\n"
         + "TRƯỚC KHI XUẤT: tự kiểm tra thầm reply đang kể sự việc cụ thể thay vì báo cáo state; "
-        + "không tự điều khiển Cao Minh, không lộ kiến thức chưa thể biết; A/B/C là các hành động "
+        + "không tự điều khiển Cao Minh, không lộ kiến thức chưa thể biết; gợi ý là một hành động "
         + "ngắn và khác nhau. Sửa trong nội bộ trước khi trả lời, không xuất suy luận hay trường phân tích.\n"
         + "OUTPUT: chỉ JSON hợp lệ, không markdown. JSON không có quyền thay đổi state.\n"
         + "{\"reply\":\"phản hồi Game Master\",\"choices\":[{\"text\":\"Gợi ý 1\"}],\"encounterDialogue\":[]}";

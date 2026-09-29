@@ -112,7 +112,7 @@ public final class NarrationGuard {
 
   private static String validateChoices(JSONArray choices, String playerAction) {
     if (choices == null) return "";
-    if (choices.length() > 3) return "choices must contain at most 3 suggestions.";
+    if (choices.length() > 1) return "choices must contain at most 1 suggestion.";
     Set<String> seen = new HashSet<>();
     String action = normalize(playerAction).replaceFirst("^cao minh ", "");
     for (int i = 0; i < choices.length(); i++) {

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 /** Sanitizes and deterministically enriches Explorer choice/highlight projection before WebView. */
 public final class GmChoiceContract {
-  private static final int MAX_CHOICES = 3;
+  private static final int MAX_CHOICES = 1;
   private static final int MAX_CHOICE_TEXT = 180;
   private static final int MAX_HIGHLIGHTS = 24;
   private static final int MAX_HIGHLIGHT_TEXT = 120;
