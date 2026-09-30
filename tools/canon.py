@@ -136,7 +136,7 @@ def parse_scalar(text: str) -> Any:
 
 def collect_markdown_items() -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
-    pattern = re.compile(r"<!-- canon-item\s*\n(.*?)\n-->\s*\n(.*?)\(?=<!-- canon-item\s*\n|\Z)", re.S)
+    pattern = re.compile(r"<!-- canon-item\s*\n(.*?)\n-->\s*\n(.*?)(?=<!-- canon-item\s*\n|\Z)", re.S)
     for path in sorted(CANON.rglob("*.md")):
         if path in RUNTIME_SOURCES or path in PROSE_SOURCES or path.name in {"README.md", "CONFLICTS.md"}:
             continue
