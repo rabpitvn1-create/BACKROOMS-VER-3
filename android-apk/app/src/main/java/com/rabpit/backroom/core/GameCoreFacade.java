@@ -80,6 +80,13 @@ public final class GameCoreFacade implements AutoCloseable {
       String text = action == null ? "" : action.trim();
       if (text.isEmpty()) return response(false, legacy, "Hành động trống.", "validation_rejected", null);
 
+      JSONObject combat = legacy.optJSONObject("combat");
+      if (combat != null && combat.optBoolean("deathRestartPending", false)) {
+        preparedTurns.clear();
+        return response(false, legacy, "Cao Minh đã gục ngã. Hãy tỉnh lại trước khi hành động.",
+            "death_restart_required", null);
+      }
+
       if (GameCoreRules.isDirectPlayerPickupAction(text)) {
         JSONObject result = deepCopy(legacy);
         String reply = "Không thể nhặt vật phẩm tự do. Loot chỉ nhận từ Entity hoặc Rương.";
@@ -256,8 +263,11 @@ public final class GameCoreFacade implements AutoCloseable {
     JSONObject base = parseState(liveStateJson);
     try {
       String text = action == null ? "" : action.trim();
+      JSONObject combat = base.optJSONObject("combat");
       if (base.length() == 0 || text.isEmpty() || !fingerprint(base).equals(expectedBaseHash)
-          || CombatChoiceEngine.isActive(base) || GameCoreRules.isDirectPlayerPickupAction(text)
+          || CombatChoiceEngine.isActive(base)
+          || (combat != null && combat.optBoolean("deathRestartPending", false))
+          || GameCoreRules.isDirectPlayerPickupAction(text)
           || GameCoreRules.isInventoryQuery(text) || GameCoreRules.isPartyQuery(text)) {
         return response(false, base, "Preview unavailable.", "preview_unavailable", null);
       }
@@ -294,9 +304,11 @@ public final class GameCoreFacade implements AutoCloseable {
     JSONObject persisted = parseState(liveStateJson);
     try {
       String first = firstAction == null ? "" : firstAction.trim();
+      JSONObject combat = persisted.optJSONObject("combat");
       if (persisted.length() == 0 || first.isEmpty()
           || !fingerprint(persisted).equals(expectedBaseHash)
           || CombatChoiceEngine.isActive(persisted)
+          || (combat != null && combat.optBoolean("deathRestartPending", false))
           || !encounterKey(persisted).isEmpty()
           || GameCoreRules.isDirectPlayerPickupAction(first)
           || GameCoreRules.isInventoryQuery(first)
