@@ -1,0 +1,31 @@
+name: TEMP Final Actions Cleanup
+
+on:
+  push:
+    branches:
+      - agent-ponytail/java-1.1.64
+    paths:
+      - '.github/workflows/temp-final-actions-cleanup.yml'
+
+permissions:
+  actions: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const ids = [36707520448,36707290020,36707180237,36706546803,36706192902,36705705572,36705428169,36705041298,36704865404,36704288044];
+            for (const run_id of ids) {
+              try {
+                await github.rest.actions.deleteWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id
+                });
+              } catch (e) {
+                if (e.status !== 404) throw e;
+              }
+            }
