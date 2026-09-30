@@ -88,6 +88,36 @@ public class FullGameplay200TurnSimulationTest {
     }
   }
 
+  @Test public void chainStopsBeforeMechanicalExitSoFreeformCanRefuseTransition()
+      throws Exception {
+    String graph = asset("level_graph.json");
+    String knowledge = asset("knowledge/level_knowledge.json");
+    String registry = asset("knowledge/entity_encounters.json");
+    JSONObject initial = GameCoreFacade.newGameState(new JSONObject())
+        .put("emergent", new JSONObject().put("saveId", "exit-refusal-fixture"))
+        .put("levelRoute", new JSONObject()
+            .put("levelKey", "0").put("streak", 10).put("exitAvailable", true)
+            .put("lastRollTurn", -1).put("lastResult", "EXIT_AVAILABLE"));
+    try (GameCoreFacade core = new GameCoreFacade(
+        inMemoryPreferences(initial.toString()), LevelCore.withAssets(knowledge, graph),
+        new EntityCore(registry), false)) {
+      JSONObject state = new JSONObject(core.normalizeState(initial.toString()));
+      assertTrue(state.getJSONObject("levelRoute").getBoolean("exitAvailable"));
+      JSONObject forecast = new JSONObject(core.previewNarrativeChain(
+          "Đi qua lối ra", 3, core.currentStateHash()));
+      assertFalse("A free-form refusal must not inherit a precommitted Level transition",
+          forecast.optBoolean("handled", false));
+
+      JSONObject prepared = new JSONObject(core.processRule(
+          core.currentCoreState(), "Tôi ngồi yên và không đi qua lối ra"));
+      assertEquals("turn_prepared", prepared.getString("reason"));
+      JSONObject committed = new JSONObject(
+          core.completePreparedTurn(prepared.getString("turnId"), "{}"));
+      assertTrue(committed.optBoolean("handled", false));
+      assertEquals("0", committed.getJSONObject("state").getString("currentLevelKey"));
+    }
+  }
+
   @Test public void realGameFlowFor200ActionsWithCombatEncountersAndNarration() throws Exception {
     Result natural = play("full-natural-20260929", false, WORLD_ACTIONS);
     Result repeatPrefix = play("full-natural-20260929", false, 30);

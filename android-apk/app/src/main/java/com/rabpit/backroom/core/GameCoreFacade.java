@@ -229,12 +229,12 @@ public final class GameCoreFacade implements AutoCloseable {
       return prepared;
   }
 
-  /** Explicit inventory and chest operations are never reduced to a narrative rewrite. */
-  public synchronized boolean isMechanicalAction(String action) {
+  /** Explicit mechanics are never reduced to a narrative rewrite. */
+  private boolean isMechanicalActionForState(JSONObject state, String action) {
     String text = action == null ? "" : action.trim();
-    JSONObject state = parseState(liveStateJson);
-    JSONObject flags = state.optJSONObject("flags");
-    JSONObject route = state.optJSONObject("levelRoute");
+    JSONObject safeState = state == null ? new JSONObject() : state;
+    JSONObject flags = safeState.optJSONObject("flags");
+    JSONObject route = safeState.optJSONObject("levelRoute");
     String lower = text.toLowerCase(Locale.ROOT);
     boolean explicitExit = LevelCore.hasTransitionIntent(text)
         && ((route != null && route.optBoolean("exitAvailable", false))
@@ -248,6 +248,10 @@ public final class GameCoreFacade implements AutoCloseable {
         || explicitExit
         || (itemCore.isOpenChestAction(text)
             && flags != null && flags.optBoolean("chestPresent", false));
+  }
+
+  public synchronized boolean isMechanicalAction(String action) {
+    return isMechanicalActionForState(parseState(liveStateJson), action);
   }
 
   /** Returns a hypothetical post-turn state without writing preferences or retaining a turn attempt. */
@@ -327,6 +331,10 @@ public final class GameCoreFacade implements AutoCloseable {
             : current.optJSONObject("levelRoute") != null
                 && current.getJSONObject("levelRoute").optBoolean("exitAvailable", false)
                 ? "Đi qua lối ra" : "Tiếp tục khám phá";
+        // Never precommit a mechanical boundary (notably Level exit) for an
+        // arbitrary future free-form action. A/B buttons may still converge at
+        // that boundary, but Player Action must be allowed to refuse it.
+        if (isMechanicalActionForState(current, action)) break;
         String beforeWorldHash = expectedWorldHash;
         PreparedTurn attempt = prepareExplorerTurnData(current, action);
         JSONObject predicted = finishWorkingTurn(current, attempt, new JSONObject());
