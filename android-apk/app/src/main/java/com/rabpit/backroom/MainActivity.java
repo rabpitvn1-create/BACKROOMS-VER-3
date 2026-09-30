@@ -797,7 +797,7 @@ public class MainActivity extends Activity {
       result = new JSONArray()
           .put(new JSONObject().put("text", "Đi qua lối ra đến chặng kế tiếp")
               .put("action", "Đi qua lối ra"))
-          .put(new JSONObject().put("text", "Thận trọng tiếp cận lối thoát vừa tìm thấy"));
+          .put(new JSONObject().put("text", "Men theo mép lối ra rồi bước qua"));
     }
     return result;
   }
@@ -958,6 +958,12 @@ public class MainActivity extends Activity {
     prefetchGeneration.incrementAndGet();
     prefetchCache = null;
     activePrefetchKey = null;
+  }
+
+  /** Load/reset must not reuse a plan from a former session with a coincidental state hash. */
+  private synchronized void invalidateAllNarrativeCaches() {
+    invalidatePrefetch();
+    hiddenChain = null;
   }
 
   private synchronized void prefetchChoices(String sourceJson, String choicesJson) {
@@ -1125,7 +1131,7 @@ public class MainActivity extends Activity {
         boolean exitOpen = route != null && route.optBoolean("exitAvailable", false);
         if (exitOpen) {
           suggestions.put(new JSONObject().put("text", "Đi qua lối ra đến chặng kế tiếp"));
-          suggestions.put(new JSONObject().put("text", "Thận trọng tiếp cận lối thoát vừa tìm thấy"));
+          suggestions.put(new JSONObject().put("text", "Men theo mép lối ra rồi bước qua"));
         } else {
           suggestions.put(new JSONObject().put("text", "Tiếp tục khám phá khu vực phía trước"));
           suggestions.put(new JSONObject().put("text", "Khảo sát những âm thanh khác thường gần đó"));
@@ -1157,12 +1163,12 @@ public class MainActivity extends Activity {
     }
 
     @JavascriptInterface public String loadCheckpoint() {
-      invalidatePrefetch();
+      invalidateAllNarrativeCaches();
       return gameCore.loadCheckpoint();
     }
 
     @JavascriptInterface public void clearCheckpoint() {
-      invalidatePrefetch();
+      invalidateAllNarrativeCaches();
       gameCore.clearCheckpoint();
     }
 
@@ -1198,7 +1204,8 @@ public class MainActivity extends Activity {
               && choiceId != null ? ready.forChoice(choiceId, action == null ? "" : action.trim(),
                   sourceTurn, sourceGmIndex, sourceGmText) : null;
           String actualAction = action == null ? "" : action.trim();
-          boolean mechanical = gameCore.isMechanicalAction(actualAction);
+          // A/B express two approaches to one result; explicit free-form mechanics remain Core-owned.
+          boolean mechanical = choiceId == null && gameCore.isMechanicalAction(actualAction);
           JSONArray visibleChoices = initialNarrativeChoices(submitted);
           if (choiceId != null && visibleChoices.length() == 2) {
             int slot = "A".equals(choiceId) ? 0 : "B".equals(choiceId) ? 1 : -1;
@@ -1212,14 +1219,8 @@ public class MainActivity extends Activity {
           HiddenNarrativeChain.Beat beat = !mechanical && chain != null
               ? chain.current(gameCore.currentNarrativeWorldHash(), visibleChoices) : null;
           if (chain != null && beat == null) hiddenChain = null;
-          String canonicalAction = actualAction;
-          if (!mechanical) {
-            if (beat != null) canonicalAction = beat.canonicalAction;
-            else if (visibleChoices.length() == 2) {
-              canonicalAction = visibleChoices.getJSONObject(0).optString("action",
-                  visibleChoices.getJSONObject(0).getString("text"));
-            }
-          }
+          String canonicalAction = HiddenNarrativeChain.resolveCoreAction(
+              actualAction, choiceId, mechanical, beat, visibleChoices);
 
           if (CombatChoiceEngine.isActive(submitted)) {
             throw new Exception("Đang chiến đấu. Hãy dùng khung Poker Dice trong GAME MASTER.");
@@ -1483,12 +1484,12 @@ public class MainActivity extends Activity {
     }
 
     @JavascriptInterface public String normalizeState(String stateJson) {
-      invalidatePrefetch();
+      invalidateAllNarrativeCaches();
       return gameCore.normalizeState(stateJson);
     }
 
     @JavascriptInterface public String startNewGame(String initialJson) {
-      invalidatePrefetch();
+      invalidateAllNarrativeCaches();
       return gameCore.startNewGame(initialJson);
     }
   }

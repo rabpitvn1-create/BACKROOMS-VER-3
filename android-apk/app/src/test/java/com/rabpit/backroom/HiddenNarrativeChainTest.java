@@ -114,4 +114,34 @@ public class HiddenNarrativeChainTest {
     catch (IllegalArgumentException expected) { rejected = true; }
     assertTrue(rejected);
   }
+  @Test public void missingForecastPreservesFreeformButConvergesTwoButtons()
+      throws Exception {
+    JSONArray displayed = choices("Lần theo khe hở bên trái", "Quan sát đèn trên trần");
+    assertEquals("Tôi ngồi yên", HiddenNarrativeChain.resolveCoreAction(
+        "Tôi ngồi yên", null, false, null, displayed));
+    assertEquals("Lần theo khe hở bên trái", HiddenNarrativeChain.resolveCoreAction(
+        "Quan sát đèn trên trần", "B", false, null, displayed));
+    assertEquals("Đi qua lối ra", HiddenNarrativeChain.resolveCoreAction(
+        "Đi qua lối ra", null, true, null, displayed));
+  }
+
+  @Test public void forecastConvergesNarrativeVariantsButNotMechanicalActions()
+      throws Exception {
+    JSONArray displayed = choices("Lần theo khe hở bên trái", "Quan sát đèn trên trần");
+    JSONObject forecast = new JSONObject().put("steps", new JSONArray()
+        .put(forecastStep("old", "new")));
+    JSONObject draft = new JSONObject().put("steps", new JSONArray()
+        .put(draftStep("Cao Minh tiến vào dải sáng hẹp kéo dài trước mắt.",
+            "Những tiếng rung nhỏ dội từ trần khiến Cao Minh chú ý.",
+            choices("Kiểm tra khu vực phía trước", "Lắng nghe từ phía sau"))));
+    HiddenNarrativeChain.Beat beat = HiddenNarrativeChain.parse(forecast,draft,displayed)
+        .current("old",displayed);
+    assertNotNull(beat);
+    assertEquals("Tiếp tục khám phá", HiddenNarrativeChain.resolveCoreAction(
+        "Quan sát đèn trên trần", "B", false, beat, displayed));
+    assertEquals("Tiếp tục khám phá", HiddenNarrativeChain.resolveCoreAction(
+        "Tôi bò về phía ngược lại", null, false, beat, displayed));
+    assertEquals("Đi qua lối ra", HiddenNarrativeChain.resolveCoreAction(
+        "Đi qua lối ra", null, true, beat, displayed));
+  }
 }

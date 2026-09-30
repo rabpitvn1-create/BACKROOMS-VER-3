@@ -1671,7 +1671,7 @@ static int entitySkillProcRoll(int seed,int round,int actorIndex,int skillIndex)
       JSONArray log = state.optJSONArray("log");
       if (log == null) log = new JSONArray();
       log.put(new JSONObject().put("role", "gm")
-          .put("text", "Backrooms nuốt chửng lấy bạn khi bạn ngã xuống."));
+          .put("text", "Backrooms đã nuốt chửng lấy bạn."));
       state.put("log", log);
 
       CharacterProgressionCore progression = new CharacterProgressionCore();

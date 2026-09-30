@@ -98,6 +98,22 @@ async function generate(prompt, name, results) {
   results.calls.push(entry);
   return {parsed,entry};
 }
+/** Continue collecting independent samples even when the provider rejects one. */
+function classifyFailure(error) {
+  const match = String(error && error.message || '').match(/\\bHTTP\\s+(\\d{3})\\b/);
+  return {httpStatus: match ? Number(match[1]) : null,
+    reason: match ? 'HTTP '+match[1] : 'request failed'};
+}
+async function safelyGenerate(prompt, name, results) {
+  const started = Date.now();
+  try { return await generate(prompt,name,results); }
+  catch (error) {
+    const failure = classifyFailure(error);
+    results.calls.push({name,latencyMs:Date.now()-started,
+      parseable:false,failed:true,httpStatus:failure.httpStatus});
+    return {parsed:null,failed:failure.reason};
+  }
+}
 function flush(results) {
   fs.mkdirSync(path.dirname(OUTPUT), {recursive:true});
   fs.writeFileSync(OUTPUT, JSON.stringify(results,null,2)+'\n',{mode:0o600});
@@ -131,8 +147,8 @@ async function main() {
       + 'Mỗi reply dài 120–220 từ tiếng Việt, chứa hành động và đích đến tương ứng. '
       + 'Bước 0 dùng hai lựa chọn được cung cấp, mỗi bước kế tiếp dùng nextChoices đã tạo từ bước trước.\n'
       + JSON.stringify(BEATS);
-    const batch = await generate(chainPrompt,'chain_3_beats_2_variants',results);
-    const problem = validateBatch(batch.parsed,BEATS.length);
+    const batch = await safelyGenerate(chainPrompt,'chain_3_beats_2_variants',results);
+    const problem = batch.failed || validateBatch(batch.parsed,BEATS.length);
     results.batched = {valid:!problem,problem,steps:batch.parsed&&batch.parsed.steps||null};
 
     // Baseline: one normal narration request per turn (only one reply and two choices).
@@ -142,8 +158,8 @@ async function main() {
         +'. Kết quả Core: '+beat.result+'. Điểm đến: '+beat.destination
         +'. Viết diễn biến tiếng Việt 120–220 từ, tôn trọng hành động, không báo cáo state. '
         + 'Trả JSON duy nhất {"reply":"...","choices":[{"text":"..."},{"text":"..."}]}.';
-      const item=await generate(prompt,'baseline_turn_'+(i+1),results);
-      const error=validateSingle(item.parsed);
+      const item=await safelyGenerate(prompt,'baseline_turn_'+(i+1),results);
+      const error=item.failed || validateSingle(item.parsed);
       results.singleTurnBaseline.push({index:i+1,valid:!error,problem:error,output:item.parsed});
     }
     // The same fixed beat must support surprising free-form actions.
@@ -155,9 +171,16 @@ async function main() {
         + 'Không giả vờ nhân vật đã tự nguyện chọn một hành động khác; không kể chuyện theo kiểu thông báo hệ thống, '
         + 'không lạm dụng bất tỉnh, dịch chuyển hoặc hành lang đột ngột biến dạng. '
         + 'Viết 120–220 từ. Trả JSON duy nhất {"reply":"...","choices":[{"text":"..."},{"text":"..."}]}.';
-      const item=await generate(prompt,'freeform_'+(i+1),results);
-      const error=validateSingle(item.parsed);
+      const item=await safelyGenerate(prompt,'freeform_'+(i+1),results);
+      const error=item.failed || validateSingle(item.parsed);
       results.freeformRewrites.push({index:i+1,action,valid:!error,problem:error,output:item.parsed});
+    }
+    // A partial run remains a failed gate, but its evidence is still collected.
+    if (results.batched.valid !== true
+        || results.singleTurnBaseline.some(item=>!item.valid)
+        || results.freeformRewrites.some(item=>!item.valid)) {
+      results.incomplete = true;
+      process.exitCode = 1;
     }
   } catch (error) {
     // Do not persist raw errors or provider payloads (avoid accidental secret leakage).
@@ -171,13 +194,16 @@ async function main() {
       return acc;
     },{measuredTokens:0});
     process.stdout.write(JSON.stringify({
-      model:results.model,attempts:results.httpAttempts,successfulResponses:all.length,
+      model:results.model,attempts:results.httpAttempts,
+      successfulResponses:all.filter(item=>!item.failed).length,
+      failedRequests:all.filter(item=>item.failed).length,
       batchValid:results.batched.valid===true,
       freeformValid:results.freeformRewrites.filter(x=>x.valid).length,
       baselineValid:results.singleTurnBaseline.filter(x=>x.valid).length,
-      measuredTokens:totals.measuredTokens,stopped:!!results.stopped
+      measuredTokens:totals.measuredTokens,stopped:!!results.stopped,
+      incomplete:!!results.incomplete
     })+'\n');
   }
 }
 if (require.main===module) main();
-module.exports={validChoices,validateBatch,validateSingle,usageOf};
+module.exports={validChoices,validateBatch,validateSingle,usageOf,classifyFailure};

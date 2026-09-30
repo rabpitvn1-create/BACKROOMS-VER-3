@@ -34,7 +34,7 @@ assert.deepEqual(open.map(choice => choice.id), ['A','B']);
 assert.equal(open[0].action, 'Đi qua lối ra');
 assert.equal(open.some(choice => choice.action === 'Tiếp tục khám phá Level 0.1'), false);
 assert.deepEqual(choices({currentLevelKey: '1.2', levelRoute: {exitAvailable: true}})
-  .map(choice => choice.action), ['Đi qua lối ra','Thận trọng tiếp cận lối thoát vừa tìm thấy']);
+  .map(choice => choice.action), ['Đi qua lối ra','Men theo mép lối ra rồi bước qua']);
 
 assert.deepEqual(choices({currentLevelKey:'0',levelRoute:{exitAvailable:false}},[
   {text:'Quan sát cửa',action:'Quan sát cửa'},

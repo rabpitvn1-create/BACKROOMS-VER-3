@@ -9,6 +9,12 @@ test('provider probe checks batch JSON shape without an API call',()=>{
   assert.match(probe.validateBatch({steps:[{replyA:'a',replyB:'b',nextChoices:choices}]},1),/invalid/);
   assert.match(probe.validateBatch({steps:[]},1),/length/);
 });
+test('provider probe classifies failures without persisting secret-bearing error strings',()=>{
+  assert.deepEqual(probe.classifyFailure(new Error('Gemini request X failed: HTTP 503')),
+    {httpStatus:503,reason:'HTTP 503'});
+  assert.deepEqual(probe.classifyFailure(new Error('Network error with sensitive context')),
+    {httpStatus:null,reason:'request failed'});
+});
 test('provider probe rejects duplicate choices and incomplete single reply',()=>{
   assert.equal(probe.validateSingle({reply:'a'.repeat(110),choices}),'');
   assert.match(probe.validateSingle({reply:'a'.repeat(110),choices:[choices[0],choices[0]]}),/invalid/);

@@ -232,11 +232,20 @@ public final class GameCoreFacade implements AutoCloseable {
   /** Explicit inventory and chest operations are never reduced to a narrative rewrite. */
   public synchronized boolean isMechanicalAction(String action) {
     String text = action == null ? "" : action.trim();
-    JSONObject flags = parseState(liveStateJson).optJSONObject("flags");
+    JSONObject state = parseState(liveStateJson);
+    JSONObject flags = state.optJSONObject("flags");
+    JSONObject route = state.optJSONObject("levelRoute");
+    String lower = text.toLowerCase(Locale.ROOT);
+    boolean explicitExit = LevelCore.hasTransitionIntent(text)
+        && ((route != null && route.optBoolean("exitAvailable", false))
+            || lower.contains("lối ra") || lower.contains("lối thoát")
+            || lower.matches(".*\\blevel\\s*[0-9]+.*"));
     return text.startsWith("__loot:")
         || GameCoreRules.isDirectPlayerPickupAction(text)
         || GameCoreRules.isInventoryQuery(text)
         || GameCoreRules.isPartyQuery(text)
+        || GameCoreRules.isRestAction(text)
+        || explicitExit
         || (itemCore.isOpenChestAction(text)
             && flags != null && flags.optBoolean("chestPresent", false));
   }
@@ -724,13 +733,24 @@ public final class GameCoreFacade implements AutoCloseable {
               .put("factPredicate", "respawned_in_place")
               .put("factValue", working.optString("location", ""))
               .put("causedBy", "system")
-              .put("observedByPlayer", true),
+              .put("observedByPlayer", false),
           null));
       emergentTurnEngine.validateBatch(turnId, events);
       emergentTurnEngine.commitAuthoritative(persisted, working, turnId, events, null);
       working.put("saveVersion", CURRENT_SAVE_VERSION);
       projectBeforePersist(working);
       emergentTurnEngine.catchUpProjections(working);
+      // Narrative concealment must not invent an interactable object or move Core position.
+      String[] reframes = {
+          "Cao Minh mở mắt trong tiếng điện rền khô khốc. Hơi lạnh ngấm qua lòng bàn tay đặt trên sàn. Không một dấu mốc nào đủ rõ để xác định phương hướng.",
+          "Nhịp đèn chập chờn cắt bóng Cao Minh thành những khoảng tối rời rạc. Không khí phảng phất mùi bụi ẩm. Những thứ ở xa vẫn khuất ngoài tầm mắt.",
+          "Một tiếng lách tách vô định kéo Cao Minh trở lại với cảm giác nơi đầu ngón tay. Trần nhà chìm trong ánh sáng nhợt nhạt; mọi dấu hiệu định hướng đều mờ đi."
+      };
+      JSONArray log = working.optJSONArray("log");
+      if (log == null) log = new JSONArray();
+      log.put(new JSONObject().put("role", "gm")
+          .put("text", reframes[Math.floorMod(turnId.hashCode(), reframes.length)]));
+      working.put("log", log);
       persist(working);
       return response(true, working, null, "death_restart_completed", null);
     } catch (Exception e) {

@@ -28,6 +28,26 @@ public class FullGameplay200TurnSimulationTest {
   private static final int WORLD_ACTIONS = 200;
   private static final int COMBAT_HAND_LIMIT = 160;
 
+  @Test public void explicitFreeformMechanicsStayCoreOwnedEvenWithConvergentChoices()
+      throws Exception {
+    String graph = asset("level_graph.json");
+    String knowledge = asset("knowledge/level_knowledge.json");
+    String registry = asset("knowledge/entity_encounters.json");
+    JSONObject initial = GameCoreFacade.newGameState(new JSONObject())
+        .put("emergent", new JSONObject().put("saveId", "mechanical-freeform-fixture"));
+    try (GameCoreFacade core = new GameCoreFacade(
+        inMemoryPreferences(initial.toString()), LevelCore.withAssets(knowledge, graph),
+        new EntityCore(registry), false)) {
+      core.normalizeState(initial.toString());
+      assertTrue("Rest must keep original time and recovery rules",
+          core.isMechanicalAction("Tôi nghỉ một lúc"));
+      assertTrue(core.isMechanicalAction("Tôi ngủ trong góc phòng"));
+      assertTrue("An exit request must not silently become exploratory movement",
+          core.isMechanicalAction("Đi qua lối ra"));
+      assertFalse(core.isMechanicalAction("Chạy về phía có tiếng động"));
+    }
+  }
+
   @Test public void realGameFlowFor200ActionsWithCombatEncountersAndNarration() throws Exception {
     Result natural = play("full-natural-20260929", false, WORLD_ACTIONS);
     Result repeatPrefix = play("full-natural-20260929", false, 30);

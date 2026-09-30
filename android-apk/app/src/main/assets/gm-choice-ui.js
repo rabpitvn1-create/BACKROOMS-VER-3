@@ -257,7 +257,7 @@
     });
     if (state && state.levelRoute && state.levelRoute.exitAvailable === true) {
       choices = [{text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'},
-        {text:'Thận trọng tiếp cận lối thoát vừa tìm thấy',action:'Thận trọng tiếp cận lối thoát vừa tìm thấy'}];
+        {text:'Men theo mép lối ra rồi bước qua',action:'Men theo mép lối ra rồi bước qua'}];
     }
     return choices.slice(0, 2).map(function(choice, index){
       return Object.assign({}, choice, {id:String.fromCharCode(65+index)});
@@ -320,7 +320,7 @@
       var restartButton = document.createElement('button');
       restartButton.type = 'button';
       restartButton.className = 'gm-choice';
-      restartButton.textContent = 'BẮT ĐẦU LẠI TỪ ĐẦU LEVEL';
+      restartButton.textContent = 'TỈNH LẠI';
       restartButton.disabled = !!window.__combatBusy;
       restartButton.addEventListener('click', submitDeathRestart);
       restartBox.appendChild(restartButton);
@@ -484,7 +484,7 @@
       submit.disabled = true;
     } else if (deathLocked) {
       action.value = '';
-      action.placeholder = 'Cao Minh đã gục ngã — bắt đầu lại từ đầu Level trong khung GAME MASTER.';
+      action.placeholder = 'Cao Minh đã gục ngã — chọn TỈNH LẠI trong khung GAME MASTER.';
       submit.disabled = true;
     } else {
       action.placeholder = defaultPlaceholder || 'Cao Minh tương tác gì với môi trường hiện tại?';
