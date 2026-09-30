@@ -25,6 +25,14 @@ const UNEXPECTED = [
   'Tôi cố tìm cách quay về vị trí ban đầu, từ chối đi theo đường trước mặt.'
 ];
 
+function configuredKeys(env=process.env) {
+  return [...new Set([
+    env.GEMINI_API_KEY_1, env.GEMINI_API_KEY_2, env.GEMINI_API_KEY_3,
+    env.GEMINI_API_KEY_4, env.GEMINI_API_KEY_5, env.GEMINI_API_KEY
+  ].filter(value => typeof value === 'string' && value.trim())
+    .map(value => value.trim()))];
+}
+
 function validChoices(choices) {
   return Array.isArray(choices) && choices.length === 2
       && choices.every(c => c && typeof c.text === 'string' && c.text.trim().length >= 8)
@@ -109,6 +117,28 @@ function classifyFailure(error) {
   return {httpStatus: match ? Number(match[1]) : null,
     reason: match ? 'HTTP '+match[1] : 'request failed'};
 }
+async function generateAcrossKeys(prompt, name, results) {
+  const keys = configuredKeys();
+  if (!keys.length) throw new Error('Gemini API secret not configured');
+  const original = process.env.GEMINI_API_KEY;
+  let lastError = null;
+  try {
+    for (const key of keys) {
+      process.env.GEMINI_API_KEY = key;
+      try { return await generateAcrossKeys(prompt,name,results); }
+      catch (error) {
+        lastError = error;
+        const status = classifyFailure(error).httpStatus;
+        if (![429,500,502,503,504].includes(status || 0)) throw error;
+      }
+    }
+  } finally {
+    if (original === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = original;
+  }
+  throw lastError || new Error('Gemini request failed');
+}
+
 async function safelyGenerate(prompt, name, results) {
   const started = Date.now();
   try { return await generate(prompt,name,results); }
@@ -149,7 +179,7 @@ async function main() {
     ]
   };
   try {
-    if (!process.env.GEMINI_API_KEY) throw new Error('Gemini API secret not configured');
+    if (!configuredKeys().length) throw new Error('Gemini API secret not configured');
     const chainPrompt = EXPLORER_FACTS + '\nBạn phải chuẩn bị trước đúng 3 lượt trong một lời gọi. '
       + 'Mỗi lượt có hai cách tiếp cận khác nhau nhưng cùng kết quả Core. '
       + 'Lời kể không được tiết lộ các lựa chọn hội tụ; thay đổi nhịp điệu, giác quan và quan hệ nhân quả, không chỉ đổi từ đồng nghĩa. '
@@ -217,4 +247,4 @@ async function main() {
   }
 }
 if (require.main===module) main();
-module.exports={validChoices,validateBatch,validateSingle,usageOf,classifyFailure,measuredTokensOf};
+module.exports={validChoices,validateBatch,validateSingle,usageOf,classifyFailure,measuredTokensOf,configuredKeys};

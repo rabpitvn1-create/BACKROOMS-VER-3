@@ -9,6 +9,13 @@ test('provider probe checks batch JSON shape without an API call',()=>{
   assert.match(probe.validateBatch({steps:[{replyA:'a',replyB:'b',nextChoices:choices}]},1),/invalid/);
   assert.match(probe.validateBatch({steps:[]},1),/length/);
 });
+test('probe rotates unique configured Gemini keys like the APK',()=>{
+  assert.deepEqual(probe.configuredKeys({
+    GEMINI_API_KEY_1:' key-a ',GEMINI_API_KEY_2:'key-b',
+    GEMINI_API_KEY_3:'key-a',GEMINI_API_KEY:'legacy'
+  }),['key-a','key-b','legacy']);
+  assert.deepEqual(probe.configuredKeys({}),[]);
+});
 test('provider probe classifies failures without persisting secret-bearing error strings',()=>{
   assert.deepEqual(probe.classifyFailure(new Error('Gemini request X failed: HTTP 503')),
     {httpStatus:503,reason:'HTTP 503'});

@@ -29,11 +29,15 @@ jobs:
           node-version: '22'
       - name: Probe actual configured Gemini Low (synthetic narrative fixtures)
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
+          GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          GEMINI_API_KEY_4: ${{ secrets.GEMINI_API_KEY_4 }}
+          GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
           GEMINI_MODEL: gemini-3.8-flash
         run: |
-          if [ -z "$GEMINI_API_KEY" ]; then
-            echo "Live probe unavailable: GEMINI_API_KEY secret not configured."
+          if [ -z "${GEMINI_API_KEY_1}${GEMINI_API_KEY_2}${GEMINI_API_KEY_3}${GEMINI_API_KEY_4}${GEMINI_API_KEY_5}" ]; then
+            echo "Live probe unavailable: no Gemini API key secret is configured."
             exit 1
           fi
           node android-apk/tools/gemini-low-probe.cjs
