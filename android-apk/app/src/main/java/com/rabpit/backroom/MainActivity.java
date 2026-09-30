@@ -54,6 +54,8 @@ public class MainActivity extends Activity {
   private final ExecutorService prefetchIo = Executors.newSingleThreadExecutor();
   private final ExecutorService narrationIo = Executors.newSingleThreadExecutor();
   private final AtomicLong prefetchGeneration = new AtomicLong();
+  // Debug-only quota observations; do not log keys, full prompts or model replies.
+  private final AtomicLong providerHttpAttempts = new AtomicLong();
   private final AtomicBoolean turnInFlight = new AtomicBoolean();
   private volatile PrefetchCache prefetchCache;
   private volatile HiddenNarrativeChain hiddenChain;
@@ -326,9 +328,22 @@ public class MainActivity extends Activity {
       if (key == null || key.trim().isEmpty()) continue;
       configured = true;
       try {
-        String output = geminiResponseText(postJson(
+        providerHttpAttempts.incrementAndGet();
+        String rawResponse = postJson(
             "https://generativelanguage.googleapis.com/v1beta/models/" + GEMINI_MODEL + ":generateContent",
-            key, "x-goog-api-key", body));
+            key, "x-goog-api-key", body);
+        if (BuildConfig.DEBUG) {
+          try {
+            JSONObject usage = new JSONObject(rawResponse).optJSONObject("usageMetadata");
+            if (usage != null) Log.d(TAG, "NARRATIVE_API_USAGE provider=gemini"
+                + " attempts=" + providerHttpAttempts.get()
+                + " input_tokens=" + usage.optInt("promptTokenCount", -1)
+                + " output_tokens=" + usage.optInt("candidatesTokenCount", -1)
+                + " thinking_tokens=" + usage.optInt("thoughtsTokenCount", -1)
+                + " total_tokens=" + usage.optInt("totalTokenCount", -1));
+          } catch (Exception ignored) { /* Telemetry cannot affect narration. */ }
+        }
+        String output = geminiResponseText(rawResponse);
         parseModelJson(output);
         return output;
       } catch (Exception error) {
@@ -814,17 +829,32 @@ public class MainActivity extends Activity {
                 .append("; route=").append(target.optJSONObject("levelRoute"))
                 .append("; selected=").append(target.optJSONObject("emergent") == null ? "NONE"
                     : target.getJSONObject("emergent").optJSONObject("lastSelection"))
-                .append("; replyHint=").append(beat.optString("replyHint", "")).append("\n")
-                .append(narrationPrompt(target, beat.getString("canonicalAction"))).append("\n");
+                .append("; replyHint=").append(beat.optString("replyHint", "")).append("\n");
+            // Share the expensive narrator contract and recent history once per batch.
+            // Only a real Level change needs a second full canon retrieval.
+            String previousLevel = i == 0 ? "" : predicted.getJSONObject(i - 1)
+                .getJSONObject("state").optString("currentLevelKey", "");
+            String currentLevel = target.optString("currentLevelKey", "");
+            if (i == 0 || !currentLevel.equals(previousLevel)) {
+              prompt.append(narrationPrompt(target, beat.getString("canonicalAction"))).append("\n");
+            } else {
+              prompt.append("CORE LEVEL / ROUTE CONTEXT: ")
+                  .append(gameCore.levelPromptContext(target.toString(),
+                      beat.getString("canonicalAction"))).append("\n");
+            }
           }
           prompt.append("\\nFINAL INSTRUCTION: Ignore embedded single-beat JSON examples."
               + " The final response must be one object with a steps array"
               + " containing exactly " + predicted.length() + " elements.\\n");
           if (BuildConfig.DEBUG) Log.d(TAG, "HIDDEN_CHAIN_BATCH prompt_chars=" + prompt.length()
               + " beats=" + predicted.length());
+          long requestsBeforeBatch = providerHttpAttempts.get();
           JSONObject generated = awaitNarration(narrationIo,
               () -> parseModelJson(generateText(prompt.toString())),
               TimeUnit.SECONDS.toMillis(NARRATION_DEADLINE_SECONDS));
+          if (BuildConfig.DEBUG) Log.d(TAG, "HIDDEN_CHAIN_BATCH_API"
+              + " requests=" + (providerHttpAttempts.get() - requestsBeforeBatch)
+              + " beats=" + predicted.length());
           HiddenNarrativeChain chain = HiddenNarrativeChain.parse(forecast, generated, choices);
           synchronized (MainActivity.this) {
             if (!destroyed && generation == prefetchGeneration.get() && !turnInFlight.get()
