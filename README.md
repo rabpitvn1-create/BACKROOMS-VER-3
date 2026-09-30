@@ -6,9 +6,9 @@ Android/WebView game. V3 builds directly from checked-in source; there is no run
 
 - `android-apk/app/src/main/assets/index.html`: WebView UI.
 - `android-apk/app/src/main/java/com/rabpit/backroom/MainActivity.java`: Android bridge + lightweight GM provider orchestration.
-- `android-apk/app/src/main/java/com/rabpit/backroom/core/`: typed Kotlin state, save, inventory, party, physiology and combat adapters.
-- `android-apk/app/src/main/java/com/rabpit/backroom/core/gameplay/`: gameplay rules rebuilt from V2: stats/progression, items/equipment, skills/entities, Poker Dice, level routing and deterministic RNG.
-- `.github/workflows/build-backroom-apk.yml`: direct test/build/release pipeline.
+- `android-apk/app/src/main/java/com/rabpit/backroom/core/`: Java game state, save, inventory, party, physiology, combat and narrative runtime.
+- Android gameplay/runtime source under `android-apk/app/src/main/java/` is Java-only; the project no longer applies the Kotlin Android plugin.
+- GitHub Actions workflows are intentionally absent from `main`.
 
 Old Python patch scripts and character-specific Legacy systems are intentionally excluded from V3. Git history remains the recovery source if any old behavior is needed later.
 

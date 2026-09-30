@@ -1,8 +1,7 @@
 Backroom 1.1.64 Debug
 
-- V3 builds directly from checked-in Android/Kotlin source; the historical Python patch chain was removed.
-- Gameplay architecture is being rebuilt from V2 as typed Kotlin modules, without importing V2 GM/canon architecture.
-- Old An Nhiên and MadGod character systems were removed from the active tree; Git history is the recovery source if needed later.
-- Game Master uses the five-key Gemini pool, with Haiku fallback via HAIKU_API_KEY, HAIKU_MODEL and HAIKU_BASE_URL.
-- LiteRT remains removed.
-- Luna remains removed.
+- Source runtime is Java-only; Kotlin source and the Kotlin Android Gradle plugin are not used.
+- Preserves the current restored pre-Hui/Hua's Family gameplay state while publishing it as version 1.1.64 (versionCode 66).
+- Android/WebView bridge, gameplay Core, save/inventory/party/combat runtime and tests build from checked-in Java source.
+- Game Master uses the existing Gemini/Haiku provider configuration.
+- GitHub Actions workflows remain absent from main after the rollback cleanup.
