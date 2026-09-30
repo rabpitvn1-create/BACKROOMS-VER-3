@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const test = require('node:test');
-const {analyze} = require(path.resolve(__dirname, '../../../tools/narrative-metrics.cjs'));
+const {analyze} = require(path.resolve(__dirname, '../../../../tools/narrative-metrics.cjs'));
 
 test('aggregates experiment events without reading secrets or payloads', () => {
   const report = analyze([
