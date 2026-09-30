@@ -1677,7 +1677,9 @@ static int entitySkillProcRoll(int seed,int round,int actorIndex,int skillIndex)
       CharacterProgressionCore progression = new CharacterProgressionCore();
       progression.applyCaoMinhDeathPenalty(state);
       state.put(LevelCore.LEVEL_KEY, targetLevelKey);
-      LevelCore.returnToCurrentLevelStart(state);
+      // Experimental: a failed encounter cannot move the underlying world.
+      state.put("location", targetLocation);
+      state.put("perceptionShroud", true);
       combat.put("deathRestartAnchorLocation", targetLocation)
           .put("deathRestartLevelKey", targetLevelKey)
           .put("deathRestartPending", true)
