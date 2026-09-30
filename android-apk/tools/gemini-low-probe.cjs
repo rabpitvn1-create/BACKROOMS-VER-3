@@ -58,24 +58,37 @@ function usageOf(data) {
 async function generate(prompt, name, results) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error('Gemini API secret not configured');
-  results.httpAttempts++;
   const started = Date.now();
-  const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/'
-      + encodeURIComponent(MODEL) + ':generateContent', {
-    method: 'POST',
-    headers: {'x-goog-api-key': key, 'content-type': 'application/json'},
-    body: JSON.stringify({
-      contents: [{role:'user',parts:[{text:prompt}]}],
-      generationConfig: {
-        responseMimeType:'application/json',
-        thinkingConfig:{thinkingLevel:'low'},
-        temperature:0.8,
-        maxOutputTokens:4096
-      }
-    }),
-    signal: AbortSignal.timeout(60000)
-  });
-  if (!response.ok) throw new Error('Gemini request ' + name + ' failed: HTTP ' + response.status);
+  let response;
+  // Only transient provider overload/rate-limit errors are retried.
+  // Do not rotate to Haiku: this probe must measure Gemini Low itself.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    results.httpAttempts++;
+    response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/'
+        + encodeURIComponent(MODEL) + ':generateContent', {
+      method: 'POST',
+      headers: {'x-goog-api-key': key, 'content-type': 'application/json'},
+      body: JSON.stringify({
+        contents: [{role:'user',parts:[{text:prompt}]}],
+        generationConfig: {
+          responseMimeType:'application/json',
+          thinkingConfig:{thinkingLevel:'low'},
+          temperature:0.8,
+          maxOutputTokens:4096
+        }
+      }),
+      signal: AbortSignal.timeout(60000)
+    });
+    if (response.ok) break;
+    const retryable = [429,500,502,503,504].includes(response.status);
+    if (!retryable || attempt === 2) {
+      throw new Error('Gemini request ' + name + ' failed: HTTP ' + response.status);
+    }
+    const after = Number(response.headers.get('retry-after'));
+    const delayMs = Number.isFinite(after) && after > 0
+        ? Math.min(15000, after * 1000) : 2500 * (attempt + 1);
+    await new Promise(resolve => setTimeout(resolve, delayMs));
+  }
   const data = await response.json();
   const text = (data.candidates || []).flatMap(c => ((c.content || {}).parts || []))
     .map(p => p.text || '').join('').trim();
