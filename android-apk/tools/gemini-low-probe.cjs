@@ -11,7 +11,7 @@ const path = require('node:path');
 
 const MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
 const OUTPUT = process.env.PROBE_OUTPUT || path.resolve('android-apk/probe-results/gemini-low-probe.json');
-const EXPLORER_FACTS = 'Bối cảnh: Cao Minh ở Level 0 của Backrooms. Không có Entity, nhân vật phụ hay vật phẩm mới. Core đã quyết định kết quả các lượt trước khi GM kể chuyện. Không thay đổi Core, chỉ viết tiếng Việt tự nhiên.';
+const EXPLORER_FACTS = 'Bối cảnh: Cao Minh ở Level 0 của Backrooms. Không có Entity, nhân vật phụ hay vật phẩm mới. Core đã quyết định kết quả các lượt trước khi GM kể chuyện. Không thay đổi Core. Kể ngôi thứ ba hạn định quanh Cao Minh, không gọi nhân vật là "bạn". Không tự bịa sợ hãi, hoang mang, hy vọng hay quyết định nội tâm. Không tuyên bố khu vực an toàn hoặc không có mối đe dọa chỉ vì lượt này không có biến cố. Không tự tạo vết đánh dấu hay thay đổi thế giới tồn tại lâu dài. Nếu Player Action đứng yên, ngồi lại hoặc chỉ lắng nghe thì không tự bắt Cao Minh đứng dậy hay di chuyển.';
 const BEATS = [
   {destination:'một đoạn hành lang vàng có ánh đèn huỳnh quang',result:'khám phá tiến triển; không có biến cố mới',a:'Thận trọng tiến vào khoảng tối',b:'Lần theo tiếng ù của bóng đèn'},
   {destination:'một vùng tường vàng có vết ẩm loang',result:'quan sát thành công; không có Entity',a:'Quan sát kỹ các vệt ẩm',b:'Rời khỏi chỗ sáng để tìm lối khác'},
@@ -35,8 +35,30 @@ function configuredKeys(env=process.env) {
 
 function validChoices(choices) {
   return Array.isArray(choices) && choices.length === 2
-      && choices.every(c => c && typeof c.text === 'string' && c.text.trim().length >= 8)
+      && choices.every(c => c && typeof c.text === 'string' && c.text.trim().length >= 8
+        && !/^(?:đánh dấu|khắc|cào|vẽ|viết ký hiệu|đặt dấu mốc)\\b/iu.test(c.text.trim()))
       && choices[0].text.trim() !== choices[1].text.trim();
+}
+function stationaryAction(action='') {
+  const stay=/(?:nhất\\s+quyết\\s+)?không\\s+(?:bước|đi|di\\s+chuyển|rời)|\\b(?:ngồi\\s+(?:yên|xuống)|đứng\\s+yên|áp\\s+tai|chỉ\\s+(?:tập trung\\s+)?lắng nghe)\\b/iu;
+  const move=/(?:^|\\s)(?:đi|chạy|bò|bước|tiến|rẽ|leo|di\\s+chuyển|rời|quay\\s+(?:đầu|gót)|men\\s+theo|đi\\s+theo)\\b/iu;
+  return stay.test(action) || (!move.test(action) && /\\b(?:lắng nghe|quan sát|chờ|đợi|dừng|nghỉ)\\b/iu.test(action));
+}
+function validateProse(reply, action='') {
+  const text=String(reply||'');
+  if (!/\\bCao Minh\\b/u.test(text)) return 'reply must use third-person Cao Minh narration';
+  if (/\\bbạn\\b/iu.test(text)) return 'reply uses second-person narration';
+  if (/(?:sự|nỗi)\\s+(?:căng thẳng|hoang mang|sợ hãi)|\\btâm\\s*(?:lý|trí).{0,30}?(?:bình ổn|hoang mang|căng thẳng|sợ hãi)|\\bnhịp\\s+tim.{0,30}?(?:dồn dập|đập dồn)|\\b(?:hy vọng|hoảng loạn|hoang mang|sợ hãi)\\b/iu.test(text))
+    return 'reply invents inner emotion';
+  if (/(?:khu vực(?: này)?|nơi(?: đây| này)?|lối đi(?: này)?)\\s+(?:hiện\\s+)?(?:hoàn\\s+toàn|tuyệt\\s+đối)\\s+an\\s+toàn/iu.test(text)
+      || /(?:không|chẳng)\\s+(?:hề\\s+)?(?:có|xuất hiện).{0,40}?(?:mối\\s+(?:nguy hiểm|đe dọa)|dấu hiệu\\s+nguy hiểm|bóng dáng\\s+thực thể)/iu.test(text))
+    return 'reply overclaims safety or threat absence';
+  if (/(?:cao minh|hắn)\\s+(?:cào|khắc|vẽ|đánh dấu|viết).{0,60}?(?:vết\\s+(?:xước|khắc)|ký hiệu|dấu mốc|lên\\s+(?:tường|sàn))/iu.test(text))
+    return 'reply invents a persistent world edit';
+  if (stationaryAction(action)
+      && /(?:cao minh|hắn|anh)\\s+(?:tự\\s+)?(?:đứng\\s+dậy(?:.{0,24})?|bước|đi|chạy|bò|tiến|rẽ|leo|di\\s+chuyển|rời|quay\\s+gót|men\\s+theo)\\b/iu.test(text))
+    return 'reply moves Cao Minh after a stationary action';
+  return '';
 }
 function validateBatch(parsed, count) {
   if (!parsed || !Array.isArray(parsed.steps) || parsed.steps.length !== count) {
@@ -46,13 +68,16 @@ function validateBatch(parsed, count) {
     if (!step || typeof step.replyA !== 'string' || typeof step.replyB !== 'string'
         || step.replyA.trim().length < 100 || step.replyB.trim().length < 100
         || !validChoices(step.nextChoices)) return 'invalid replies/choices at step ' + i;
+    const proseA=validateProse(step.replyA,(BEATS[i]||{}).a||'');
+    const proseB=validateProse(step.replyB,(BEATS[i]||{}).b||'');
+    if (proseA || proseB) return 'style violation at step '+i+': '+(proseA||proseB);
   }
   return '';
 }
-function validateSingle(parsed) {
+function validateSingle(parsed, action='') {
   if (!parsed || typeof parsed.reply !== 'string' || parsed.reply.trim().length < 100
       || !validChoices(parsed.choices)) return 'invalid reply or choices';
-  return '';
+  return validateProse(parsed.reply,action);
 }
 function usageOf(data) {
   const u = data && data.usageMetadata || {};
@@ -200,7 +225,7 @@ async function main() {
         +'. Viết diễn biến tiếng Việt 120–220 từ, tôn trọng hành động, không báo cáo state. '
         + 'Trả JSON duy nhất {"reply":"...","choices":[{"text":"..."},{"text":"..."}]}.';
       const item=await safelyGenerate(prompt,'baseline_turn_'+(i+1),results);
-      const error=item.failed || validateSingle(item.parsed);
+      const error=item.failed || validateSingle(item.parsed,beat.a);
       results.singleTurnBaseline.push({index:i+1,valid:!error,problem:error,output:item.parsed});
     }
     // The same fixed beat must support surprising free-form actions.
@@ -214,8 +239,15 @@ async function main() {
         + 'không lạm dụng bất tỉnh, dịch chuyển hoặc hành lang đột ngột biến dạng. '
         + 'Viết 120–220 từ. Trả JSON duy nhất {"reply":"...","choices":[{"text":"..."},{"text":"..."}]}.';
       const item=await safelyGenerate(prompt,'freeform_'+(i+1),results);
-      const error=item.failed || validateSingle(item.parsed);
+      const error=item.failed || validateSingle(item.parsed,action);
       results.freeformRewrites.push({index:i+1,action,valid:!error,problem:error,output:item.parsed});
+    }
+    if (results.batched.valid !== true && /^HTTP 5\\d\\d$/.test(String(results.batched.problem||''))
+        && !results.quotaLimited) {
+      const retry=await safelyGenerate(chainPrompt,'chain_3_beats_2_variants_retry',results);
+      const retryProblem=retry.failed || validateBatch(retry.parsed,BEATS.length);
+      results.batched={valid:!retryProblem,problem:retryProblem,
+        steps:retry.parsed&&retry.parsed.steps||null,retried:true};
     }
     // A partial run remains a failed gate, but its evidence is still collected.
     if (results.batched.valid !== true || results.quotaLimited
@@ -247,4 +279,4 @@ async function main() {
   }
 }
 if (require.main===module) main();
-module.exports={validChoices,validateBatch,validateSingle,usageOf,classifyFailure,measuredTokensOf,configuredKeys,generateAcrossKeys};
+module.exports={validChoices,validateBatch,validateSingle,validateProse,stationaryAction,usageOf,classifyFailure,measuredTokensOf,configuredKeys,generateAcrossKeys};

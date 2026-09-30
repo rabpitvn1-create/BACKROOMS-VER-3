@@ -50,6 +50,14 @@ public final class NarrationGuard {
           + "(?:làm gì|chọn gì|đi đâu|hành động gì)(?:\\s+(?:tiếp|tiếp theo|bây giờ))?\\s*[?？!。.]?$");
   private static final Pattern AGENCY = Pattern.compile(
       "(?iu)(?:cao minh|hắn)\\s+(?:quyết định|tự nhủ|nghĩ thầm|thầm nghĩ)\\b");
+  private static final Pattern EXPLICIT_STAY = Pattern.compile(
+      "(?iu)(?:nhất\\s+quyết\\s+)?không\\s+(?:bước|đi|di\\s+chuyển|rời)|"
+          + "\\b(?:ngồi\\s+(?:yên|xuống)|đứng\\s+yên|áp\\s+tai|chỉ\\s+(?:tập trung\\s+)?lắng nghe)\\b");
+  private static final Pattern ACTION_MOVEMENT = Pattern.compile(
+      "(?iu)(?:^|\\s)(?:đi|chạy|bò|bước|tiến|rẽ|leo|di\\s+chuyển|rời|quay\\s+(?:đầu|gót)|men\\s+theo|đi\\s+theo)\\b");
+  private static final Pattern NARRATED_MOVEMENT = Pattern.compile(
+      "(?iu)(?:cao minh|hắn|anh)\\s+(?:tự\\s+)?(?:đứng\\s+dậy(?:.{0,24})?|"
+          + "bước|đi|chạy|bò|tiến|rẽ|leo|di\\s+chuyển|rời|quay\\s+gót|men\\s+theo)\\b");
   private static final Pattern CHOICE_ACTION = Pattern.compile(
       "(?iu)^(?:cao minh\\s+|hắn\\s+)?(?:quan sát|kiểm tra|khảo sát|xem xét|"
           + "lắng nghe|nghe|nhìn|tìm|tìm kiếm|khám phá|lục|dò|theo dõi|đi|bước|tiến|rẽ|quay|"
@@ -123,6 +131,13 @@ public final class NarrationGuard {
     if (INVENTED_INNER_STATE.matcher(reply).find()
         && !INVENTED_INNER_STATE.matcher(playerAction == null ? "" : playerAction).find())
       return "Narrator invents Cao Minh's fear, hope or internal emotional state.";
+    String actionText = playerAction == null ? "" : playerAction;
+    boolean explicitlyStationary = EXPLICIT_STAY.matcher(actionText).find()
+        || (!ACTION_MOVEMENT.matcher(actionText).find()
+            && Pattern.compile("(?iu)\\b(?:lắng nghe|quan sát|chờ|đợi|dừng|nghỉ)\\b")
+                .matcher(actionText).find());
+    if (explicitlyStationary && NARRATED_MOVEMENT.matcher(reply).find())
+      return "Narrator moves Cao Minh after a stationary or refusal Player Action.";
     if (UNTRACKED_WORLD_EDIT.matcher(reply).find())
       return "Narration claims a persistent world edit that Core did not commit.";
     if (state != null && state.optBoolean("perceptionShroud", false)

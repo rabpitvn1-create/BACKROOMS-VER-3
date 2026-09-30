@@ -121,6 +121,22 @@ public class NarrationGuardTest {
         ordinary, "Quan sát hành lang").isEmpty());
   }
 
+  @Test public void stationaryPlayerActionCannotBeTurnedIntoMovement() throws Exception {
+    JSONObject ordinary = new JSONObject();
+    assertFalse(NarrationGuard.validate(narration(
+        "Cao Minh đứng dậy rồi bước qua góc rẽ phía trước."), ordinary,
+        "Tôi ngồi xuống, nhắm mắt và nhất quyết không bước thêm.").isEmpty());
+    assertFalse(NarrationGuard.validate(narration(
+        "Cao Minh rời khỏi vị trí cũ và bước dọc theo bức tường."), ordinary,
+        "Tôi áp tai vào bức tường và chỉ tập trung lắng nghe.").isEmpty());
+    assertTrue(NarrationGuard.validate(narration(
+        "Tiếng rung mỏng truyền qua lớp tường, còn Cao Minh vẫn giữ nguyên vị trí."),
+        ordinary, "Tôi áp tai vào bức tường và chỉ tập trung lắng nghe.").isEmpty());
+    assertTrue(NarrationGuard.validate(narration(
+        "Cao Minh chạy qua góc rẽ, tiếng bước chân dội ngược từ lớp tường vàng."),
+        ordinary, "Tôi quay đầu bỏ chạy thật nhanh về phía sau.").isEmpty());
+  }
+
   @Test public void postDefeatLocationMustRemainConcealed() throws Exception {
     JSONObject hidden = new JSONObject().put("perceptionShroud", true)
         .put("location", "Hành lang thực tế mà Cao Minh không nhận ra");
