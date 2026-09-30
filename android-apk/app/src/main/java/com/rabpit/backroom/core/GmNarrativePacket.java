@@ -68,7 +68,7 @@ public final class GmNarrativePacket {
         + "không tự điều khiển Cao Minh, không lộ kiến thức chưa thể biết; gợi ý là một hành động "
         + "ngắn và khác nhau. Sửa trong nội bộ trước khi trả lời, không xuất suy luận hay trường phân tích.\n"
         + "OUTPUT: chỉ JSON hợp lệ, không markdown. JSON không có quyền thay đổi state.\n"
-        + "{\"reply\":\"phản hồi Game Master\",\"choices\":[{\"text\":\"Gợi ý 1\"}],\"encounterDialogue\":[]}";
+        + "{\"reply\":\"phản hồi Game Master\",\"choices\":[{\"text\":\"Gợi ý 1\"},{\"text\":\"Gợi ý 2\"}],\"encounterDialogue\":[]}";
   }
 
   private static String situationContext(JSONObject state) {
