@@ -15,6 +15,13 @@ test('provider probe classifies failures without persisting secret-bearing error
   assert.deepEqual(probe.classifyFailure(new Error('Network error with sensitive context')),
     {httpStatus:null,reason:'request failed'});
 });
+test('partial provider failures do not crash token accounting',()=>{
+  assert.equal(probe.measuredTokensOf([
+    {name:'failed',failed:true,httpStatus:503},
+    {name:'success',usage:{totalTokens:1748}},
+    {name:'no_usage',usage:{totalTokens:null}}
+  ]),1748);
+});
 test('provider probe rejects duplicate choices and incomplete single reply',()=>{
   assert.equal(probe.validateSingle({reply:'a'.repeat(110),choices}),'');
   assert.match(probe.validateSingle({reply:'a'.repeat(110),choices:[choices[0],choices[0]]}),/invalid/);

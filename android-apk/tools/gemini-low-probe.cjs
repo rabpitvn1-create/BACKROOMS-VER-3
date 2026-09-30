@@ -114,6 +114,11 @@ async function safelyGenerate(prompt, name, results) {
     return {parsed:null,failed:failure.reason};
   }
 }
+/** Missing usage on a failed HTTP attempt must never crash probe reporting. */
+function measuredTokensOf(calls) {
+  return calls.reduce((sum,entry) => sum
+    + (entry.usage && Number.isFinite(entry.usage.totalTokens) ? entry.usage.totalTokens : 0), 0);
+}
 function flush(results) {
   fs.mkdirSync(path.dirname(OUTPUT), {recursive:true});
   fs.writeFileSync(OUTPUT, JSON.stringify(results,null,2)+'\n',{mode:0o600});
@@ -189,10 +194,7 @@ async function main() {
   } finally {
     flush(results);
     const all=results.calls;
-    const totals=all.reduce((acc,c)=>{
-      if (c.usage.totalTokens!==null) acc.measuredTokens+=c.usage.totalTokens;
-      return acc;
-    },{measuredTokens:0});
+    const measuredTokens=measuredTokensOf(all);
     process.stdout.write(JSON.stringify({
       model:results.model,attempts:results.httpAttempts,
       successfulResponses:all.filter(item=>!item.failed).length,
@@ -200,10 +202,10 @@ async function main() {
       batchValid:results.batched.valid===true,
       freeformValid:results.freeformRewrites.filter(x=>x.valid).length,
       baselineValid:results.singleTurnBaseline.filter(x=>x.valid).length,
-      measuredTokens:totals.measuredTokens,stopped:!!results.stopped,
+      measuredTokens,stopped:!!results.stopped,
       incomplete:!!results.incomplete
     })+'\n');
   }
 }
 if (require.main===module) main();
-module.exports={validChoices,validateBatch,validateSingle,usageOf,classifyFailure};
+module.exports={validChoices,validateBatch,validateSingle,usageOf,classifyFailure,measuredTokensOf};
