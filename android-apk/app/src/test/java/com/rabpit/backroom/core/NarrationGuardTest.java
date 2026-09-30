@@ -97,16 +97,18 @@ public class NarrationGuardTest {
         "Cao Minh mở cửa và phát hiện lối ra"), new JSONObject()).isEmpty());
   }
 
-  @Test public void acceptsOnlyOneShortActionAndSanitizesLegacySaves() throws Exception {
+  @Test public void acceptsTwoDistinctActionsAndSanitizesLegacySaves() throws Exception {
     String reply = "Ánh đèn rung nhẹ trên trần, còn vệt nước dưới chân tường kéo về phía ngã rẽ.";
     assertTrue(NarrationGuard.validate(narration(reply, "Lắng nghe phía sau bức tường"),
         new JSONObject(), "Đứng quan sát").isEmpty());
-    assertFalse(NarrationGuard.validate(narration(reply,
+    assertTrue(NarrationGuard.validate(narration(reply,
         "Kiểm tra vệt nước", "Rẽ vào hành lang bên trái"), new JSONObject()).isEmpty());
+    assertFalse(NarrationGuard.validate(narration(reply,
+        "Kiểm tra vệt nước", "Rẽ vào hành lang bên trái", "Lắng nghe tiếng đèn"), new JSONObject()).isEmpty());
     JSONArray previous = new JSONArray().put(new JSONObject().put("text", "Kiểm tra vệt nước"))
         .put(new JSONObject().put("text", "Lắng nghe tiếng đèn"))
         .put(new JSONObject().put("text", "Rẽ vào hành lang"));
-    assertEquals(1, GmChoiceContract.sanitizeChoices(previous).length());
+    assertEquals(2, GmChoiceContract.sanitizeChoices(previous).length());
   }
 
   @Test public void filtersInvalidPrefetchBranchIndependently() throws Exception {
