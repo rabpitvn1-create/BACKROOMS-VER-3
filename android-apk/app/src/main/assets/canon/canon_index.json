@@ -8,26 +8,6 @@
   },
   "items": [
     {
-      "id": "campaign.live_state.authority",
-      "owner": "core:state",
-      "type": "CAMPAIGN",
-      "status": "DYNAMIC",
-      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/GameCoreFacade.java",
-      "revision": "runtime",
-      "scope": [
-        "campaign"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "repo",
-      "sourceAvailability": "AVAILABLE",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/campaign.md",
-      "text": "Campaign canon là trạng thái và kết quả mà Core đã commit trong save hiện hành. Canon nền không được reset vị trí, quan hệ, thương tích, inventory, tri thức đã học, lời hứa hoặc hậu quả đã commit. Build canon không sinh save mặc định mới và không áp baseline lên state động."
-    },
-    {
       "id": "CHAR.CAO_MINH.HUYET_MA_24",
       "owner": "knowledge:character",
       "type": "KNOWLEDGE",
@@ -388,6 +368,912 @@
       "text": "Syvial remains an independent high-tier supernatural swordswoman governed by her own current source. Her Lucifer Core, Devil Trigger, GodKiller and other established abilities remain hers. In the Cao Minh R15 campaign she has no pre-existing command history, romance, friendship or other relationship with Cao Minh; if encountered, the first meeting is first contact unless live campaign continuity later establishes otherwise."
     },
     {
+      "id": "ENTITY.BEAST_LEVEL_5",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-5A",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "The Beast of Level 5 is an apex Entity with intelligence above humans. It actively hunts people, may observe a group for a long time, influence anxiety/watched sensations, exploit hotel architecture to isolate prey, allow a survivor to live as a route to others, and has no absolutely confirmed weakness. It is not a stationary boss waiting for a fight; treat it as high-level ecological pressure."
+    },
+    {
+      "id": "ENTITY.BIOLOGICAL_PIPELINE",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-2F",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Biological Pipeline is a tens-of-kilometres organic/mechanical-pipe-like predator whose true body may not be the visible pipe. It senses vibration/body heat, can offer apparently safe crawlspace routes, let humans go deep, alter direction, lock retreat, secrete rapidly tissue-corrosive alkaline liquid and preserve corpses/gear as false evidence of safe passage. Destroying one pipe section does not prove the Entity is dead."
+    },
+    {
+      "id": "ENTITY.CABLE_MIMIC",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-3D",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Cable Mimic blends into electrical cable bundles, can remain still for hours and imitate machine vibration. When touched/passed it can wrap limbs and conduct current from the facility through the victim. Without checking, genuine facility cable and Entity cable may be indistinguishable."
+    },
+    {
+      "id": "ENTITY.DEATHMOTH",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-1D; ENT-3A",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Deathmoth: large moth-like predator using dark ceilings/technical recesses, often attacking in groups and reacting to light/movement. At Level 3 it can exploit broken-light zones and pressure humans toward live electrical equipment."
+    },
+    {
+      "id": "ENTITY.DIEP_MINH.BACKROOMS_R01",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/DIEP_MINH_CANON.md",
+      "revision": "DIEP-MINH-BACKROOMS-01; DIEP-MINH-RUNTIME-01",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.DIEP_MINH.VISUAL_R01",
+        "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Diệp Minh nguyên bản đã chết tại thế giới nguyên sinh trước các lần xuất hiện trong Backrooms. Thực thể mang tên Diệp Minh trong Backrooms giữ dung mạo, nhận ra Cao Minh, nhớ huyết cừu Cao gia và duy trì sát ý cũ. Bản chất thật vẫn OPEN: có thể là tàn hồn, bản sao/tái tạo từ ký ức và chấp niệm, một biểu hiện khác của cùng cá thể hoặc cơ chế chưa biết; không được khẳng định Backrooms có ý chí hay chủ động hồi sinh hắn. Một hiện thân có thể bị tiêu diệt nhưng không xóa Diệp Minh vĩnh viễn; thời gian và địa điểm tái xuất không cố định. Runtime key diep_minh là legacy/boss-only và không được auto-spawn nếu chưa có retcon gameplay riêng."
+    },
+    {
+      "id": "ENTITY.DIEP_MINH.VISUAL_R01",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/DIEP_MINH_CANON.md",
+      "revision": "DIEP-MINH-VIS-01",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Visual R01 theo entity/diep_minh.png: Diệp Minh là nam tử trẻ tóc đen, dung mạo sắc lạnh. Nửa phải cơ thể còn hình người trong pháp giáp đen-vàng và chiến bào có phù văn, âm dương/bát quái, dây xích và phù vàng chữ đỏ. Nửa trái dị hóa thành ma thể đen-đỏ với hồng quang, các đường đỏ phát sáng, tua/nhánh quỷ dị và chân vuốt; mắt trái phát đỏ. Tay phải cầm trường kiếm dài tỏa kim quang vàng cam, có ký hiệu/phù văn sáng dọc lưỡi. Các chi tiết cơ khí chỉ là tạo hình pháp giáp tiên hiệp; không suy thành công nghệ hoặc tự biến hiệu ứng thị giác thành kỹ năng."
+    },
+    {
+      "id": "ENTITY.FALSE_PUDDLE",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-1F",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK",
+        "ITEM.LIQUID_PAIN"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "False Puddle mimics a flat puddle of Almond Water while hiding a deep toothed mouth. It positions on traveled routes, reacts to human footstep vibration and opens when stepped on to pull prey down. Liquid Pain or sharp metal has worked in some cases, but apparent death can be feigned; recorded weakness is not absolute."
+    },
+    {
+      "id": "ENTITY.GLOBAL_HARD_LOCK",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "0.6 Entity — HARD LOCK",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Project Entity hard lock: no Entity is friendly or neutral toward humans and no beneficial symbiosis/parasitism is canon. An Entity may delay attack to observe, lure, split, manipulate or conduct a long hunt, but apparent help ultimately serves harmful predatory/other harmful goals. Entity origins are not unified and intelligence ranges from animal predator to superhuman. Do not assume destroying a visible body always kills the underlying Entity."
+    },
+    {
+      "id": "ENTITY.HOUND",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-1A; ENT-2B",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Hound: fast aggressive four-limbed predator. Hunts in groups, favors injured/isolated humans, can pressure prey toward dead ends, and may retreat from strong resistance then return. In narrow Level 2 corridors it can attack from both ends, use deceptive footstep sounds and prioritize weaker prey."
+    },
+    {
+      "id": "ENTITY.JEFF",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-R01 — JEFF THE KILLER",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Jeff the Killer is a very rare roaming humanoid predator permitted as an incursion across Levels 0-6, not a resident of Levels 0/4/6. Origin remains UNKNOWN; Project does not confirm creepypasta-original identity, former Frontrooms humanity, Backrooms copy, or that all sightings are one metaphysical individual. Gameplay continuity does lock that killing one hiện thân never permanently removes Jeff; the ontology of respawn remains OPEN. Jeff only hunts humans, uses long-term tactical observation and must never become neutral ally/trader/rescuer."
+    },
+    {
+      "id": "ENTITY.SKIN_STEALER",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-2D",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Skin-Stealer hunts by using human appearance and behavior. Project lock allows deep mimicry and enough copied memory to pass simple tests, potentially living with a group long-term to damage the whole team rather than killing immediately. Human-like appearance therefore never proves a contact is human."
+    },
+    {
+      "id": "ENTITY.SMILER",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-2C",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Smiler: visible primarily as a bright face-like feature in darkness. Uses blacked-out areas and dark corners, and may keep distance to pressure prey into choosing a bad route rather than immediately charging."
+    },
+    {
+      "id": "ENTITY.WRETCH",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-3B",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Wretch: a creature believed or suspected to have once been human. It moves irregularly, tolerates pain well and hunts through sound and scent, with common reports in lower Level 3 tunnels."
+    },
+    {
+      "id": "GAME.GM.FAIRNESS",
+      "owner": "knowledge:game_rule",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "05_TextGame/RULES/GAME_MASTER_RULES.md",
+      "revision": "1-15",
+      "scope": [
+        "knowledge:game_rule"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "GM fairness: Canon/State -> real conditions -> dice only for remaining uncertainty -> consequence. No player magnetism, retroactive world edits, fake choices, counter-build cheating, automatic party joins, NPC wiki knowledge, retroactive expertise, or threat teleporting without a canon/path/time basis. Persist environment, traces, entities, relationships, knowledge and consequences. Allow quiet safety when state and rolls permit it."
+    },
+    {
+      "id": "GAME.TEXT.CORE",
+      "owner": "knowledge:game_rule",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "05_TextGame/RULES/TEXT_GAME_RULES.md",
+      "revision": "1-12",
+      "scope": [
+        "knowledge:game_rule"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Text Game authority: user instruction, Text Game rules, GM rules, live save/campaign state, then on-demand canon. Player controls Cao Minh's intentional actions; GM controls world, Entity, survivor/NPC and consequences. Do not nerf canon abilities, invent facts, reset consequences, cheat dice, or fill UNKNOWN. Gameplay normally retrieves only needed canon rather than scanning the whole corpus."
+    },
+    {
+      "id": "ITEM.ALMOND_WATER",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/items.md",
+      "revision": "8.1 Object 1 — Almond Water",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Almond Water is a key anomalous drinking-water resource but remains scarce in Project canon. It can rehydrate and support alertness/some mild symptoms; it is not a cure-all and does not negate every Entity effect. It can expire and become poisonous. Open sources must be checked; Level 0 carpet moisture is not drinking water. Gameplay effect per unit: +50 Hunger and +100 Thirsty."
+    },
+    {
+      "id": "ITEM.BANDAGE",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "GAMEPLAY_RULE",
+      "revision": "Consumable item contract 2026-09-18",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Bandage is a consumable medical item. Gameplay effect per unit: +15 HP, capped by the target character's max HP."
+    },
+    {
+      "id": "ITEM.GAMEPLAY_LOOT_LOCK",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "GAMEPLAY_RULE",
+      "revision": "Core loot contract 2026-09-18",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "ITEM.ALMOND_WATER",
+        "ITEM.BANDAGE"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Gameplay loot is Core-owned. Consumable items may enter player Inventory only from a defeated Entity drop (entity-specific rate between 10% and 20%) or a Core-spawned exploration chest. Exploration chest spawn rate is exactly 3%; every spawned chest contains an item 100%. AI narration must never create loose loot or mutate Inventory directly."
+    },
+    {
+      "id": "ITEM.GLOBAL_HARD_LOCK",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/items.md",
+      "revision": "0.7-0.8; 8.6",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Safe food/water and medicine are scarce; guns/ammunition are uncommon for ordinary survivors; resources can reappear unreliably. Frontrooms objects can function normally, then deviate, degrade or be assimilated without a fixed timetable. Do not spawn a resource exactly when convenient just to rescue a character. Reliable information is itself a survival resource. Do not label a map/source absolutely SAFE; retain who observed it, when and with what confidence."
+    },
+    {
+      "id": "ITEM.GREEK_FIRE",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/items.md",
+      "revision": "8.2 Object 5 — Greek Fire",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Greek Fire is an extremely rare flammable resource useful for heat, cooking and combat. It is strategically valuable and dangerous in confined spaces; it is not common starter equipment."
+    },
+    {
+      "id": "ITEM.LIQUID_PAIN",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/items.md",
+      "revision": "8.3 Object 12 — Liquid Pain",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Liquid Pain is a red toxic, tissue-corrosive liquid with harmful fumes. It can be used against Entities and in crude traps/munitions, may appear in mislabeled containers, and must not be treated as drinking water or handled bare-handed."
+    },
+    {
+      "id": "LEVEL.0.1",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Level 0.1 — Zenith Station",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0.1 / Zenith Station: an enormous damaged metal-and-glass megastructure embedded within Level 0, built in a smooth futuristic style with exposed wiring, broken electronics, automated doors and scattered functional machinery. Lighting and temperature vary sharply with damage, including dark, dangerously hot or cold sections. It retains Level 0's isolation and perceptual irregularities. In BACKROOMsV2 progression it is the mandatory destination after Level 0 and before Level 0.2."
+    },
+    {
+      "id": "LEVEL.0.2",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Level 0.2 — Remodeled Mess",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0.2 / Remodeled Mess: a remodeled-looking variation of Level 0 with dry red carpet, white walls, working outlets and Wi-Fi, and occasional bathrooms. Entry or interaction can trigger a dangerous chain reaction in which ceilings, walls and floors collapse into an unfinished-house-like ruin, creating debris and dust hazards. In BACKROOMsV2 progression it follows Level 0.1 and leads only to Level 0.5."
+    },
+    {
+      "id": "LEVEL.0.5",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Level 0.5 — Aquaclaustrophobic Infirmary",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0.5 / Aquaclaustrophobic Infirmary: a recently documented flooded and claustrophobic sub-level associated with Level 0, dominated by dirty standing water, oppressive corridors and a ruined hospital/infirmary sector. Environmental danger is severe and some hostile presence is documented. BACKROOMsV2 treats it as a full gameplay Level after Level 0.2 and before Level 0.7."
+    },
+    {
+      "id": "LEVEL.0.7",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Level 0.7 — The Reminiscence District",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0.7 / The Reminiscence District: a vast preserved collection of historical hiện thâns of Level 0, with sections reflecting forms of the level from ancient periods through the modern era. Architecture can differ radically between preserved periods, sustaining supplies are unreliable, and blocked or anomalous exits are part of its documented hazards. In BACKROOMsV2 it follows Level 0.5 and leads only to Manila Room."
+    },
+    {
+      "id": "LEVEL.00",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
+      "revision": "Level 0; entity 1.3",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0 / The Lobby: endless-feeling yellow rooms, damp carpet, fluorescent hum, suspended ceiling and non-linear geometry. Main dangers are dehydration, exhaustion, disorientation and perceptual effects. Fluorescent Pressure can cause headache/sleeplessness/misheard footsteps; Memory Rooms can echo or corrupt memories; Layout Resistance can break detailed mapping. No resident Entity is confirmed; distant figures/voices should first be treated as hallucination, memory hiện thân, perceptual copy or unclassified phenomenon unless evidence proves an incursion. Transition toward Level 1 may emerge gradually as concrete/columns/parking features replace the yellow rooms; it cannot be forced on demand."
+    },
+    {
+      "id": "LEVEL.01",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md",
+      "revision": "2 LEVEL 1 — PARKING ZONE",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.HOUND",
+        "ENTITY.FALSE_PUDDLE"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 1 / Parking Zone: vast concrete parking/garage network with columns, ramps, rare disabled cars, heat and local cold fog; blackouts may last minutes to days and make mobile light both useful and revealing. Maintenance Halls can retain power but are not long-term safety; Luxury Lots are cleaner/foggier with unreliable electrical sources and relatively more supply crates, still scarce. Gradual transition toward Level 2 appears as vehicles vanish, space narrows into pipes/hot humid machinery corridors."
+    },
+    {
+      "id": "LEVEL.02",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md",
+      "revision": "3 LEVEL 2 — PIPE DREAMS",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.HOUND",
+        "ENTITY.SMILER",
+        "ENTITY.SKIN_STEALER",
+        "ENTITY.BIOLOGICAL_PIPELINE"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 2 / Pipe Dreams: utility tunnels, shafts, rusty pipes, crawlspaces and unfinished electrical networks with extreme temperature changes. Earthquakes can collapse paths, rupture pipes, release steam and open new routes. Pipe liquid resembling Almond Water must not be drunk directly because of biological/chemical/anomalous contamination. Transition toward Level 3 occurs as high-voltage electrical infrastructure becomes dominant."
+    },
+    {
+      "id": "LEVEL.03",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md",
+      "revision": "4 LEVEL 3 — THE ELECTRICAL STATION",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.DEATHMOTH",
+        "ENTITY.WRETCH",
+        "ENTITY.SKIN_STEALER",
+        "ENTITY.CABLE_MIMIC"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 3 / The Electrical Station: huge industrial electrical corridors with transformers, conductors, fans, coils, panels, hot pipes and unknown power source. Local blackouts expose live-wire/machinery/Entity risk and routes can differ when power returns. Lower Utility Tunnels are below freezing, contain abnormal unfrozen standing water and have high disappearance rates. Office-sector doors/elevators may lead gradually to Level 4; some long dark passages can lead toward Level 6."
+    },
+    {
+      "id": "LEVEL.04",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
+      "revision": "Level 4; entity 5.2",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 4 / The Abandoned Office: office/cubicle network with partial fluorescent lighting, fixed rainy-looking windows and more stable geometry than Levels 0-3. It is a relative rest/salvage region, never absolutely safe. No stable resident Entity population is confirmed, but incursions from other regions can occur and a place cleared today is not guaranteed clear tomorrow. Large settlements are discouraged by unstable resources/boundaries and attraction of danger. Corridors may gradually become old hotel architecture leading to Level 5."
+    },
+    {
+      "id": "LEVEL.05",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md",
+      "revision": "6 LEVEL 5 — TERROR HOTEL",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.BEAST_LEVEL_5",
+        "ENTITY.SKIN_STEALER",
+        "ENTITY.HOUND"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 5 / Terror Hotel: huge non-Euclidean hotel with early-20th-century style varying by wing, including lobby/ballroom/rooms/restaurant/pool/maintenance/boiler spaces. Prolonged stay can produce paranoia, watched sensations, whispers, touch sensations, visual shadows and sleep loss; Project does not reduce this to a sanity meter and causes may overlap between isolation, sleep loss, Level and Entity. Boiler/maintenance passages can darken and cool toward Level 6."
+    },
+    {
+      "id": "LEVEL.06",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
+      "revision": "7 LEVEL 6; entity 7.3",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 6 / Lights Out: resident Entity presence is not confirmed; danger remains severe through cold, darkness, scarce food/water, sleep loss, microsleep, hallucination and navigation failure. Evidence that an external Entity refuses the Level boundary does not prove the inside is safe; the reason remains OPEN. Do not convert the absence of confirmed resident Entities into safety."
+    },
+    {
+      "id": "LEVEL.MANILA_ROOM",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "The Manila Room",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Manila Room: a small static beige/manila-walled room within Level 0 with wooden floorboards, an octagonal table, chairs and wooden doors. Level 0's isolation effect weakens around it, allowing wanderers to perceive and meet one another; documents and donated supplies may be present. Source canon places a Level 1 exit nearby, but BACKROOMsV2 overrides that connection for gameplay: Manila Room is a mandatory standalone Level after Level 0.7 and can progress only to The Torment."
+    },
+    {
+      "id": "LEVEL.RED_ROOMS",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Red Rooms",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Red Rooms: a deep-red Level 0-like environment with crimson walls, darkroom-like lighting, coarse sticky carpet, mushrooms and black mold. Communications degrade with time; no hostile Entities are documented there, but the environment is deeply distressing and source canon describes it as effectively a dead end. BACKROOMsV2 deliberately overrides that exit rule: Red Rooms is the final mandatory standalone Level in the Level 0 chain and only after clearing it may the player enter Level 1."
+    },
+    {
+      "id": "LEVEL.THE_TORMENT",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "The Torment",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "The Torment: an anomalous greyscale region associated with Level 0, described with concentric graves, dead trees, a deteriorated hooded statue, a stationary moon, dense gray fog and an overwhelming sense of dread. Contact with its anomalous spread has been described as turning matter gray before disintegration. Source canon has no confirmed conventional entrance or exit; BACKROOMsV2 deliberately overrides connectivity and makes The Torment a mandatory standalone Level after Manila Room and before Red Rooms."
+    },
+    {
+      "id": "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD",
+      "owner": "knowledge:relationship",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/DIEP_MINH_CANON.md",
+      "revision": "DIEP-MINH-CAO-REL-01",
+      "scope": [
+        "knowledge:relationship"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Cao Minh và Diệp Minh là tử địch không đội trời chung. Diệp Minh đã trực tiếp góp phần vào đại kiếp thảm sát Cao gia; biến cố ấy phá nát nền tảng đời Cao Minh, đẩy hắn vào tuyệt vọng và là một nguyên nhân quyết định khiến hắn bước vào ma đạo. Không mặc định Diệp Minh là chủ mưu duy nhất. Kẻ chủ mưu cuối cùng, động cơ của Diệp Minh, mức độ hắn trực tiếp sát hại từng người, quan hệ trước đại kiếp, các thế lực liên quan, cán cân thắng bại và kết cục cuối cùng vẫn OPEN."
+    },
+    {
+      "id": "REL.CAO_MINH.SYVIAL.NONE",
+      "owner": "knowledge:relationship",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "CAO-CANON-CLEANUP-R15",
+      "scope": [
+        "knowledge:relationship"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Cao Minh and Syvial have no pre-existing relationship at campaign start. If they meet, treat it as first contact unless later live campaign continuity explicitly changes that state."
+    },
+    {
+      "id": "WORLD.CORE",
+      "owner": "knowledge:world",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/world.md",
+      "revision": "0.1-0.5",
+      "scope": [
+        "knowledge:world"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Backrooms origin is never confirmed. Levels are survivor labels for recognizable regions within one vast continuous reality, not sealed boxes; boundaries and routes can drift. Architecture, local rules, time and memory may deviate. Human biology still matters: hunger, thirst, blood loss, infection, heat, cold, exhaustion and sleep deprivation can kill. Copies of people can exist; there is no absolute method to prove an original. Death has no single universal outcome."
+    },
+    {
+      "id": "WRITING.COMPETENCE",
+      "owner": "knowledge:writing",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "00_RULES/Những điều bắt buộc không được làm khi viết tiểu thuyết.md + 00_RULES/worldcodex.md + 00_RULES/Supernatural_Horror_Craft_Guide.md",
+      "revision": "NOVEL.COMPETENCE.NO_SUDDEN_STUPIDITY; 7; SH-SUSPENSE-01",
+      "scope": [
+        "knowledge:writing"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Never make a competent character forget established skills, equipment, experience, obvious options or canonical abilities merely to create danger. If a tool cannot solve a problem, the reason must come from real information limits, environment, conflicting objectives, protected people, injury, cost, or another established constraint. Horror must not be maintained by withholding competence."
+    },
+    {
+      "id": "WRITING.DIALOGUE",
+      "owner": "knowledge:writing",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "00_RULES/CONVERSATION.MD",
+      "revision": "RULES.DIALOGUE / 0-32",
+      "scope": [
+        "knowledge:writing"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Dialogue authority is CONVERSATION.MD. Speak as the actual person in the current situation, not as a canon interface or an optimized psychological explanation. Keep address from active relationship canon. Dialogue may be direct, ordinary, slightly circular, interrupted by practical life, or unresolved when appropriate; do not manufacture fragmentary 'cool' speech, exposition packages, or pre-solved conversation beats."
+    },
+    {
+      "id": "WRITING.KNOWLEDGE_BOUNDARY",
+      "owner": "knowledge:writing",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "00_RULES/worldcodex.md + 00_RULES/Những điều bắt buộc không được làm khi viết tiểu thuyết.md + 00_RULES/CONVERSATION.MD",
+      "revision": "KNOWLEDGE BOUNDARY; NOVEL.KNOWLEDGE; 14-16",
+      "scope": [
+        "knowledge:writing"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Characters know only what their background, direct observation, testimony, validated ability/device evidence, or reasonable inference supports. Backstage canon is not character knowledge. Preserve uncertainty level: reported/inferred/uncertain does not become fact. Do not turn knowledge-state labels or source metadata into dialogue."
+    },
+    {
+      "id": "WRITING.PLAYER_AGENCY",
+      "owner": "knowledge:writing",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "05_TextGame/RULES/TEXT_GAME_RULES.md + 05_TextGame/RULES/GAME_MASTER_RULES.md",
+      "revision": "TEXT_GAME_RULES 4; GM_RULES 2",
+      "scope": [
+        "knowledge:writing"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Do not choose Cao Minh's intentional action for the player. Resolve what Cao Minh can perceive from the chosen action before asking for the next choice. Menus are suggestions, not rails; free-form methods are valid, but the player cannot declare an unconfirmed result as already true."
+    },
+    {
+      "id": "campaign.live_state.authority",
+      "owner": "core:state",
+      "type": "CAMPAIGN",
+      "status": "DYNAMIC",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/GameCoreFacade.java",
+      "revision": "runtime",
+      "scope": [
+        "campaign"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/campaign.md",
+      "text": "Campaign canon là trạng thái và kết quả mà Core đã commit trong save hiện hành. Canon nền không được reset vị trí, quan hệ, thương tích, inventory, tri thức đã học, lời hứa hoặc hậu quả đã commit. Build canon không sinh save mặc định mới và không áp baseline lên state động."
+    },
+    {
       "id": "character.cao_minh.foundation",
       "owner": "character:cao_minh",
       "type": "FOUNDATION",
@@ -488,50 +1374,6 @@
       "text": "ASYNC Rifleman\nHostile ASYNC hazmat rifle operator. Uses disciplined mid-range bursts, cover and coordinated crossfire; avoids reckless charges when a firing position is available."
     },
     {
-      "id": "ENTITY.BEAST_LEVEL_5",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-5A",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "The Beast of Level 5 is an apex Entity with intelligence above humans. It actively hunts people, may observe a group for a long time, influence anxiety/watched sensations, exploit hotel architecture to isolate prey, allow a survivor to live as a route to others, and has no absolutely confirmed weakness. It is not a stationary boss waiting for a fight; treat it as high-level ecological pressure."
-    },
-    {
-      "id": "ENTITY.BIOLOGICAL_PIPELINE",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-2F",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Biological Pipeline is a tens-of-kilometres organic/mechanical-pipe-like predator whose true body may not be the visible pipe. It senses vibration/body heat, can offer apparently safe crawlspace routes, let humans go deep, alter direction, lock retreat, secrete rapidly tissue-corrosive alkaline liquid and preserve corpses/gear as false evidence of safe passage. Destroying one pipe section does not prove the Entity is dead."
-    },
-    {
       "id": "entity.biological_pipeline.foundation",
       "owner": "world:entity:biological_pipeline",
       "type": "FOUNDATION",
@@ -550,28 +1392,6 @@
       "promptEligible": true,
       "sourceFile": "canon/runtime/entities.md",
       "text": "Biological Pipeline\nHuge organic/mechanical pipeline-like predator that senses vibration and heat, offers false safe routes, traps retreat and can secrete tissue-corrosive alkaline liquid."
-    },
-    {
-      "id": "ENTITY.CABLE_MIMIC",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-3D",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Cable Mimic blends into electrical cable bundles, can remain still for hours and imitate machine vibration. When touched/passed it can wrap limbs and conduct current from the facility through the victim. Without checking, genuine facility cable and Entity cable may be indistinguishable."
     },
     {
       "id": "entity.cable_mimic.foundation",
@@ -634,28 +1454,6 @@
       "text": "CopX\nCopX is a corroded late-1980s security automaton, its ivory armor split around exposed servos and a handgun still held in a rigid right arm. Broken evacuation orders leak from its speaker before it identifies moving humans as intruders. It holds long sightlines, fires short measured bursts, then turns stiffly toward movement; cover and sudden changes of angle can break its aim. Its ammunition and sensors are finite, its joints can jam, and it cannot teleport, see through walls or enforce real authority. Sightings since 1987 do not prove that every CopX is the same machine. It is hostile to humans; apparent warnings are degraded threat signals, never a promise of rescue. Defeating one chassis ends that encounter, not necessarily every future sighting."
     },
     {
-      "id": "ENTITY.DEATHMOTH",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-1D; ENT-3A",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Deathmoth: large moth-like predator using dark ceilings/technical recesses, often attacking in groups and reacting to light/movement. At Level 3 it can exploit broken-light zones and pressure humans toward live electrical equipment."
-    },
-    {
       "id": "entity.deathmoth.foundation",
       "owner": "world:entity:deathmoth",
       "type": "FOUNDATION",
@@ -674,29 +1472,6 @@
       "promptEligible": true,
       "sourceFile": "canon/runtime/entities.md",
       "text": "Deathmoth\nLarge moth-like predator that uses dark ceilings and technical recesses and reacts to light and movement."
-    },
-    {
-      "id": "ENTITY.DIEP_MINH.BACKROOMS_R01",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "android-apk/DIEP_MINH_CANON.md",
-      "revision": "DIEP-MINH-BACKROOMS-01; DIEP-MINH-RUNTIME-01",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.DIEP_MINH.VISUAL_R01",
-        "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Diệp Minh nguyên bản đã chết tại thế giới nguyên sinh trước các lần xuất hiện trong Backrooms. Thực thể mang tên Diệp Minh trong Backrooms giữ dung mạo, nhận ra Cao Minh, nhớ huyết cừu Cao gia và duy trì sát ý cũ. Bản chất thật vẫn OPEN: có thể là tàn hồn, bản sao/tái tạo từ ký ức và chấp niệm, một biểu hiện khác của cùng cá thể hoặc cơ chế chưa biết; không được khẳng định Backrooms có ý chí hay chủ động hồi sinh hắn. Một hiện thân có thể bị tiêu diệt nhưng không xóa Diệp Minh vĩnh viễn; thời gian và địa điểm tái xuất không cố định. Runtime key diep_minh là legacy/boss-only và không được auto-spawn nếu chưa có retcon gameplay riêng."
     },
     {
       "id": "entity.diep_minh.foundation",
@@ -719,28 +1494,6 @@
       "text": "Diệp Minh\nDiệp Minh là tử địch không đội trời chung của Cao Minh. Hắn từng trực tiếp góp phần vào đại kiếp thảm sát Cao gia, biến cố đã đẩy Cao Minh vào tuyệt vọng và trở thành một nguyên nhân quyết định khiến hắn bước vào ma đạo; Diệp Minh không mặc định là chủ mưu duy nhất. Ngoại hình khóa theo entity/diep_minh.webp: nam tử trẻ tóc đen, pháp giáp đen-vàng; nửa phải còn hình người, nửa trái dị hóa thành ma thể đen-đỏ với hồng quang, tua nhánh và vuốt; tay phải cầm trường kiếm tỏa kim quang, quanh thân có phù vàng chữ đỏ và họa tiết âm dương/bát quái. Diệp Minh nguyên bản đã chết trước các lần xuất hiện trong Backrooms. Thực thể hiện tại nhận ra Cao Minh và giữ ký ức cốt lõi về huyết cừu, nhưng việc nó là tàn hồn, bản sao, tái tạo hay một cơ chế khác của Backrooms vẫn OPEN. Một manifestation có thể bị tiêu diệt nhưng không bị xóa vĩnh viễn; không có thời gian hoặc địa điểm tái xuất cố định."
     },
     {
-      "id": "ENTITY.DIEP_MINH.VISUAL_R01",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "android-apk/DIEP_MINH_CANON.md",
-      "revision": "DIEP-MINH-VIS-01",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Visual R01 theo entity/diep_minh.png: Diệp Minh là nam tử trẻ tóc đen, dung mạo sắc lạnh. Nửa phải cơ thể còn hình người trong pháp giáp đen-vàng và chiến bào có phù văn, âm dương/bát quái, dây xích và phù vàng chữ đỏ. Nửa trái dị hóa thành ma thể đen-đỏ với hồng quang, các đường đỏ phát sáng, tua/nhánh quỷ dị và chân vuốt; mắt trái phát đỏ. Tay phải cầm trường kiếm dài tỏa kim quang vàng cam, có ký hiệu/phù văn sáng dọc lưỡi. Các chi tiết cơ khí chỉ là tạo hình pháp giáp tiên hiệp; không suy thành công nghệ hoặc tự biến hiệu ứng thị giác thành kỹ năng."
-    },
-    {
       "id": "entity.duller.foundation",
       "owner": "world:entity:duller",
       "type": "FOUNDATION",
@@ -761,29 +1514,6 @@
       "text": "Duller\nDistorted humanoid Entity that watches before approaching and exploits concrete-column blind spots."
     },
     {
-      "id": "ENTITY.FALSE_PUDDLE",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-1F",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK",
-        "ITEM.LIQUID_PAIN"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "False Puddle mimics a flat puddle of Almond Water while hiding a deep toothed mouth. It positions on traveled routes, reacts to human footstep vibration and opens when stepped on to pull prey down. Liquid Pain or sharp metal has worked in some cases, but apparent death can be feigned; recorded weakness is not absolute."
-    },
-    {
       "id": "entity.false_puddle.foundation",
       "owner": "world:entity:false_puddle",
       "type": "FOUNDATION",
@@ -802,26 +1532,6 @@
       "promptEligible": true,
       "sourceFile": "canon/runtime/entities.md",
       "text": "False Puddle\nPredator mimicking a flat puddle of Almond Water. It reacts to human footsteps and opens a toothed mouth when prey steps on it."
-    },
-    {
-      "id": "ENTITY.GLOBAL_HARD_LOCK",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "0.6 Entity — HARD LOCK",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Project Entity hard lock: no Entity is friendly or neutral toward humans and no beneficial symbiosis/parasitism is canon. An Entity may delay attack to observe, lure, split, manipulate or conduct a long hunt, but apparent help ultimately serves harmful predatory/other harmful goals. Entity origins are not unified and intelligence ranges from animal predator to superhuman. Do not assume destroying a visible body always kills the underlying Entity."
     },
     {
       "id": "entity.hostile_faceling.foundation",
@@ -862,28 +1572,6 @@
       "promptEligible": true,
       "sourceFile": "canon/runtime/entities.md",
       "text": "Hotel Corpse Lure\nLevel 5 corpse-lure phenomenon or Entity that can preserve heat, voice, movement or useful-looking clues to draw humans closer."
-    },
-    {
-      "id": "ENTITY.HOUND",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-1A; ENT-2B",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Hound: fast aggressive four-limbed predator. Hunts in groups, favors injured/isolated humans, can pressure prey toward dead ends, and may retreat from strong resistance then return. In narrow Level 2 corridors it can attack from both ends, use deceptive footstep sounds and prioritize weaker prey."
     },
     {
       "id": "entity.hound.foundation",
@@ -1226,46 +1914,24 @@
       "text": "Đám Đông Chưa Sinh\nHui's Family source boss of Level 16. Source environment: Mọi tầng trước bị ép chung vào một kiến trúc; ký ức sai trở thành hành lang và người quen trở thành thực thể. Source rule: Tầng dùng ký ức người sống để xây thêm Backrooms; một bản sao thế giới thật có thể khiến cả nhóm tin rằng đã thoát. Source threat descriptions: Mọi thực thể từ các tầng trước; Đám Đông Chưa Sinh; Bản sao của người quen và thế giới thật. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
     },
     {
-      "id": "entity.jane_the_killer.legacy",
+      "id": "entity.jane_the_killer.legacy_foundation",
       "owner": "world:entity:jane_the_killer",
       "type": "FOUNDATION",
-      "status": "LEGACY",
+      "status": "CURRENT",
       "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
       "revision": "legacy",
       "scope": [
         "entity:jane_the_killer"
       ],
-      "knownBy": "SYSTEM",
+      "knownBy": "SCENE",
       "sourceKind": "external",
       "sourceAvailability": "EXTERNAL_SNAPSHOT",
       "refs": [],
       "requires": [],
-      "core": false,
-      "promptEligible": false,
+      "core": true,
+      "promptEligible": true,
       "sourceFile": "canon/runtime/entities.md",
       "text": ""
-    },
-    {
-      "id": "ENTITY.JEFF",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-R01 — JEFF THE KILLER",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Jeff the Killer is a very rare roaming humanoid predator permitted as an incursion across Levels 0-6, not a resident of Levels 0/4/6. Origin remains UNKNOWN; Project does not confirm creepypasta-original identity, former Frontrooms humanity, Backrooms copy, or that all sightings are one metaphysical individual. Gameplay continuity does lock that killing one hiện thân never permanently removes Jeff; the ontology of respawn remains OPEN. Jeff only hunts humans, uses long-term tactical observation and must never become neutral ally/trader/rescuer."
     },
     {
       "id": "entity.jeff_the_killer.foundation",
@@ -1328,28 +1994,6 @@
       "text": "Predatory Window\nA window-like predatory manifestation in impossible locations that lures humans close and can reach through an unreliable apparent space."
     },
     {
-      "id": "ENTITY.SKIN_STEALER",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-2D",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Skin-Stealer hunts by using human appearance and behavior. Project lock allows deep mimicry and enough copied memory to pass simple tests, potentially living with a group long-term to damage the whole team rather than killing immediately. Human-like appearance therefore never proves a contact is human."
-    },
-    {
       "id": "entity.skin-stealer.foundation",
       "owner": "world:entity:skin-stealer",
       "type": "FOUNDATION",
@@ -1370,46 +2014,24 @@
       "text": "Skin-Stealer\nHuman-mimicking predator capable of deep disguise and long infiltration. Human appearance never proves a contact is human."
     },
     {
-      "id": "entity.slenderman.legacy",
+      "id": "entity.slenderman.legacy_foundation",
       "owner": "world:entity:slenderman",
       "type": "FOUNDATION",
-      "status": "LEGACY",
+      "status": "CURRENT",
       "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
       "revision": "legacy",
       "scope": [
         "entity:slenderman"
       ],
-      "knownBy": "SYSTEM",
+      "knownBy": "SCENE",
       "sourceKind": "external",
       "sourceAvailability": "EXTERNAL_SNAPSHOT",
       "refs": [],
       "requires": [],
-      "core": false,
-      "promptEligible": false,
+      "core": true,
+      "promptEligible": true,
       "sourceFile": "canon/runtime/entities.md",
       "text": ""
-    },
-    {
-      "id": "ENTITY.SMILER",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-2C",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Smiler: visible primarily as a bright face-like feature in darkness. Uses blacked-out areas and dark corners, and may keep distance to pressure prey into choosing a bad route rather than immediately charging."
     },
     {
       "id": "entity.smiler.foundation",
@@ -1472,28 +2094,6 @@
       "text": "The Beast of Level 5\nApex Level 5 Entity with above-human intelligence that hunts humans through long observation, isolation and manipulation of hotel architecture."
     },
     {
-      "id": "ENTITY.WRETCH",
-      "owner": "knowledge:entity",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/entity.md",
-      "revision": "ENT-3B",
-      "scope": [
-        "knowledge:entity"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.GLOBAL_HARD_LOCK"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Wretch: a creature believed or suspected to have once been human. It moves irregularly, tolerates pain well and hunts through sound and scent, with common reports in lower Level 3 tunnels."
-    },
-    {
       "id": "entity.wretch.foundation",
       "owner": "world:entity:wretch",
       "type": "FOUNDATION",
@@ -1512,46 +2112,6 @@
       "promptEligible": true,
       "sourceFile": "canon/runtime/entities.md",
       "text": "Wretch\nIrregular, pain-tolerant predator believed or suspected to have once been human. It tracks prey through sound and scent."
-    },
-    {
-      "id": "GAME.GM.FAIRNESS",
-      "owner": "knowledge:game_rule",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "05_TextGame/RULES/GAME_MASTER_RULES.md",
-      "revision": "1-15",
-      "scope": [
-        "knowledge:game_rule"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "GM fairness: Canon/State -> real conditions -> dice only for remaining uncertainty -> consequence. No player magnetism, retroactive world edits, fake choices, counter-build cheating, automatic party joins, NPC wiki knowledge, retroactive expertise, or threat teleporting without a canon/path/time basis. Persist environment, traces, entities, relationships, knowledge and consequences. Allow quiet safety when state and rolls permit it."
-    },
-    {
-      "id": "GAME.TEXT.CORE",
-      "owner": "knowledge:game_rule",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "05_TextGame/RULES/TEXT_GAME_RULES.md",
-      "revision": "1-12",
-      "scope": [
-        "knowledge:game_rule"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Text Game authority: user instruction, Text Game rules, GM rules, live save/campaign state, then on-demand canon. Player controls Cao Minh's intentional actions; GM controls world, Entity, survivor/NPC and consequences. Do not nerf canon abilities, invent facts, reset consequences, cheat dice, or fill UNKNOWN. Gameplay normally retrieves only needed canon rather than scanning the whole corpus."
     },
     {
       "id": "gameplay.character.cao_minh",
@@ -3145,129 +3705,6 @@
       "text": "Traders Vault\nTraders Vault / Level 1"
     },
     {
-      "id": "ITEM.ALMOND_WATER",
-      "owner": "knowledge:item",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/items.md",
-      "revision": "8.1 Object 1 — Almond Water",
-      "scope": [
-        "knowledge:item"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Almond Water is a key anomalous drinking-water resource but remains scarce in Project canon. It can rehydrate and support alertness/some mild symptoms; it is not a cure-all and does not negate every Entity effect. It can expire and become poisonous. Open sources must be checked; Level 0 carpet moisture is not drinking water. Gameplay effect per unit: +50 Hunger and +100 Thirsty."
-    },
-    {
-      "id": "ITEM.BANDAGE",
-      "owner": "knowledge:item",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "GAMEPLAY_RULE",
-      "revision": "Consumable item contract 2026-09-18",
-      "scope": [
-        "knowledge:item"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Bandage is a consumable medical item. Gameplay effect per unit: +15 HP, capped by the target character's max HP."
-    },
-    {
-      "id": "ITEM.GAMEPLAY_LOOT_LOCK",
-      "owner": "knowledge:item",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "GAMEPLAY_RULE",
-      "revision": "Core loot contract 2026-09-18",
-      "scope": [
-        "knowledge:item"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [
-        "ITEM.ALMOND_WATER",
-        "ITEM.BANDAGE"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Gameplay loot is Core-owned. Consumable items may enter player Inventory only from a defeated Entity drop (entity-specific rate between 10% and 20%) or a Core-spawned exploration chest. Exploration chest spawn rate is exactly 3%; every spawned chest contains an item 100%. AI narration must never create loose loot or mutate Inventory directly."
-    },
-    {
-      "id": "ITEM.GLOBAL_HARD_LOCK",
-      "owner": "knowledge:item",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/items.md",
-      "revision": "0.7-0.8; 8.6",
-      "scope": [
-        "knowledge:item"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Safe food/water and medicine are scarce; guns/ammunition are uncommon for ordinary survivors; resources can reappear unreliably. Frontrooms objects can function normally, then deviate, degrade or be assimilated without a fixed timetable. Do not spawn a resource exactly when convenient just to rescue a character. Reliable information is itself a survival resource. Do not label a map/source absolutely SAFE; retain who observed it, when and with what confidence."
-    },
-    {
-      "id": "ITEM.GREEK_FIRE",
-      "owner": "knowledge:item",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/items.md",
-      "revision": "8.2 Object 5 — Greek Fire",
-      "scope": [
-        "knowledge:item"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Greek Fire is an extremely rare flammable resource useful for heat, cooking and combat. It is strategically valuable and dangerous in confined spaces; it is not common starter equipment."
-    },
-    {
-      "id": "ITEM.LIQUID_PAIN",
-      "owner": "knowledge:item",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/items.md",
-      "revision": "8.3 Object 12 — Liquid Pain",
-      "scope": [
-        "knowledge:item"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Liquid Pain is a red toxic, tissue-corrosive liquid with harmful fumes. It can be used against Entities and in crude traps/munitions, may appear in mislabeled containers, and must not be treated as drinking water or handled bare-handed."
-    },
-    {
       "id": "knowledge.luc_tram.tang_kiem_coc.backstage",
       "owner": "writer",
       "type": "KNOWLEDGE",
@@ -3389,86 +3826,6 @@
       "text": "Theo hồ sơ Chính Đạo mà Lục Trầm đã tiếp nhận, Cao Minh đột nhập Táng Kiếm Cốc, phá đại trận và giết nhiều tu sĩ trấn thủ; sư phụ của cô chết trong biến cố. Đây là lời kể/hồ sơ cô biết, không tự trở thành sự thật khách quan chỉ vì cô tin nó."
     },
     {
-      "id": "LEVEL.0.1",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "Backrooms Wiki",
-      "revision": "Level 0.1 — Zenith Station",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 0.1 / Zenith Station: an enormous damaged metal-and-glass megastructure embedded within Level 0, built in a smooth futuristic style with exposed wiring, broken electronics, automated doors and scattered functional machinery. Lighting and temperature vary sharply with damage, including dark, dangerously hot or cold sections. It retains Level 0's isolation and perceptual irregularities. In BACKROOMsV2 progression it is the mandatory destination after Level 0 and before Level 0.2."
-    },
-    {
-      "id": "LEVEL.0.2",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "Backrooms Wiki",
-      "revision": "Level 0.2 — Remodeled Mess",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 0.2 / Remodeled Mess: a remodeled-looking variation of Level 0 with dry red carpet, white walls, working outlets and Wi-Fi, and occasional bathrooms. Entry or interaction can trigger a dangerous chain reaction in which ceilings, walls and floors collapse into an unfinished-house-like ruin, creating debris and dust hazards. In BACKROOMsV2 progression it follows Level 0.1 and leads only to Level 0.5."
-    },
-    {
-      "id": "LEVEL.0.5",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "Backrooms Wiki",
-      "revision": "Level 0.5 — Aquaclaustrophobic Infirmary",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 0.5 / Aquaclaustrophobic Infirmary: a recently documented flooded and claustrophobic sub-level associated with Level 0, dominated by dirty standing water, oppressive corridors and a ruined hospital/infirmary sector. Environmental danger is severe and some hostile presence is documented. BACKROOMsV2 treats it as a full gameplay Level after Level 0.2 and before Level 0.7."
-    },
-    {
-      "id": "LEVEL.0.7",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "Backrooms Wiki",
-      "revision": "Level 0.7 — The Reminiscence District",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 0.7 / The Reminiscence District: a vast preserved collection of historical hiện thâns of Level 0, with sections reflecting forms of the level from ancient periods through the modern era. Architecture can differ radically between preserved periods, sustaining supplies are unreliable, and blocked or anomalous exits are part of its documented hazards. In BACKROOMsV2 it follows Level 0.5 and leads only to Manila Room."
-    },
-    {
       "id": "level.0.foundation",
       "owner": "world:level:0",
       "type": "FOUNDATION",
@@ -3487,163 +3844,6 @@
       "promptEligible": true,
       "sourceFile": "canon/runtime/levels.md",
       "text": "Level 0 — ngưỡng / The Lobby\nLevel 0 là điểm khởi đầu chủ đạo của Backrooms và trong BACKROOMsV2 là môi trường Cao Minh xuất hiện sau khi mặt đất dưới chân biến mất và hắn rơi khỏi thế giới nguyên sinh.\nKhông gian giống các khu hậu trường của văn phòng hoặc cửa hàng: vàng bệnh, trống trải, vô tận về cảm giác, lặp lại nhưng không hoàn toàn giống nhau.\nBản sắc kinh dị của Level 0 đến từ sự cô lập, đơn điệu kéo dài, hình học thay đổi khi không được quan sát, thiếu tài nguyên và sự bất định về những gì nghe hoặc thấy ở xa.\nLevel 0 không phải tutorial an toàn. Người không chuẩn bị có thể chết vì mất nước, đói, kiệt sức, nhiễm bẩn, ngã hoặc mất phương hướng dù không gặp Entity.\nKiến trúc phổ biến gồm các phòng và hành lang phân đoạn ngẫu nhiên, cầu thang hiếm, giấy dán tường vàng/beige, trần thả và đèn huỳnh quang.\nCác cấu trúc aberration chính của ngưỡng hiện hành gồm các phòng vòm, các phòng cột, các bãi hố, các vùng mất sáng và bố cục changes do Peripheral Shift.\nThảm gần như phủ toàn Level, là dạng Berber-like liên tục, ẩm dai dẳng và có thể chứa nhiều loại chất lỏng khác nhau; không được coi nước trong thảm là nước uống.\nIsolation Effect ngăn người ở Level 0 dễ dàng gặp nhau hoặc liên lạc trực tiếp; shouting, note, dấu đánh dấu và phá tường không phải cách đáng tin để tìm người khác.\nKhông có resident Entity được xác nhận chắc chắn. Dark figures, tiếng cào, whispering hoặc familiar voices phải giữ trạng thái chưa xác minh trừ khi EntityCore xác nhận cuộc chạm trán.\nArches có xu hướng ổn định hơn các khu khác và có giá trị định hướng cục bộ.\nKhông tự spawn Entity, survivor, NPC, faction, base, settlement hoặc rescue signal.\nKhông tự cấp item, chest, Almond Water, food, medical nhu yếu phẩm hay usable trang bị.\nKhông dùng Red Rooms hoặc Manila Room như scene ở Level 0.\nRed Rooms xuất hiện trực tiếp trong Level 0 runtime.\nManila Room xuất hiện trực tiếp trong Level 0 runtime."
-    },
-    {
-      "id": "LEVEL.00",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
-      "revision": "Level 0; entity 1.3",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 0 / The Lobby: endless-feeling yellow rooms, damp carpet, fluorescent hum, suspended ceiling and non-linear geometry. Main dangers are dehydration, exhaustion, disorientation and perceptual effects. Fluorescent Pressure can cause headache/sleeplessness/misheard footsteps; Memory Rooms can echo or corrupt memories; Layout Resistance can break detailed mapping. No resident Entity is confirmed; distant figures/voices should first be treated as hallucination, memory hiện thân, perceptual copy or unclassified phenomenon unless evidence proves an incursion. Transition toward Level 1 may emerge gradually as concrete/columns/parking features replace the yellow rooms; it cannot be forced on demand."
-    },
-    {
-      "id": "LEVEL.01",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/level.md",
-      "revision": "2 LEVEL 1 — PARKING ZONE",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.HOUND",
-        "ENTITY.FALSE_PUDDLE"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 1 / Parking Zone: vast concrete parking/garage network with columns, ramps, rare disabled cars, heat and local cold fog; blackouts may last minutes to days and make mobile light both useful and revealing. Maintenance Halls can retain power but are not long-term safety; Luxury Lots are cleaner/foggier with unreliable electrical sources and relatively more supply crates, still scarce. Gradual transition toward Level 2 appears as vehicles vanish, space narrows into pipes/hot humid machinery corridors."
-    },
-    {
-      "id": "LEVEL.02",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/level.md",
-      "revision": "3 LEVEL 2 — PIPE DREAMS",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.HOUND",
-        "ENTITY.SMILER",
-        "ENTITY.SKIN_STEALER",
-        "ENTITY.BIOLOGICAL_PIPELINE"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 2 / Pipe Dreams: utility tunnels, shafts, rusty pipes, crawlspaces and unfinished electrical networks with extreme temperature changes. Earthquakes can collapse paths, rupture pipes, release steam and open new routes. Pipe liquid resembling Almond Water must not be drunk directly because of biological/chemical/anomalous contamination. Transition toward Level 3 occurs as high-voltage electrical infrastructure becomes dominant."
-    },
-    {
-      "id": "LEVEL.03",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/level.md",
-      "revision": "4 LEVEL 3 — THE ELECTRICAL STATION",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.DEATHMOTH",
-        "ENTITY.WRETCH",
-        "ENTITY.SKIN_STEALER",
-        "ENTITY.CABLE_MIMIC"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 3 / The Electrical Station: huge industrial electrical corridors with transformers, conductors, fans, coils, panels, hot pipes and unknown power source. Local blackouts expose live-wire/machinery/Entity risk and routes can differ when power returns. Lower Utility Tunnels are below freezing, contain abnormal unfrozen standing water and have high disappearance rates. Office-sector doors/elevators may lead gradually to Level 4; some long dark passages can lead toward Level 6."
-    },
-    {
-      "id": "LEVEL.04",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
-      "revision": "Level 4; entity 5.2",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 4 / The Abandoned Office: office/cubicle network with partial fluorescent lighting, fixed rainy-looking windows and more stable geometry than Levels 0-3. It is a relative rest/salvage region, never absolutely safe. No stable resident Entity population is confirmed, but incursions from other regions can occur and a place cleared today is not guaranteed clear tomorrow. Large settlements are discouraged by unstable resources/boundaries and attraction of danger. Corridors may gradually become old hotel architecture leading to Level 5."
-    },
-    {
-      "id": "LEVEL.05",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/level.md",
-      "revision": "6 LEVEL 5 — TERROR HOTEL",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [
-        "ENTITY.BEAST_LEVEL_5",
-        "ENTITY.SKIN_STEALER",
-        "ENTITY.HOUND"
-      ],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 5 / Terror Hotel: huge non-Euclidean hotel with early-20th-century style varying by wing, including lobby/ballroom/rooms/restaurant/pool/maintenance/boiler spaces. Prolonged stay can produce paranoia, watched sensations, whispers, touch sensations, visual shadows and sleep loss; Project does not reduce this to a sanity meter and causes may overlap between isolation, sleep loss, Level and Entity. Boiler/maintenance passages can darken and cool toward Level 6."
-    },
-    {
-      "id": "LEVEL.06",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
-      "revision": "7 LEVEL 6; entity 7.3",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Level 6 / Lights Out: resident Entity presence is not confirmed; danger remains severe through cold, darkness, scarce food/water, sleep loss, microsleep, hallucination and navigation failure. Evidence that an external Entity refuses the Level boundary does not prove the inside is safe; the reason remains OPEN. Do not convert the absence of confirmed resident Entities into safety."
     },
     {
       "id": "level.1.foundation",
@@ -4084,206 +4284,6 @@
       "promptEligible": true,
       "sourceFile": "canon/runtime/levels.md",
       "text": "Hui's Family Level 10\nHui's Family Level 10 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nTrường học nằm trong đêm bất biến; bảng đen tự viết bài học về người đang có mặt.\nTrường học nằm trong đêm bất biến; bảng đen tự viết bài học về người đang có mặt.\nQuy luật của Level: Giám thị xuất hiện khi có người chạy, nói lớn hoặc mở cửa không được phép, nhưng không ai biết cửa nào được phép.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-    },
-    {
-      "id": "LEVEL.MANILA_ROOM",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "Backrooms Wiki",
-      "revision": "The Manila Room",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Manila Room: a small static beige/manila-walled room within Level 0 with wooden floorboards, an octagonal table, chairs and wooden doors. Level 0's isolation effect weakens around it, allowing wanderers to perceive and meet one another; documents and donated supplies may be present. Source canon places a Level 1 exit nearby, but BACKROOMsV2 overrides that connection for gameplay: Manila Room is a mandatory standalone Level after Level 0.7 and can progress only to The Torment."
-    },
-    {
-      "id": "LEVEL.RED_ROOMS",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "Backrooms Wiki",
-      "revision": "Red Rooms",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Red Rooms: a deep-red Level 0-like environment with crimson walls, darkroom-like lighting, coarse sticky carpet, mushrooms and black mold. Communications degrade with time; no hostile Entities are documented there, but the environment is deeply distressing and source canon describes it as effectively a dead end. BACKROOMsV2 deliberately overrides that exit rule: Red Rooms is the final mandatory standalone Level in the Level 0 chain and only after clearing it may the player enter Level 1."
-    },
-    {
-      "id": "LEVEL.THE_TORMENT",
-      "owner": "knowledge:level",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "Backrooms Wiki",
-      "revision": "The Torment",
-      "scope": [
-        "knowledge:level"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "The Torment: an anomalous greyscale region associated with Level 0, described with concentric graves, dead trees, a deteriorated hooded statue, a stationary moon, dense gray fog and an overwhelming sense of dread. Contact with its anomalous spread has been described as turning matter gray before disintegration. Source canon has no confirmed conventional entrance or exit; BACKROOMsV2 deliberately overrides connectivity and makes The Torment a mandatory standalone Level after Manila Room and before Red Rooms."
-    },
-    {
-      "id": "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD",
-      "owner": "knowledge:relationship",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "android-apk/DIEP_MINH_CANON.md",
-      "revision": "DIEP-MINH-CAO-REL-01",
-      "scope": [
-        "knowledge:relationship"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Cao Minh và Diệp Minh là tử địch không đội trời chung. Diệp Minh đã trực tiếp góp phần vào đại kiếp thảm sát Cao gia; biến cố ấy phá nát nền tảng đời Cao Minh, đẩy hắn vào tuyệt vọng và là một nguyên nhân quyết định khiến hắn bước vào ma đạo. Không mặc định Diệp Minh là chủ mưu duy nhất. Kẻ chủ mưu cuối cùng, động cơ của Diệp Minh, mức độ hắn trực tiếp sát hại từng người, quan hệ trước đại kiếp, các thế lực liên quan, cán cân thắng bại và kết cục cuối cùng vẫn OPEN."
-    },
-    {
-      "id": "REL.CAO_MINH.SYVIAL.NONE",
-      "owner": "knowledge:relationship",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
-      "revision": "CAO-CANON-CLEANUP-R15",
-      "scope": [
-        "knowledge:relationship"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Cao Minh and Syvial have no pre-existing relationship at campaign start. If they meet, treat it as first contact unless later live campaign continuity explicitly changes that state."
-    },
-    {
-      "id": "WORLD.CORE",
-      "owner": "knowledge:world",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "01_WORLD/world.md",
-      "revision": "0.1-0.5",
-      "scope": [
-        "knowledge:world"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "MISSING_ORIGIN",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Backrooms origin is never confirmed. Levels are survivor labels for recognizable regions within one vast continuous reality, not sealed boxes; boundaries and routes can drift. Architecture, local rules, time and memory may deviate. Human biology still matters: hunger, thirst, blood loss, infection, heat, cold, exhaustion and sleep deprivation can kill. Copies of people can exist; there is no absolute method to prove an original. Death has no single universal outcome."
-    },
-    {
-      "id": "WRITING.COMPETENCE",
-      "owner": "knowledge:writing",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "00_RULES/Những điều bắt buộc không được làm khi viết tiểu thuyết.md + 00_RULES/worldcodex.md + 00_RULES/Supernatural_Horror_Craft_Guide.md",
-      "revision": "NOVEL.COMPETENCE.NO_SUDDEN_STUPIDITY; 7; SH-SUSPENSE-01",
-      "scope": [
-        "knowledge:writing"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Never make a competent character forget established skills, equipment, experience, obvious options or canonical abilities merely to create danger. If a tool cannot solve a problem, the reason must come from real information limits, environment, conflicting objectives, protected people, injury, cost, or another established constraint. Horror must not be maintained by withholding competence."
-    },
-    {
-      "id": "WRITING.DIALOGUE",
-      "owner": "knowledge:writing",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "00_RULES/CONVERSATION.MD",
-      "revision": "RULES.DIALOGUE / 0-32",
-      "scope": [
-        "knowledge:writing"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Dialogue authority is CONVERSATION.MD. Speak as the actual person in the current situation, not as a canon interface or an optimized psychological explanation. Keep address from active relationship canon. Dialogue may be direct, ordinary, slightly circular, interrupted by practical life, or unresolved when appropriate; do not manufacture fragmentary 'cool' speech, exposition packages, or pre-solved conversation beats."
-    },
-    {
-      "id": "WRITING.KNOWLEDGE_BOUNDARY",
-      "owner": "knowledge:writing",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "00_RULES/worldcodex.md + 00_RULES/Những điều bắt buộc không được làm khi viết tiểu thuyết.md + 00_RULES/CONVERSATION.MD",
-      "revision": "KNOWLEDGE BOUNDARY; NOVEL.KNOWLEDGE; 14-16",
-      "scope": [
-        "knowledge:writing"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Characters know only what their background, direct observation, testimony, validated ability/device evidence, or reasonable inference supports. Backstage canon is not character knowledge. Preserve uncertainty level: reported/inferred/uncertain does not become fact. Do not turn knowledge-state labels or source metadata into dialogue."
-    },
-    {
-      "id": "WRITING.PLAYER_AGENCY",
-      "owner": "knowledge:writing",
-      "type": "KNOWLEDGE",
-      "status": "CURRENT",
-      "sourceRef": "05_TextGame/RULES/TEXT_GAME_RULES.md + 05_TextGame/RULES/GAME_MASTER_RULES.md",
-      "revision": "TEXT_GAME_RULES 4; GM_RULES 2",
-      "scope": [
-        "knowledge:writing"
-      ],
-      "knownBy": "SYSTEM",
-      "sourceKind": "external",
-      "sourceAvailability": "EXTERNAL_SNAPSHOT",
-      "refs": [],
-      "requires": [],
-      "core": false,
-      "promptEligible": false,
-      "sourceFile": "canon/runtime/knowledge.md",
-      "text": "Do not choose Cao Minh's intentional action for the player. Resolve what Cao Minh can perceive from the chosen action before asking for the next choice. Menus are suggestions, not rails; free-form methods are valid, but the player cannot declare an unconfirmed result as already true."
     }
   ]
 }
