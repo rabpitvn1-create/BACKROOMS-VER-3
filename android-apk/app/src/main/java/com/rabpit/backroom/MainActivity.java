@@ -1014,8 +1014,24 @@ public class MainActivity extends Activity {
         fallbackDialogue.put(name + " cất tiếng khi Cao Minh đến gần.");
         fallbackDialogue.put("Cả hai trao đổi vài lời rồi tiếp tục quan sát khu vực.");
       }
+      JSONObject flags = state == null ? null : state.optJSONObject("flags");
+      JSONObject combat = state == null ? null : state.optJSONObject("combat");
+      boolean activeEncounter = flags != null
+          && !flags.optString("entityEncounterKey", "").trim().isEmpty();
+      boolean deathPending = combat != null && combat.optBoolean("deathRestartPending", false);
+      JSONArray suggestions = new JSONArray();
+      if (!activeEncounter && !deathPending) {
+        boolean exitOpen = route != null && route.optBoolean("exitAvailable", false);
+        if (exitOpen) {
+          suggestions.put(new JSONObject().put("text", "Đi qua lối ra đến chặng kế tiếp"));
+          suggestions.put(new JSONObject().put("text", "Thận trọng tiếp cận lối thoát vừa tìm thấy"));
+        } else {
+          suggestions.put(new JSONObject().put("text", "Tiếp tục khám phá khu vực phía trước"));
+          suggestions.put(new JSONObject().put("text", "Khảo sát những âm thanh khác thường gần đó"));
+        }
+      }
       generated.put("reply", reply)
-          .put("choices", new JSONArray())
+          .put("choices", suggestions)
           .put("encounterDialogue", fallbackDialogue);
     } catch (Exception ignored) {}
     return generated;
