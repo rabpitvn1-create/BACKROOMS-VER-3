@@ -28,10 +28,7 @@ jobs:
           node-version: '22'
       - name: Validate JavaScript choice UI
         run: node --test android-apk/app/src/test/js/*.test.cjs
-      - name: Verify forecast-versus-commit early
-        working-directory: android-apk
-        run: gradle :app:testDebugUnitTest --tests 'com.rabpit.backroom.core.FullGameplay200TurnSimulationTest.readOnlyChainForecastMatchesActualCommittedTurnsWithNarration' --no-daemon
-      - name: Run Android unit tests and assemble experiment APK
+      - name: Run Android unit tests and assemble debug APK
         working-directory: android-apk
         run: gradle :app:testDebugUnitTest :app:assembleDebug --no-daemon
       - name: Upload testable debug APK
