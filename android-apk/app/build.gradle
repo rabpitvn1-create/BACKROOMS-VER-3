@@ -4,7 +4,7 @@ plugins {
 
 def secret = { name ->
   def value = System.getenv(name) ?: ""
-  return value.replace("\\", "\\\\").replace(""", "\\"")
+  return value.replace("\\", "\\\\").replace("\"", "\\\"")
 }
 
 android {
@@ -17,15 +17,15 @@ android {
     targetSdk 35
     versionCode 66
     versionName '1.1.64'
-    buildConfigField "String", "GEMINI_API_KEY_1", """ + secret("GEMINI_API_KEY_1") + """
-    buildConfigField "String", "GEMINI_API_KEY_2", """ + secret("GEMINI_API_KEY_2") + """
-    buildConfigField "String", "GEMINI_API_KEY_3", """ + secret("GEMINI_API_KEY_3") + """
-    buildConfigField "String", "GEMINI_API_KEY_4", """ + secret("GEMINI_API_KEY_4") + """
-    buildConfigField "String", "GEMINI_API_KEY_5", """ + secret("GEMINI_API_KEY_5") + """
-    buildConfigField "String", "HAIKU_API_KEY", """ + secret("HAIKU_API_KEY") + """
-    buildConfigField "String", "HAIKU_API", """ + (secret("HAIKU_API") ?: secret("HAIKU_API_KEY")) + """
-    buildConfigField "String", "HAIKU_MODEL", """ + secret("HAIKU_MODEL") + """
-    buildConfigField "String", "HAIKU_BASE_URL", """ + secret("HAIKU_BASE_URL") + """
+    buildConfigField "String", "GEMINI_API_KEY_1", "\"" + secret("GEMINI_API_KEY_1") + "\""
+    buildConfigField "String", "GEMINI_API_KEY_2", "\"" + secret("GEMINI_API_KEY_2") + "\""
+    buildConfigField "String", "GEMINI_API_KEY_3", "\"" + secret("GEMINI_API_KEY_3") + "\""
+    buildConfigField "String", "GEMINI_API_KEY_4", "\"" + secret("GEMINI_API_KEY_4") + "\""
+    buildConfigField "String", "GEMINI_API_KEY_5", "\"" + secret("GEMINI_API_KEY_5") + "\""
+    buildConfigField "String", "HAIKU_API_KEY", "\"" + secret("HAIKU_API_KEY") + "\""
+    buildConfigField "String", "HAIKU_API", "\"" + (secret("HAIKU_API") ?: secret("HAIKU_API_KEY")) + "\""
+    buildConfigField "String", "HAIKU_MODEL", "\"" + secret("HAIKU_MODEL") + "\""
+    buildConfigField "String", "HAIKU_BASE_URL", "\"" + secret("HAIKU_BASE_URL") + "\""
   }
 
   buildTypes {
