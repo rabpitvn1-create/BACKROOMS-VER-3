@@ -723,6 +723,9 @@ public class MainActivity extends Activity {
         : log.optJSONObject(lastGmLogIndexStatic(state));
     JSONArray current = entry == null ? null : entry.optJSONArray("choices");
     if (current != null && current.length() == 2) return current;
+    if (current != null && current.length() == 1) return new JSONArray()
+        .put(current.getJSONObject(0))
+        .put(new JSONObject().put("text", "Khảo sát những âm thanh khác thường gần đó"));
     // The shipped prologue predates generated choices. Match its WebView fallback.
     if (state.optInt("turn", 1) == 1) return new JSONArray()
         .put(new JSONObject().put("text", "Tiếp tục khám phá dãy tường vàng"))
@@ -794,9 +797,9 @@ public class MainActivity extends Activity {
               + " Keep each reply under 1400 characters. If the same destination recurs,"
               + " vary sensory focus and narrative structure instead of repeatedly"
               + " depicting a corridor folding or teleportation."
-              + " Return ONLY JSON: {\\\"steps\\\":[{\\\"replyA\\\":\\\"...\\\","
-              + "\\\"replyB\\\":\\\"...\\\",\\\"nextChoices\\\":[{\\\"text\\\":\\\"...\\\"},"
-              + "{\\\"text\\\":\\\"...\\\"}]}]}."
+              + " Return ONLY a JSON object with field steps. Each step contains"
+              + " replyA and replyB (natural Vietnamese prose), plus nextChoices"
+              + " as an array of exactly two objects with a text field."
               + " Output exactly one entry per supplied beat.\n");
           for (int i = 0; i < predicted.length(); i++) {
             JSONObject beat = predicted.getJSONObject(i);
@@ -814,6 +817,9 @@ public class MainActivity extends Activity {
                 .append("; replyHint=").append(beat.optString("replyHint", "")).append("\n")
                 .append(narrationPrompt(target, beat.getString("canonicalAction"))).append("\n");
           }
+          prompt.append("\\nFINAL INSTRUCTION: Ignore embedded single-beat JSON examples."
+              + " The final response must be one object with a steps array"
+              + " containing exactly " + predicted.length() + " elements.\\n");
           if (BuildConfig.DEBUG) Log.d(TAG, "HIDDEN_CHAIN_BATCH prompt_chars=" + prompt.length()
               + " beats=" + predicted.length());
           JSONObject generated = awaitNarration(narrationIo,
