@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import com.rabpit.backroom.core.CombatChoiceEngine;
 import com.rabpit.backroom.core.GameCoreFacade;
 import com.rabpit.backroom.core.GmChoiceContract;
-import com.rabpit.backroom.core.GmBranchBatch;
 import com.rabpit.backroom.core.GmNarrativePacket;
 import com.rabpit.backroom.core.CanonRetriever;
 import com.rabpit.backroom.core.GmNarratorContract;
@@ -38,8 +37,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class MainActivity extends Activity {
   private static final String TAG = "BackroomMain";
@@ -56,10 +53,7 @@ public class MainActivity extends Activity {
   // Speculative provider requests must never block a real player turn.
   private final ExecutorService prefetchNarrationIo = Executors.newSingleThreadExecutor();
   private final AtomicLong prefetchGeneration = new AtomicLong();
-  // Debug-only quota observations; do not log keys, full prompts or model replies.
-  private final AtomicLong providerHttpAttempts = new AtomicLong();
   private final AtomicBoolean turnInFlight = new AtomicBoolean();
-  private volatile PrefetchCache prefetchCache;
   private volatile HiddenNarrativeChain hiddenChain;
   private volatile String activePrefetchKey;
   private volatile boolean destroyed;
@@ -295,7 +289,6 @@ public class MainActivity extends Activity {
     connection.setDoOutput(true);
     connection.setRequestProperty("Content-Type", "application/json");
     connection.setRequestProperty(authHeader, authHeader.equals("Authorization") ? "Bearer " + key : key);
-    providerHttpAttempts.incrementAndGet();
     try (OutputStream output = connection.getOutputStream()) {
       output.write(payload.toString().getBytes("UTF-8"));
     }
@@ -332,22 +325,9 @@ public class MainActivity extends Activity {
       if (key == null || key.trim().isEmpty()) continue;
       configured = true;
       try {
-        providerHttpAttempts.incrementAndGet();
-        String rawResponse = postJson(
+        String output = geminiResponseText(postJson(
             "https://generativelanguage.googleapis.com/v1beta/models/" + GEMINI_MODEL + ":generateContent",
-            key, "x-goog-api-key", body);
-        if (BuildConfig.DEBUG) {
-          try {
-            JSONObject usage = new JSONObject(rawResponse).optJSONObject("usageMetadata");
-            if (usage != null) Log.d(TAG, "NARRATIVE_API_USAGE provider=gemini"
-                + " attempts=" + providerHttpAttempts.get()
-                + " input_tokens=" + usage.optInt("promptTokenCount", -1)
-                + " output_tokens=" + usage.optInt("candidatesTokenCount", -1)
-                + " thinking_tokens=" + usage.optInt("thoughtsTokenCount", -1)
-                + " total_tokens=" + usage.optInt("totalTokenCount", -1));
-          } catch (Exception ignored) { /* Telemetry cannot affect narration. */ }
-        }
-        String output = geminiResponseText(rawResponse);
+            key, "x-goog-api-key", body));
         parseModelJson(output);
         return output;
       } catch (Exception error) {
@@ -389,42 +369,8 @@ public class MainActivity extends Activity {
     return text.toString();
   }
 
-  private JSONObject branchSchema() throws Exception {
-    JSONObject choice = new JSONObject().put("type", "OBJECT")
-        .put("properties", new JSONObject().put("text", new JSONObject().put("type", "STRING")))
-        .put("required", new JSONArray().put("text"));
-    JSONObject branch = new JSONObject().put("type", "OBJECT")
-        .put("properties", new JSONObject()
-            .put("reply", new JSONObject().put("type", "STRING"))
-            .put("choices", new JSONObject().put("type", "ARRAY").put("items", choice))
-            .put("encounterDialogue", new JSONObject().put("type", "ARRAY")
-                .put("items", new JSONObject().put("type", "STRING"))))
-        .put("required", new JSONArray().put("reply").put("choices").put("encounterDialogue"));
-    JSONObject branches = new JSONObject().put("type", "OBJECT")
-        .put("properties", new JSONObject().put("A", branch).put("B", branch).put("C", branch))
-        .put("required", new JSONArray().put("A").put("B").put("C"));
-    return new JSONObject().put("type", "OBJECT")
-        .put("properties", new JSONObject().put("branches", branches))
-        .put("required", new JSONArray().put("branches"));
-  }
 
   /** Each configured Gemini key is tried before Haiku for the three-branch prefetch. */
-  private JSONObject geminiBranchBatch(String prompt) throws Exception {
-    JSONObject config = new JSONObject().put("responseMimeType", "application/json")
-        .put("responseSchema", branchSchema()).put("maxOutputTokens", 8192)
-        .put("thinkingConfig", new JSONObject().put("thinkingLevel", "low"));
-    try {
-      return parseModelJson(geminiJson(prompt, config));
-    } catch (Exception geminiError) {
-      Log.w(TAG, "All Gemini keys failed for branch prefetch; falling back to Haiku.");
-      try {
-        return parseModelJson(haikuText(prompt, 8192));
-      } catch (Exception haikuError) {
-        throw new Exception("Gemini: " + providerErrorSummary(geminiError)
-            + " | Haiku: " + providerErrorSummary(haikuError));
-      }
-    }
-  }
 
   private boolean haikuConfigured() {
     return BuildConfig.HAIKU_API != null && !BuildConfig.HAIKU_API.trim().isEmpty();
@@ -486,15 +432,6 @@ public class MainActivity extends Activity {
     if (status < 200 || status >= 300) {
       String detail = body.length() > 220 ? body.substring(0, 220) : body.toString();
       throw new HttpError(status, "Haiku HTTP " + status + (detail.isEmpty() ? "" : ": " + detail));
-    }
-    if (BuildConfig.DEBUG) {
-      try {
-        JSONObject usage = new JSONObject(body.toString()).optJSONObject("usage");
-        if (usage != null) Log.d(TAG, "NARRATIVE_API_USAGE provider=haiku"
-            + " attempts=" + providerHttpAttempts.get()
-            + " input_tokens=" + usage.optInt("input_tokens", usage.optInt("prompt_tokens", -1))
-            + " output_tokens=" + usage.optInt("output_tokens", usage.optInt("completion_tokens", -1)));
-      } catch (Exception ignored) { /* Telemetry cannot affect narration. */ }
     }
     return body.toString();
   }
@@ -853,33 +790,14 @@ public class MainActivity extends Activity {
               || !fullHash.equals(gameCore.currentStateHash())) return;
 
           StringBuilder prompt = new StringBuilder(
-              "HIDDEN NARRATIVE CHAIN: You are planning exactly " + predicted.length()
-              + " FUTURE narrative beats in ONE response. Java Core has already computed every"
-              + " mandatory result for each beat. NEVER modify the result, Level, Entity,"
-              + " chest, loot, party or survivor state. Each beat has TWO distinct ways"
-              + " of experiencing the EXACT SAME world outcome. The two approaches must"
-              + " differ in actions, emotional tone, sensory focus and causal narration,"
-              + " not simply synonyms. Do not reveal convergence, hidden plans, RNG,"
-              + " status reports or location knowledge unavailable to Cao Minh. "
-              + " No new entity or inventory events. All player-facing text in natural Vietnamese."
-              + " A NONE selection means no NEW situation, NOT that the area is safe."
-              + " Never guarantee safety, reveal an unknown Level number as Cao Minh's"
-              + " knowledge, or invent an enduring scratch/marker/world modification."
-              + " Do not offer actions that create untracked lasting world changes."
-              + " Cao Minh is a seasoned cultivator; do not manufacture fear,"
-              + " panic, inner decisions or thoughts unsupported by the player's choice."
-              + " Vary causality and syntax as well as sensory detail; preserve"
-              + " the same outcome without repetitive corridor-folding shortcuts."
-              + " For beat 0, the two displayed actions are supplied below."
-              + " For beat N+1, its two actions MUST be the previous beat's nextChoices."
-              + " Invent 2 concrete, meaningfully different nextChoices per beat."
-              + " Keep each reply under 1400 characters. If the same destination recurs,"
-              + " vary sensory focus and narrative structure instead of repeatedly"
-              + " depicting a corridor folding or teleportation."
-              + " Return ONLY a JSON object with field steps. Each step contains"
-              + " replyA and replyB (natural Vietnamese prose), plus nextChoices"
-              + " as an array of exactly two objects with a text field."
-              + " Output exactly one entry per supplied beat.\n");
+              "HIDDEN NARRATIVE CHAIN: prepare exactly " + predicted.length()
+              + " ordinary exploration beats in one response. Java Core owns every world fact"
+              + " and mandatory outcome. For each beat, write two genuinely different"
+              + " narrative approaches (A/B) to that same outcome. Respect the visible action,"
+              + " never reveal convergence, and never invent Level changes, Entity events,"
+              + " combat results, items, party changes or other Core state. Keep the prose"
+              + " natural Vietnamese and varied. Return only JSON with a steps array;"
+              + " each step has replyA, replyB and exactly two nextChoices with text.\n");
           for (int i = 0; i < predicted.length(); i++) {
             JSONObject beat = predicted.getJSONObject(i);
             JSONObject target = beat.getJSONObject("state");
@@ -910,15 +828,9 @@ public class MainActivity extends Activity {
           prompt.append("\\nFINAL INSTRUCTION: Ignore embedded single-beat JSON examples."
               + " The final response must be one object with a steps array"
               + " containing exactly " + predicted.length() + " elements.\\n");
-          if (BuildConfig.DEBUG) Log.d(TAG, "HIDDEN_CHAIN_BATCH prompt_chars=" + prompt.length()
-              + " beats=" + predicted.length());
-          long requestsBeforeBatch = providerHttpAttempts.get();
           JSONObject generated = awaitNarration(prefetchNarrationIo,
               () -> parseModelJson(generateText(prompt.toString())),
               TimeUnit.SECONDS.toMillis(NARRATION_DEADLINE_SECONDS));
-          if (BuildConfig.DEBUG) Log.d(TAG, "HIDDEN_CHAIN_BATCH_API"
-              + " requests=" + (providerHttpAttempts.get() - requestsBeforeBatch)
-              + " beats=" + predicted.length());
           HiddenNarrativeChain chain = HiddenNarrativeChain.parse(forecast, generated, choices);
           synchronized (MainActivity.this) {
             if (!destroyed && generation == prefetchGeneration.get() && !turnInFlight.get()
@@ -932,117 +844,15 @@ public class MainActivity extends Activity {
     } catch (java.util.concurrent.RejectedExecutionException ignored) {}
   }
 
-  private static final class PrefetchBranch {
-    final String action, outcomeHash;
-    final JSONObject narration;
-    PrefetchBranch(String action, String outcomeHash, JSONObject narration) {
-      this.action = action;
-      this.outcomeHash = outcomeHash;
-      this.narration = narration;
-    }
-  }
-
-  private static final class PrefetchCache {
-    final String baseHash;
-    final int sourceTurn, sourceGmIndex;
-    final String sourceGmText;
-    final Map<String, PrefetchBranch> branches;
-    PrefetchCache(String baseHash, int sourceTurn, int sourceGmIndex, String sourceGmText,
-                  Map<String, PrefetchBranch> branches) {
-      this.baseHash = baseHash;
-      this.sourceTurn = sourceTurn;
-      this.sourceGmIndex = sourceGmIndex;
-      this.sourceGmText = sourceGmText;
-      this.branches = branches;
-    }
-    PrefetchBranch forChoice(String id, String action, int turn, int index, String gmText) {
-      PrefetchBranch branch = branches.get(id);
-      return sourceTurn == turn && sourceGmIndex == index && sourceGmText.equals(gmText)
-          && branch != null && branch.action.equals(action) ? branch : null;
-    }
-  }
-
   private synchronized void invalidatePrefetch() {
     prefetchGeneration.incrementAndGet();
-    prefetchCache = null;
     activePrefetchKey = null;
   }
 
-  /** Load/reset must not reuse a plan from a former session with a coincidental state hash. */
+  /** Load/reset/new game must not reuse a plan from a former world state. */
   private synchronized void invalidateAllNarrativeCaches() {
     invalidatePrefetch();
     hiddenChain = null;
-  }
-
-  private synchronized void prefetchChoices(String sourceJson, String choicesJson) {
-    if (destroyed || turnInFlight.get()) return;
-    final String baseHash = gameCore.currentStateHash();
-    final JSONObject source, current;
-    final int sourceTurn, sourceGmIndex;
-    final String sourceGmText;
-    try {
-      source = new JSONObject(sourceJson);
-      current = new JSONObject(gameCore.currentCoreState());
-      sourceTurn = source.getInt("turn");
-      sourceGmIndex = lastGmLogIndex(source);
-      JSONObject gm = source.getJSONArray("log").getJSONObject(sourceGmIndex);
-      sourceGmText = gm.getString("text");
-      if (sourceTurn != current.optInt("turn", -1) || sourceGmIndex != lastGmLogIndex(current)
-          || !sourceGmText.equals(current.getJSONArray("log")
-              .getJSONObject(sourceGmIndex).optString("text", ""))) return;
-    } catch (Exception error) { return; }
-    final String key = baseHash + "|" + sourceTurn + "|" + sourceGmIndex + "|"
-        + JSONObject.quote(sourceGmText) + "|" + JSONObject.quote(choicesJson);
-    if (key.equals(activePrefetchKey)) return;
-    final long generation = prefetchGeneration.incrementAndGet();
-    prefetchCache = null;
-    activePrefetchKey = key;
-    try { prefetchIo.execute(() -> {
-      try {
-        JSONArray choices = new JSONArray(choicesJson);
-        if (choices.length() != 3) return;
-        if (generation != prefetchGeneration.get() || !baseHash.equals(gameCore.currentStateHash())) return;
-        Map<String, String> actions = new LinkedHashMap<>();
-        Map<String, JSONObject> previews = new LinkedHashMap<>();
-        StringBuilder prompt = new StringBuilder(
-            "Generate exactly one independent next-turn narration per branch A/B/C. "
-                + "Each branch has its own hypothetical Core-committed outcome and canon. "
-                + "Never transfer events, facts, entities, loot or future choices between branches. "
-                + "Each reply must be at most 1800 characters, choices 0-3. "
-                + "Return only JSON with branches A, B and C; each contains reply, choices and encounterDialogue.\n");
-        for (int i = 0; i < 3; i++) {
-          String id = String.valueOf((char) ('A' + i));
-          JSONObject choice = choices.getJSONObject(i);
-          String action = choice.optString("action", "").trim();
-          if (!id.equals(choice.optString("id", "")) || action.isEmpty()
-              || actions.containsValue(action)) return;
-          JSONObject preview = new JSONObject(gameCore.previewTurn(action, baseHash));
-          if (!preview.optBoolean("handled", false)) return;
-          actions.put(id, action);
-          previews.put(id, preview);
-          prompt.append("\n=== BRANCH ").append(id).append(" ONLY ===\n")
-              .append(narrationPrompt(preview.getJSONObject("state"), action)).append('\n');
-        }
-        if (generation != prefetchGeneration.get() || !baseHash.equals(gameCore.currentStateHash())) return;
-        Map<String, PrefetchBranch> valid = new LinkedHashMap<>();
-        Map<String, JSONObject> generatedBranches = GmBranchBatch.generate(
-            prompt.toString(), actions, previews, this::geminiBranchBatch);
-        for (Map.Entry<String, JSONObject> entry : generatedBranches.entrySet()) {
-          String id = entry.getKey();
-          JSONObject preview = previews.get(id);
-          valid.put(id, new PrefetchBranch(actions.get(id), preview.getString("outcomeHash"), entry.getValue()));
-        }
-        synchronized (MainActivity.this) {
-          if (!destroyed && generation == prefetchGeneration.get()
-              && baseHash.equals(gameCore.currentStateHash())) {
-            prefetchCache = new PrefetchCache(baseHash, sourceTurn, sourceGmIndex, sourceGmText, valid);
-          }
-        }
-      } catch (Exception error) {
-        Log.w(TAG, "Branch prefetch unavailable; normal turn path remains available: "
-            + providerErrorSummary(error));
-      }
-    }); } catch (java.util.concurrent.RejectedExecutionException ignored) {}
   }
 
   static JSONObject narrationFallback(JSONObject state, String replyHint) {
@@ -1175,10 +985,6 @@ public class MainActivity extends Activity {
       MainActivity.this.prefetchNarrativeChain(sourceJson, choicesJson);
     }
 
-    @JavascriptInterface public void prefetchChoices(String sourceJson, String choicesJson) {
-      MainActivity.this.prefetchChoices(sourceJson, choicesJson);
-    }
-
     @JavascriptInterface public String saveCheckpoint() {
       return gameCore.saveCheckpoint();
     }
@@ -1205,11 +1011,9 @@ public class MainActivity extends Activity {
     private void submitTurnInternal(String stateJson, String action, String choiceId,
                                     int sourceTurn, int sourceGmIndex, String sourceGmText) {
       if (destroyed || !turnInFlight.compareAndSet(false, true)) return;
-      final PrefetchCache ready = prefetchCache;
       invalidatePrefetch();
       try { io.execute(() -> {
         JSONObject committedBeforeNarration = null;
-        long tStart = System.currentTimeMillis();
         try {
           JSONObject submitted = new JSONObject(stateJson);
           JSONObject persisted = new JSONObject(gameCore.currentCoreState());
@@ -1220,13 +1024,7 @@ public class MainActivity extends Activity {
                   .getJSONObject(sourceGmIndex).optString("text", "")))) {
             throw new Exception("Lựa chọn đã thuộc lượt cũ. Hãy chọn trên lượt hiện tại.");
           }
-          String baseHash = gameCore.currentStateHash();
-          PrefetchBranch cached = ready != null && ready.baseHash.equals(baseHash)
-              && choiceId != null ? ready.forChoice(choiceId, action == null ? "" : action.trim(),
-                  sourceTurn, sourceGmIndex, sourceGmText) : null;
           String actualAction = action == null ? "" : action.trim();
-          // A/B express two approaches to one result; explicit free-form mechanics remain Core-owned.
-          boolean mechanical = choiceId == null && gameCore.isMechanicalAction(actualAction);
           JSONArray visibleChoices = initialNarrativeChoices(submitted);
           if (choiceId != null && visibleChoices.length() == 2) {
             int slot = "A".equals(choiceId) ? 0 : "B".equals(choiceId) ? 1 : -1;
@@ -1237,11 +1035,11 @@ public class MainActivity extends Activity {
             }
           }
           HiddenNarrativeChain chain = hiddenChain;
-          HiddenNarrativeChain.Beat beat = !mechanical && chain != null
-              ? chain.current(gameCore.currentNarrativeWorldHash(), visibleChoices) : null;
+          HiddenNarrativeChain.Beat beat = chain == null ? null
+              : chain.current(gameCore.currentNarrativeWorldHash(), visibleChoices);
           if (chain != null && beat == null) hiddenChain = null;
           String canonicalAction = HiddenNarrativeChain.resolveCoreAction(
-              actualAction, choiceId, mechanical, beat, visibleChoices);
+              actualAction, choiceId, beat);
 
           if (CombatChoiceEngine.isActive(submitted)) {
             throw new Exception("Đang chiến đấu. Hãy dùng khung Poker Dice trong GAME MASTER.");
@@ -1292,9 +1090,7 @@ public class MainActivity extends Activity {
             final String gmAction = actualAction;
             final String coreAction = canonicalAction;
             generated = awaitNarration(narrationIo, () -> {
-              boolean legacyHit = cached != null && cached.outcomeHash.equals(gameCore.currentStateHash());
-              JSONObject draft = directCached ? selectedBeat.narration(choiceId)
-                  : legacyHit ? new JSONObject(cached.narration.toString()) : null;
+              JSONObject draft = directCached ? selectedBeat.narration(choiceId) : null;
               String prompt = narrationPrompt(narrationState, coreAction);
               if (!coreAction.equals(gmAction)) {
                 prompt += "\nPLAYER'S ACTUAL ACTION: " + gmAction
@@ -1309,13 +1105,7 @@ public class MainActivity extends Activity {
                     + "\nRebuild a genuinely different, causal scene grounded in the"
                     + " player's actual action. Never contradict Core state or invent events.";
               }
-              if (draft == null) {
-                if (BuildConfig.DEBUG) Log.d(TAG, forecastMatches && choiceId == null
-                    ? "HIDDEN_CHAIN_PLAYER_ACTION_REWRITE" : "HIDDEN_CHAIN_UNCACHED_NARRATION");
-                draft = parseModelJson(generateText(prompt));
-              } else if (BuildConfig.DEBUG && directCached) {
-                Log.d(TAG, "HIDDEN_CHAIN_CACHE_HIT choice=" + choiceId);
-              }
+              if (draft == null) draft = parseModelJson(generateText(prompt));
               if (forecastMatches) draft.put("choices",
                   new JSONArray(selectedBeat.nextChoices.toString()));
               final String retryPrompt = prompt;
@@ -1373,11 +1163,6 @@ public class MainActivity extends Activity {
                 gameCore.startCombatRuntime(newEncounter, log.length() - 1));
           }
 
-          if (BuildConfig.DEBUG) {
-            Log.d(TAG, "EMERGENT TURN TELEMETRY: total=" + (System.currentTimeMillis() - tStart)
-                + "ms turnId=" + turnId
-                + " situation=" + (selected == null ? "NONE" : selected.optString("situationKey", "NONE")));
-          }
           emit("backroomTurn", state.toString());
         } catch (Exception e) {
           String message = e.getMessage() == null ? "Không thể xử lý lượt." : e.getMessage();

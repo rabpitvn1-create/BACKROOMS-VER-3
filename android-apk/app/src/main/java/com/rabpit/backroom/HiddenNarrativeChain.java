@@ -70,16 +70,9 @@ final class HiddenNarrativeChain {
   }
 
   /** Do not substitute choice A for uncached free-form Player Action. */
-  static String resolveCoreAction(String submitted, String choiceId,
-                                  boolean mechanical, Beat beat, JSONArray visibleChoices) {
-    if (mechanical) return submitted;
-    if (beat != null) return beat.canonicalAction;
-    if (("A".equals(choiceId) || "B".equals(choiceId))
-        && visibleChoices != null && visibleChoices.length() == 2) {
-      JSONObject first = visibleChoices.optJSONObject(0);
-      if (first != null) return first.optString("action", first.optString("text", submitted));
-    }
-    return submitted;
+  static String resolveCoreAction(String submitted, String choiceId, Beat beat) {
+    if (choiceId == null || beat == null) return submitted;
+    return ("A".equals(choiceId) || "B".equals(choiceId)) ? beat.canonicalAction : submitted;
   }
 
   synchronized Beat current(String worldHash, JSONArray visibleChoices) {

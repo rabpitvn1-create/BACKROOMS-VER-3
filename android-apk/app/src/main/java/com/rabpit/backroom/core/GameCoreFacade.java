@@ -250,9 +250,6 @@ public final class GameCoreFacade implements AutoCloseable {
             && flags != null && flags.optBoolean("chestPresent", false));
   }
 
-  public synchronized boolean isMechanicalAction(String action) {
-    return isMechanicalActionForState(parseState(liveStateJson), action);
-  }
 
   /** Returns a hypothetical post-turn state without writing preferences or retaining a turn attempt. */
   public synchronized String previewTurn(String action, String expectedBaseHash) {
