@@ -103,6 +103,21 @@ public class ChainNarrationFallbackTest {
     assertFalse(reply.contains("huỳnh quang"));
   }
 
+  @Test public void defeatPerceptionShroudDoesNotExposeActualPositionAfterProviderFailure()
+      throws Exception {
+    JSONObject hidden = state("RESET", 2)
+        .put("currentLevelKey", "hua_1900_0")
+        .put("location", "Hui's Family Level 1 / hành lang sâu")
+        .put("perceptionShroud", true);
+    JSONObject generated = MainActivity.narrationFallback(hidden, "", "Quan sát lối đi");
+    String reply = generated.getString("reply");
+    assertTrue(reply.contains("Cao Minh"));
+    assertFalse(reply.contains("Hui's Family"));
+    assertFalse(reply.contains("hành lang sâu"));
+    assertFalse(reply.contains("điểm xuất phát"));
+    assertFalse(reply.contains("cảnh vật quen thuộc"));
+  }
+
   @Test public void selectedEmergentEventKeepsNarrativeLeadIn() throws Exception {
     JSONObject levelZero = state("SUCCESS", 1).put("currentLevelKey", "0");
     levelZero.put("emergent", new JSONObject().put("lastSelection",
