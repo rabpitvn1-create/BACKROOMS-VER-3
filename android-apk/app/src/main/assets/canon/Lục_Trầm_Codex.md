@@ -1,3 +1,5 @@
+<!-- GENERATED FILE. DO NOT EDIT. Source: canon/characters/luc_tram_codex.md; run python3 tools/canon.py generate. -->
+<!-- canon-document: id=document.luc_tram.r05; type=FOUNDATION; status=CURRENT; source=02_CHARACTERS/Lục_Trầm_Codex; revision=R05 -->
 # **LỤC TRẦM**
 
 ## **THIÊN KIẾM MÔN · CHÂN TRUYỀN ĐỆ TỬ**
@@ -10,7 +12,9 @@ Mã Codex: LUC-TRAM-THIEN-KIEM-CODEX-R05
 
 Trạng thái: CURRENT / CHARACTER CANON
 
-Override: Retcon này thay thế toàn bộ Character Canon cũ của Lucia Lục / Hứa Thuý Mai đối với nhân vật này.
+HARD LOCK HIỆN HÀNH: runtime id `lucia` và runtime id `luc_tram` là hai nhân vật độc lập. Không alias, rename, merge hoặc chuyển canon giữa hai id.
+
+Override: Retcon này chỉ thay thế dữ liệu legacy từng gán Lucia Lục / Hứa Thuý Mai vào slot lịch sử của Lục Trầm. Nó KHÔNG thay thế canon hiện hành của nhân vật runtime `lucia`.
 
 # **00A · READ FIRST — AI CANON EXECUTION CONTRACT R04**
 
@@ -86,7 +90,7 @@ Override: Retcon này thay thế toàn bộ Character Canon cũ của Lucia Lụ
 
 # **D. CÁC INVARIANT BẤT BIẾN CỦA LỤC TRẦM**
 
-# **\- Tên hiện hành: LỤC TRẦM. Lucia Lục / Hứa Thuý Mai và loadout quân nhân cũ là LEGACY / RETIRED.**
+# **\- Tên hiện hành: LỤC TRẦM. Dữ liệu legacy từng gán alias/loadout Lucia Lục / Hứa Thuý Mai cho slot lịch sử này là RETIRED đối với Lục Trầm; nhân vật runtime `lucia` hiện hành vẫn độc lập.**
 
 # **\- Nữ; Nhân tộc / tu sĩ; Chính Đạo · Kiếm Đạo; Chân truyền đệ tử Thiên Kiếm Môn.**
 
@@ -746,13 +750,13 @@ OPEN không được tự biến thành canon chỉ để phục vụ drama.
 
 # **24 · LEGACY OVERRIDE**
 
-Lucia Lục / Hứa Thuý Mai / quân nhân Việt Nam / M4A1 / follower Lucia / military loadout / Too Young To Die / các skill súng cũ → LEGACY / RETIRED đối với nhân vật này.
+Dữ liệu legacy từng gán Lucia Lục / Hứa Thuý Mai / quân nhân Việt Nam / M4A1 / follower Lucia / military loadout / Too Young To Die / các skill súng cũ vào slot Lục Trầm → LEGACY / RETIRED CHỈ đối với Lục Trầm. Canon hiện hành của nhân vật runtime `lucia` không bị đoạn này retcon.
 
 Tên nhân vật hiện hành: LỤC TRẦM.
 
 Nhận diện hiện hành: Chân truyền đệ tử Thiên Kiếm Môn · Chính Đạo Kiếm Tu · tử địch cũ của Vạn Giới Ma Tôn Cao Minh.
 
-Nếu runtime game hoặc tài liệu cũ vẫn còn khóa Lucia, M4A1, kỹ năng súng hay dữ liệu quân nhân thì đó là dữ liệu implementation/continuity cũ cần migration, không được dùng để ghi đè Character Codex này.
+Nếu dữ liệu có id `luc_tram` còn mang M4A1, kỹ năng súng hay hồ sơ quân nhân thì đó là implementation/continuity legacy cần migration. Dữ liệu có id `lucia` là nhân vật độc lập và phải giữ nguyên canon riêng.
 
 # **25 · THỨ TỰ THẨM QUYỀN**
 
