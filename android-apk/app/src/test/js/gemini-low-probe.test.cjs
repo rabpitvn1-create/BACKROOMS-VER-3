@@ -12,6 +12,8 @@ test('provider probe checks batch JSON shape without an API call',()=>{
 test('provider probe classifies failures without persisting secret-bearing error strings',()=>{
   assert.deepEqual(probe.classifyFailure(new Error('Gemini request X failed: HTTP 503')),
     {httpStatus:503,reason:'HTTP 503'});
+  assert.deepEqual(probe.classifyFailure(new Error('Gemini request X failed: HTTP 429')),
+    {httpStatus:429,reason:'HTTP 429'});
   assert.deepEqual(probe.classifyFailure(new Error('Network error with sensitive context')),
     {httpStatus:null,reason:'request failed'});
 });

@@ -80,7 +80,12 @@ async function generate(prompt, name, results) {
       signal: AbortSignal.timeout(60000)
     });
     if (response.ok) break;
-    const retryable = [429,500,502,503,504].includes(response.status);
+    // A 429 indicates exhausted/rate-limited quota. Retrying every fixture
+    // hides the failure and burns more API attempts without useful evidence.
+    if (response.status === 429) {
+      throw new Error('Gemini request ' + name + ' failed: HTTP 429');
+    }
+    const retryable = [500,502,503,504].includes(response.status);
     if (!retryable || attempt === 2) {
       throw new Error('Gemini request ' + name + ' failed: HTTP ' + response.status);
     }
@@ -109,6 +114,7 @@ async function safelyGenerate(prompt, name, results) {
   try { return await generate(prompt,name,results); }
   catch (error) {
     const failure = classifyFailure(error);
+    if (failure.httpStatus === 429) results.quotaLimited = true;
     results.calls.push({name,latencyMs:Date.now()-started,
       parseable:false,failed:true,httpStatus:failure.httpStatus});
     return {parsed:null,failed:failure.reason};
@@ -157,7 +163,7 @@ async function main() {
     results.batched = {valid:!problem,problem,steps:batch.parsed&&batch.parsed.steps||null};
 
     // Baseline: one normal narration request per turn (only one reply and two choices).
-    for (let i=0;i<BEATS.length;i++) {
+    for (let i=0;i<BEATS.length && !results.quotaLimited;i++) {
       const beat=BEATS[i];
       const prompt=EXPLORER_FACTS+'\nChỉ kể một lượt. Người chơi: '+beat.a
         +'. Kết quả Core: '+beat.result+'. Điểm đến: '+beat.destination
@@ -170,6 +176,7 @@ async function main() {
     // The same fixed beat must support surprising free-form actions.
     const beat=BEATS[0];
     for (const [i,action] of UNEXPECTED.entries()) {
+      if (results.quotaLimited) break;
       const prompt=EXPLORER_FACTS+'\nPLAYER ACTION: '+action
         +'\nKết quả Core không đổi: '+beat.result+'. Đích đến bắt buộc: '+beat.destination
         +'. Hãy kể có quan hệ nhân quả tự nhiên từ hành động THỰC TẾ đến kết quả này. '
@@ -181,7 +188,9 @@ async function main() {
       results.freeformRewrites.push({index:i+1,action,valid:!error,problem:error,output:item.parsed});
     }
     // A partial run remains a failed gate, but its evidence is still collected.
-    if (results.batched.valid !== true
+    if (results.batched.valid !== true || results.quotaLimited
+        || results.singleTurnBaseline.length !== BEATS.length
+        || results.freeformRewrites.length !== UNEXPECTED.length
         || results.singleTurnBaseline.some(item=>!item.valid)
         || results.freeformRewrites.some(item=>!item.valid)) {
       results.incomplete = true;
@@ -203,7 +212,7 @@ async function main() {
       freeformValid:results.freeformRewrites.filter(x=>x.valid).length,
       baselineValid:results.singleTurnBaseline.filter(x=>x.valid).length,
       measuredTokens,stopped:!!results.stopped,
-      incomplete:!!results.incomplete
+      quotaLimited:!!results.quotaLimited,incomplete:!!results.incomplete
     })+'\n');
   }
 }
