@@ -197,14 +197,18 @@ public class FullGameplay200TurnSimulationTest {
         // The visible actions and prose diverge; no world event or reward may diverge.
         JSONObject narratedA = committedA.getJSONObject("state");
         JSONObject narratedB = committedB.getJSONObject("state");
-        narratedA.getJSONArray("log")
-            .put(new JSONObject().put("role", "player").put("text", "Quan sát cẩn thận"))
+        JSONArray logA = narratedA.optJSONArray("log");
+        JSONArray logB = narratedB.optJSONArray("log");
+        if (logA == null) logA = new JSONArray();
+        if (logB == null) logB = new JSONArray();
+        logA.put(new JSONObject().put("role", "player").put("text", "Quan sát cẩn thận"))
             .put(new JSONObject().put("role", "gm")
                 .put("text", "Cao Minh lần theo những dấu hiệu trước mắt."));
-        narratedB.getJSONArray("log")
-            .put(new JSONObject().put("role", "player").put("text", "Quay đầu bỏ chạy"))
+        logB.put(new JSONObject().put("role", "player").put("text", "Quay đầu bỏ chạy"))
             .put(new JSONObject().put("role", "gm")
                 .put("text", "Cao Minh vội rời xa vùng tối phía sau."));
+        narratedA.put("log", logA);
+        narratedB.put("log", logB);
         optionA.commitNarration(narratedA.toString(), false, false);
         optionB.commitNarration(narratedB.toString(), false, false);
         assertEquals("Only narration may diverge in canonical convergence, seed=" + scenario,
