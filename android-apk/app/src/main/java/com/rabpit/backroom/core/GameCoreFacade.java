@@ -338,7 +338,7 @@ public final class GameCoreFacade implements AutoCloseable {
     return narrativeWorldHash(parseState(liveStateJson));
   }
 
-  private static String narrativeWorldHash(JSONObject source) {
+  private String narrativeWorldHash(JSONObject source) {
     JSONObject copy = deepCopy(source);
     copy.remove("log");
     JSONObject emergent = copy.optJSONObject(EmergentTurnEngine.ROOT_KEY);
