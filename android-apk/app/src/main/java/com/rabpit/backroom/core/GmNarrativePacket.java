@@ -44,7 +44,7 @@ public final class GmNarrativePacket {
         + "không trộn động từ, chỉ hướng hoặc mô tả môi trường tiếng Anh vào câu lựa chọn.\n"
         + style + "\n"
         + "CORE-OWNED: Java Core sở hữu toàn bộ world outcome: Level/route, Entity spawn, Loot, Inventory, Party, Survival, Progression, Combat, Fact và Thread. "
-        + "Chỉ kể Level và vị trí đã commit. Nếu Core context không xác nhận một sự kiện, không được kể nó như đã xảy ra.\n"
+        + "Chỉ kể Level và vị trí đã commit. Nếu Core context không xác nhận một sự kiện, không được kể nó như đã xảy ra. Không tuyên bố một khu vực hoàn toàn an toàn chỉ vì Core không tạo encounter mới. Không kể tên Level như tri thức của Cao Minh khi nhân vật chưa được xác nhận đã biết. Không bịa các vết đánh dấu, vật thể hoặc thay đổi môi trường tồn tại lâu dài mà Core không ghi nhận.\n"
         + "EPISTEMIC: READ-ONLY STATE đã được lọc theo góc nhìn Cao Minh. Belief confidence=CONFIRMED chỉ có nghĩa actor tin chắc; "
         + "không tự coi belief là objective truth nếu không có confirmedFactId/fact tương ứng. Không suy ra hidden state bị thiếu khỏi context.\n"
         + "EXPLORER CHOICES: ngoài khi đối đầu Entity, luôn trả đúng 2 gợi ý khác nhau về cách tiếp cận, ngắn, cụ thể và phù hợp với tình huống hiện tại; "

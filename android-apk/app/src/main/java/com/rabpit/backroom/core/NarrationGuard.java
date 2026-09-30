@@ -25,6 +25,13 @@ public final class NarrationGuard {
   private static final Pattern META = Pattern.compile(
       "(?iu)(?:\\b(?:debug|stateDelta|JSON|prompt|token|API|checkpoint)\\b|"
           + "\\b(?:Core|system)\\s*[:=]|\\[(?:system|debug|core)\\])");
+  // No selected encounter is not evidence that the whole room is safe.
+  private static final Pattern UNSUPPORTED_SAFETY = Pattern.compile(
+      "(?iu)(?:khu vực(?: này)?|nơi(?: đây| này)?|lối đi(?: này)?)\\s+"
+          + "(?:hiện\\s+)?(?:hoàn\\s+toàn|tuyệt\\s+đối)\\s+an\\s+toàn");
+  private static final Pattern EXPOSED_LEVEL = Pattern.compile("(?iu)\\bLevel\\s*\\d+\\b");
+  private static final Pattern PERSISTENT_CHOICE = Pattern.compile(
+      "(?iu)^(?:cao minh\\s+)?(?:đánh dấu|khắc|cào|vẽ|viết ký hiệu|đặt dấu mốc)\\b");
   private static final Pattern MECHANICAL_END = Pattern.compile(
       "(?iu)(?:bạn|ngươi|cao minh)\\s+(?:sẽ|muốn|định)\\s+"
           + "(?:làm gì|chọn gì|đi đâu|hành động gì)(?:\\s+(?:tiếp|tiếp theo|bây giờ))?\\s*[?？!。.]?$");
@@ -82,20 +89,27 @@ public final class NarrationGuard {
       return "choices are forbidden while a committed Entity encounter is active.";
     }
 
-    String narrativeViolation = validateNarrative(reply, playerAction);
+    String narrativeViolation = validateNarrative(reply, playerAction, committedState);
     if (!narrativeViolation.isEmpty()) return narrativeViolation;
     String choiceViolation = validateChoices(choices, playerAction);
     if (!choiceViolation.isEmpty()) return choiceViolation;
     return "";
   }
 
-  private static String validateNarrative(String reply, String playerAction) {
+  private static String validateNarrative(String reply, String playerAction, JSONObject state) {
     // ponytail: These local patterns catch explicit violations, not literary quality or implied canon;
     // expand only with observed false negatives and grounded tests.
     if (reply.length() < 12) return "reply is unusually short; narrate a concrete event.";
     if (REPORT.matcher(reply).find() || META.matcher(reply).find()) {
       return "reply reports game/system state instead of showing the event in the world.";
     }
+    if (UNSUPPORTED_SAFETY.matcher(reply).find())
+      return "Narrator cannot certify absolute safety without a committed world fact.";
+    if (state != null && state.optBoolean("perceptionShroud", false)
+        && (EXPOSED_LEVEL.matcher(reply).find()
+            || (!state.optString("location", "").isEmpty()
+                && reply.contains(state.optString("location")))))
+      return "Narration reveals the hidden location during the post-defeat reframe.";
     if (MECHANICAL_END.matcher(reply).find()) return "reply ends with a mechanical player question.";
     if (AGENCY.matcher(reply).find() && !AGENCY.matcher(playerAction == null ? "" : playerAction).find()) {
       return "reply invents a decision or inner monologue for Cao Minh.";
@@ -125,6 +139,8 @@ public final class NarrationGuard {
       }
       if (REPORT.matcher(text).find() || META.matcher(text).find()) return id + " contains system/meta language.";
       if (GENERIC_CHOICE.matcher(text).matches()) return id + " is generic; name a concrete action or target.";
+      if (PERSISTENT_CHOICE.matcher(text).find())
+        return id + " promises a persistent world mark without Core support.";
       if (CHOICE_OUTCOME.matcher(text).find()) return id + " states an outcome instead of an action.";
       if (!CHOICE_ACTION.matcher(text).matches()) return id + " must be an actionable suggestion.";
       String normalized = normalize(text).replaceFirst("^cao minh ", "");

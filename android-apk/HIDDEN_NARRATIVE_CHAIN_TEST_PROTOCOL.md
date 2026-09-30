@@ -37,3 +37,10 @@ The parser reports canonical turns, cached A/B hits, freeform rewrites, prepared
 ## Evaluation record
 
 For each experiment record: exact commit SHA, APK build run, model/fallback actually used, 20-turn transcript without secrets, parser JSON, number of human readers, human-detected convergence and observed contradictions. Only evaluate quota savings relative to a baseline run under the same model/configuration and comparable prompts. Keep the PR in Draft if API savings or literary quality remains unmeasured or regression gates fail.
+
+## Observed Gemini Low evidence (2026-09-30)
+
+- A prior live run ([run 36651207997](https://github.com/rabpitvn1-create/BACKROOMS-VER-3/actions/runs/36651207997), second attempt) returned **one syntactically valid synthetic three-beat batch**: 357 input tokens, 1391 output tokens, 1748 reported total tokens. It did **not** produce a valid baseline or freeform sample; these cannot be cost-compared.
+- Manual inspection of that generated batch detected repeated yellow-light/corridor language, unsupported absolute safety, the narrator claiming Cao Minh's own decisions, overt Level-number leakage, and an invented permanent wall mark. Passing JSON validation is **not** passing quality or Core fidelity. A production batch's stricter NarrationGuard can reject some of these, which in turn risks losing the batch and using additional calls; cache-hit rate must be measured.
+- Subsequent [quota-safe run 36657225653](https://github.com/rabpitvn1-create/BACKROOMS-VER-3/actions/runs/36657225653) stopped after the first HTTP 429; it recorded zero successful responses. No further automated Gemini retries should be used as evidence of literary quality while the configured key is rate-limited.
+- Before approval, run actual Android gameplay with a **separately available provider quota**, capture production-prompt responses and fallback reasons, have a blinded human reader assess narrative variation/agency, and compare token usage and cache-hit rates under matching conditions.
