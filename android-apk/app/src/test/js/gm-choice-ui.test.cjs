@@ -24,7 +24,7 @@ assert.deepEqual(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: fa
   ['Quan sát khu vực phía trước','Thử lần theo một lối đi ít dấu vết'], 'empty GM output must not end normal exploration');
 assert.equal(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}, [
   {text: 'Kiểm tra cửa', action: 'Kiểm tra cửa'}
-]).length, 1);
+]).length, 2);
 
 const open = choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: true}}, [
   {text: 'A', action: 'A'}, {text: 'B', action: 'B'}, {text: 'C', action: 'C'}
@@ -59,7 +59,8 @@ assert.deepEqual(Array.from(context.displayedExplorerChoices(followingGm), x => 
 const freshChoice = {role:'gm', text:'Cánh cửa hiện ra.', choices:[{text:'Kiểm tra cánh cửa'}]};
 context.state.log.push({role:'player', text:'Đứng chờ'}, freshChoice);
 assert.deepEqual(Array.from(context.displayedExplorerChoices(freshChoice), x => x.text),
-  ['Kiểm tra cánh cửa'], 'real GM suggestions take priority over deterministic fallback');
+  ['Kiểm tra cánh cửa','Khảo sát những âm thanh khác thường gần đó'],
+  'older one-choice GM saves receive a safe second approach');
 context.state.flags = {entityEncounterKey:'hound'};
 assert.equal(context.displayedExplorerChoices({choices:[]}).length, 0,
   'do not offer explorer suggestions while an entity encounter is pending');
