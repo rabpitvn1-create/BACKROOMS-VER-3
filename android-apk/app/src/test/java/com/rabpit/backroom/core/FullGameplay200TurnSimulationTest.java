@@ -62,6 +62,7 @@ public class FullGameplay200TurnSimulationTest {
           inMemoryPreferences(initial.toString()), LevelCore.withAssets(knowledge, graph),
           new EntityCore(registry), false)) {
         core.normalizeState(initial.toString());
+        JSONObject liveBeforeForecast = new JSONObject(core.currentCoreState());
         String before = core.currentStateHash();
         JSONObject forecast = new JSONObject(
             core.previewNarrativeChain("Tiếp tục khám phá", 3, before));
@@ -71,8 +72,50 @@ public class FullGameplay200TurnSimulationTest {
         foundMultiBeat = true;
         for (int index = 0; index < steps.length(); index++) {
           JSONObject beat = steps.getJSONObject(index);
-          assertEquals("The next beat must start from the actual canonical world",
-              beat.getString("beforeWorldHash"), core.currentNarrativeWorldHash());
+          String actualWorldHash = core.currentNarrativeWorldHash();
+          if (!beat.getString("beforeWorldHash").equals(actualWorldHash)) {
+            JSONObject expectedState = index == 0 ? liveBeforeForecast
+                : steps.getJSONObject(index - 1).getJSONObject("state");
+            JSONObject actualState = new JSONObject(core.currentCoreState());
+            java.util.TreeSet<String> keys = new java.util.TreeSet<>();
+            java.util.Iterator<String> expectedKeys = expectedState.keys();
+            while (expectedKeys.hasNext()) keys.add(expectedKeys.next());
+            java.util.Iterator<String> actualKeys = actualState.keys();
+            while (actualKeys.hasNext()) keys.add(actualKeys.next());
+            java.util.ArrayList<String> changed = new java.util.ArrayList<>();
+            for (String key : keys) {
+              Object left = expectedState.opt(key);
+              Object right = actualState.opt(key);
+              if (left instanceof JSONObject && right instanceof JSONObject) {
+                if (!((JSONObject) left).similar(right)) changed.add(key);
+              } else if (!java.util.Objects.equals(String.valueOf(left), String.valueOf(right))) {
+                changed.add(key);
+              }
+            }
+            System.out.println("CHAIN_FORECAST_DIAGNOSTIC seed=" + seedIndex
+                + " step=" + index + " changedTopLevel=" + changed);
+            JSONObject expectedEmergent = expectedState.optJSONObject("emergent");
+            JSONObject liveEmergent = actualState.optJSONObject("emergent");
+            if (expectedEmergent != null && liveEmergent != null) {
+              java.util.TreeSet<String> emergentKeys = new java.util.TreeSet<>();
+              java.util.Iterator<String> it = expectedEmergent.keys();
+              while (it.hasNext()) emergentKeys.add(it.next());
+              it = liveEmergent.keys();
+              while (it.hasNext()) emergentKeys.add(it.next());
+              java.util.ArrayList<String> differences = new java.util.ArrayList<>();
+              for (String key : emergentKeys) {
+                Object left = expectedEmergent.opt(key);
+                Object right = liveEmergent.opt(key);
+                if (left instanceof JSONObject && right instanceof JSONObject
+                    ? !((JSONObject) left).similar(right)
+                    : !java.util.Objects.equals(String.valueOf(left), String.valueOf(right)))
+                  differences.add(key);
+              }
+              System.out.println("CHAIN_FORECAST_DIAGNOSTIC emergentFields=" + differences);
+            }
+          }
+          assertEquals("The next beat must start from the actual canonical world, beat " + index,
+              beat.getString("beforeWorldHash"), actualWorldHash);
           String canonicalAction = beat.getString("canonicalAction");
           JSONObject prepared = new JSONObject(core.processRule(core.currentCoreState(), canonicalAction));
           assertEquals("turn_prepared", prepared.getString("reason"));
