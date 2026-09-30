@@ -57,6 +57,26 @@ public class HiddenNarrativeChainTest {
     assertEquals(0, chain.remaining());
   }
 
+  @Test public void exitDisplayLabelCanDifferFromCanonicalSubmittedAction() throws Exception {
+    JSONArray submittedActions = choices("Đi qua lối ra",
+        "Thận trọng tiếp cận lối thoát vừa tìm thấy");
+    JSONArray displayed = new JSONArray()
+        .put(new JSONObject().put("text", "Đi qua lối ra đến chặng kế tiếp")
+            .put("action", "Đi qua lối ra"))
+        .put(new JSONObject().put("text", "Thận trọng tiếp cận lối thoát vừa tìm thấy")
+            .put("action", "Thận trọng tiếp cận lối thoát vừa tìm thấy"));
+    JSONObject forecast = new JSONObject().put("steps", new JSONArray()
+        .put(forecastStep("at-exit", "next-level")));
+    JSONObject draft = new JSONObject().put("steps", new JSONArray()
+        .put(draftStep("Cao Minh băng qua ngưỡng cửa, bước vào một khoảng sáng xa lạ.",
+            "Luồng khí lạnh dẫn Cao Minh tới một gian phòng chưa từng thấy.",
+            choices("Quan sát dấu vết phía trước", "Lắng nghe phía sau bức tường"))));
+    HiddenNarrativeChain chain = HiddenNarrativeChain.parse(forecast, draft, submittedActions);
+    assertNotNull(chain.current("at-exit", displayed));
+    displayed.getJSONObject(0).put("action", "Quay về Level trước");
+    assertNull(chain.current("at-exit", displayed));
+  }
+
   @Test public void staleWorldOrAlteredChoicesCannotReusePreparedNarration() throws Exception {
     JSONArray first = choices("Kiểm tra lối đi trước mặt", "Lần theo tiếng gió từ phía sau");
     JSONObject forecast = new JSONObject().put("steps", new JSONArray()
