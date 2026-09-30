@@ -292,6 +292,7 @@ public class MainActivity extends Activity {
     connection.setDoOutput(true);
     connection.setRequestProperty("Content-Type", "application/json");
     connection.setRequestProperty(authHeader, authHeader.equals("Authorization") ? "Bearer " + key : key);
+    providerHttpAttempts.incrementAndGet();
     try (OutputStream output = connection.getOutputStream()) {
       output.write(payload.toString().getBytes("UTF-8"));
     }
@@ -482,6 +483,15 @@ public class MainActivity extends Activity {
     if (status < 200 || status >= 300) {
       String detail = body.length() > 220 ? body.substring(0, 220) : body.toString();
       throw new HttpError(status, "Haiku HTTP " + status + (detail.isEmpty() ? "" : ": " + detail));
+    }
+    if (BuildConfig.DEBUG) {
+      try {
+        JSONObject usage = new JSONObject(body.toString()).optJSONObject("usage");
+        if (usage != null) Log.d(TAG, "NARRATIVE_API_USAGE provider=haiku"
+            + " attempts=" + providerHttpAttempts.get()
+            + " input_tokens=" + usage.optInt("input_tokens", usage.optInt("prompt_tokens", -1))
+            + " output_tokens=" + usage.optInt("output_tokens", usage.optInt("completion_tokens", -1)));
+      } catch (Exception ignored) { /* Telemetry cannot affect narration. */ }
     }
     return body.toString();
   }
