@@ -61,8 +61,13 @@ public final class NarrationGuard {
     }
     if (dialogue != null) {
       for (int i = 0; i < dialogue.length(); i++) {
-        if (dialogue.optString(i, "").trim().isEmpty()) {
+        String line = dialogue.optString(i, "").trim();
+        if (line.isEmpty()) {
           return "encounterDialogue cannot contain empty lines.";
+        }
+        if (committedState != null && committedState.optBoolean("perceptionShroud", false)
+            && revealsConcealedLocation(line, committedState)) {
+          return "encounterDialogue reveals the concealed post-defeat location.";
         }
       }
     }
@@ -80,18 +85,15 @@ public final class NarrationGuard {
       return "reply contradicts an explicit stationary/refusal Player Action.";
     }
 
-    if (committedState != null && committedState.optBoolean("perceptionShroud", false)) {
-      String location = committedState.optString("location", "");
-      if (EXPOSED_LEVEL.matcher(reply).find()
-          || (!location.isEmpty() && reply.contains(location))) {
-        return "reply reveals the concealed post-defeat location.";
-      }
+    if (committedState != null && committedState.optBoolean("perceptionShroud", false)
+        && revealsConcealedLocation(reply, committedState)) {
+      return "reply reveals the concealed post-defeat location.";
     }
 
-    return validateChoices(choices);
+    return validateChoices(choices, committedState);
   }
 
-  private static String validateChoices(JSONArray choices) {
+  private static String validateChoices(JSONArray choices, JSONObject committedState) {
     if (choices == null) return "";
     if (choices.length() > 2) return "choices must contain at most 2 suggestions.";
     Set<String> seen = new HashSet<>();
@@ -101,6 +103,10 @@ public final class NarrationGuard {
       if (text.isEmpty()) return "choice " + (char)('A' + i) + " must contain text.";
       if (text.length() > 140) return "choice " + (char)('A' + i) + " is too long.";
       if (SYSTEM_LEAK.matcher(text).find()) return "choice contains internal game/system language.";
+      if (committedState != null && committedState.optBoolean("perceptionShroud", false)
+          && revealsConcealedLocation(text, committedState)) {
+        return "choice reveals the concealed post-defeat location.";
+      }
       String normalized = normalize(text);
       if (!seen.add(normalized)) return "choices must be distinct.";
     }
@@ -110,6 +116,44 @@ public final class NarrationGuard {
   private static String normalize(String value) {
     return (value == null ? "" : value).toLowerCase(Locale.ROOT)
         .replaceAll("[^\\p{L}\\p{N}]+", " ").trim().replaceAll("\\s+", " ");
+  }
+
+  private static boolean revealsConcealedLocation(String text, JSONObject state) {
+    if (text == null || text.trim().isEmpty()) return false;
+    if (EXPOSED_LEVEL.matcher(text).find()) return true;
+
+    String normalizedText = normalize(text);
+    Set<String> concealedTerms = new HashSet<>();
+    addConcealedLocationTerms(concealedTerms, state.optString("location", ""));
+
+    String levelKey = state.optString("currentLevelKey", "").trim();
+    if (!levelKey.isEmpty()) {
+      String displayName = LevelCore.displayName(levelKey);
+      addConcealedLocationTerms(concealedTerms, displayName);
+      addConcealedLocationTerms(concealedTerms,
+          displayName.replaceAll("(?iu)\\bLevel\\s*\\d+(?:\\.\\d+)?\\b", " "));
+    }
+
+    for (String term : concealedTerms) {
+      if (!term.isEmpty() && normalizedText.contains(term)) return true;
+    }
+    return false;
+  }
+
+  private static void addConcealedLocationTerms(Set<String> output, String raw) {
+    String value = raw == null ? "" : raw.trim();
+    if (value.isEmpty()) return;
+
+    String full = normalize(value);
+    if (full.length() >= 4) output.add(full);
+
+    String[] parts = value.split("(?u)\\s*(?:/|—|–|\\||;|,)\\s*");
+    for (String part : parts) {
+      String withoutLevel = part.replaceAll(
+          "(?iu)\\bLevel\\s*\\d+(?:\\.\\d+)?\\b", " ").trim();
+      String normalized = normalize(withoutLevel);
+      if (normalized.length() >= 8) output.add(normalized);
+    }
   }
 
   @FunctionalInterface public interface Regenerator {
