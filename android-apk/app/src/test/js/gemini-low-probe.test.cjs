@@ -66,6 +66,10 @@ test('probe style validator rejects real Gemini failure modes',()=>{
   assert.match(probe.validateProse(
     'Cao Minh đứng dậy rồi bước qua góc rẽ.','Tôi ngồi xuống và nhất quyết không bước thêm'),/stationary/);
   assert.match(probe.validateProse(
+    'Kết cấu không gian âm thầm trượt đi, làm vị trí Cao Minh thay đổi.','Tôi ngồi xuống và nhất quyết không bước thêm'),/stationary/);
+  assert.match(probe.validateProse(
+    'Cao Minh quyết định tiếp tục quan sát bức tường.','Quan sát bức tường'),/agency/);
+  assert.match(probe.validateProse(
     'Cao Minh quan sát và thấy khu vực này hoàn toàn an toàn.','Quan sát khu vực'),/safety/);
   assert.match(probe.validateSingle({reply:'Cao Minh '+('a'.repeat(110)),
     choices:[{text:'Đánh dấu đường cũ trước khi đi'},{text:'Quan sát tường'}]},'Quan sát'),/invalid/);

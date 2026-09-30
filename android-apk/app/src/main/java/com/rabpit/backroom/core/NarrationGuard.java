@@ -58,6 +58,9 @@ public final class NarrationGuard {
   private static final Pattern NARRATED_MOVEMENT = Pattern.compile(
       "(?iu)(?:cao minh|hắn|anh)\\s+(?:tự\\s+)?(?:đứng\\s+dậy(?:.{0,24})?|"
           + "bước|đi|chạy|bò|tiến|rẽ|leo|di\\s+chuyển|rời|quay\\s+gót|men\\s+theo)\\b");
+  private static final Pattern ENVIRONMENT_RELOCATION = Pattern.compile(
+      "(?iu)(?:kết cấu|kiến trúc|không gian|mặt sàn|hành lang).{0,100}?"
+          + "(?:trượt|dịch chuyển).{0,100}?(?:cao minh|vị trí)");
   private static final Pattern CHOICE_ACTION = Pattern.compile(
       "(?iu)^(?:cao minh\\s+|hắn\\s+)?(?:quan sát|kiểm tra|khảo sát|xem xét|"
           + "lắng nghe|nghe|nhìn|tìm|tìm kiếm|khám phá|lục|dò|theo dõi|đi|bước|tiến|rẽ|quay|"
@@ -136,8 +139,9 @@ public final class NarrationGuard {
         || (!ACTION_MOVEMENT.matcher(actionText).find()
             && Pattern.compile("(?iu)\\b(?:lắng nghe|quan sát|chờ|đợi|dừng|nghỉ)\\b")
                 .matcher(actionText).find());
-    if (explicitlyStationary && NARRATED_MOVEMENT.matcher(reply).find())
-      return "Narrator moves Cao Minh after a stationary or refusal Player Action.";
+    if (explicitlyStationary
+        && (NARRATED_MOVEMENT.matcher(reply).find() || ENVIRONMENT_RELOCATION.matcher(reply).find()))
+      return "Narrator changes Cao Minh position after a stationary or refusal Player Action.";
     if (UNTRACKED_WORLD_EDIT.matcher(reply).find())
       return "Narration claims a persistent world edit that Core did not commit.";
     if (state != null && state.optBoolean("perceptionShroud", false)

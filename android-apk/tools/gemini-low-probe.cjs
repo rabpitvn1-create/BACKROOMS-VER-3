@@ -15,7 +15,7 @@ function configuredModels(env=process.env) {
   return [...new Set(raw.split(',').map(v => v.trim()).filter(Boolean))];
 }
 const OUTPUT = process.env.PROBE_OUTPUT || path.resolve('android-apk/probe-results/gemini-low-probe.json');
-const EXPLORER_FACTS = 'Bối cảnh: Cao Minh ở Level 0 của Backrooms. Không có Entity, nhân vật phụ hay vật phẩm mới. Core đã quyết định kết quả các lượt trước khi GM kể chuyện. Không thay đổi Core. Kể ngôi thứ ba hạn định quanh Cao Minh, không gọi nhân vật là "bạn". Không tự bịa sợ hãi, hoang mang, hy vọng hay quyết định nội tâm. Không tuyên bố khu vực an toàn hoặc không có mối đe dọa chỉ vì lượt này không có biến cố. Không tự tạo vết đánh dấu hay thay đổi thế giới tồn tại lâu dài. Nếu Player Action đứng yên, ngồi lại hoặc chỉ lắng nghe thì không tự bắt Cao Minh đứng dậy hay di chuyển.';
+const EXPLORER_FACTS = 'Bối cảnh: Cao Minh ở Level 0 của Backrooms. Không có Entity, nhân vật phụ hay vật phẩm mới. Core đã quyết định kết quả các lượt trước khi GM kể chuyện. Không thay đổi Core. Kể ngôi thứ ba hạn định quanh Cao Minh, không gọi nhân vật là "bạn". Không tự bịa sợ hãi, hoang mang, hy vọng hay quyết định nội tâm. Không tuyên bố khu vực an toàn hoặc không có mối đe dọa chỉ vì lượt này không có biến cố. Không tự tạo vết đánh dấu hay thay đổi thế giới tồn tại lâu dài; nextChoices cũng không được đề xuất đánh dấu, khắc, vẽ hay tạo dấu mốc. Nếu Player Action đứng yên, ngồi lại hoặc chỉ lắng nghe thì Cao Minh phải giữ nguyên vị trí; môi trường cũng không được tự thay đổi vị trí của Cao Minh.';
 const BEATS = [
   {destination:'một đoạn hành lang vàng có ánh đèn huỳnh quang',result:'khám phá tiến triển; không có biến cố mới',a:'Thận trọng tiến vào khoảng tối',b:'Lần theo tiếng ù của bóng đèn'},
   {destination:'một vùng tường vàng có vết ẩm loang',result:'quan sát thành công; không có Entity',a:'Quan sát kỹ các vệt ẩm',b:'Rời khỏi chỗ sáng để tìm lối khác'},
@@ -51,6 +51,7 @@ function stationaryAction(action='') {
 function validateProse(reply, action='') {
   const text=String(reply||'');
   if (!/\bCao Minh\b/u.test(text)) return 'reply must use third-person Cao Minh narration';
+  if (/(?:cao minh|hắn)\s+(?:quyết định|tự nhủ|nghĩ thầm|thầm nghĩ)\b/iu.test(text)) return 'reply invents player agency';
   if (/\bbạn\b/iu.test(text)) return 'reply uses second-person narration';
   if (/(?:sự|nỗi)\s+(?:căng thẳng|hoang mang|sợ hãi)|\btâm\s*(?:lý|trí).{0,30}?(?:bình ổn|hoang mang|căng thẳng|sợ hãi)|\bnhịp\s+tim.{0,30}?(?:dồn dập|đập dồn)|\b(?:hy vọng|hoảng loạn|hoang mang|sợ hãi)\b/iu.test(text))
     return 'reply invents inner emotion';
@@ -60,8 +61,9 @@ function validateProse(reply, action='') {
   if (/(?:cao minh|hắn)\s+(?:cào|khắc|vẽ|đánh dấu|viết).{0,60}?(?:vết\s+(?:xước|khắc)|ký hiệu|dấu mốc|lên\s+(?:tường|sàn))/iu.test(text))
     return 'reply invents a persistent world edit';
   if (stationaryAction(action)
-      && /(?:cao minh|hắn|anh)\s+(?:tự\s+)?(?:đứng\s+dậy(?:.{0,24})?|bước|đi|chạy|bò|tiến|rẽ|leo|di\s+chuyển|rời|quay\s+gót|men\s+theo)\b/iu.test(text))
-    return 'reply moves Cao Minh after a stationary action';
+      && (/(?:cao minh|hắn|anh)\s+(?:tự\s+)?(?:đứng\s+dậy(?:.{0,24})?|bước|đi|chạy|bò|tiến|rẽ|leo|di\s+chuyển|rời|quay\s+gót|men\s+theo)\b/iu.test(text)
+        || /(?:kết cấu|kiến trúc|không gian|mặt sàn|hành lang).{0,100}?(?:trượt|dịch chuyển).{0,100}?(?:cao minh|vị trí)/iu.test(text)))
+    return 'reply changes Cao Minh position after a stationary action';
   return '';
 }
 function validateBatch(parsed, count) {

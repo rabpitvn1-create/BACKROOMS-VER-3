@@ -129,6 +129,9 @@ public class NarrationGuardTest {
     assertFalse(NarrationGuard.validate(narration(
         "Cao Minh rời khỏi vị trí cũ và bước dọc theo bức tường."), ordinary,
         "Tôi áp tai vào bức tường và chỉ tập trung lắng nghe.").isEmpty());
+    assertFalse(NarrationGuard.validate(narration(
+        "Kết cấu không gian âm thầm trượt đi, làm vị trí Cao Minh thay đổi."),
+        ordinary, "Tôi ngồi xuống, nhắm mắt và nhất quyết không bước thêm.").isEmpty());
     assertTrue(NarrationGuard.validate(narration(
         "Tiếng rung mỏng truyền qua lớp tường, còn Cao Minh vẫn giữ nguyên vị trí."),
         ordinary, "Tôi áp tai vào bức tường và chỉ tập trung lắng nghe.").isEmpty());
