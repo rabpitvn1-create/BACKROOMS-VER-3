@@ -43,7 +43,7 @@ public class HiddenNarrativeChainTest {
     HiddenNarrativeChain chain = HiddenNarrativeChain.parse(forecast, generated, first);
     HiddenNarrativeChain.Beat firstBeat = chain.current("before-1", first);
     assertNotNull(firstBeat);
-    assertEquals(firstBeat.afterWorldHash, firstBeat.afterWorldHash);
+    assertEquals("before-1", firstBeat.beforeWorldHash);
     assertFalse(firstBeat.narration("A").getString("reply")
         .equals(firstBeat.narration("B").getString("reply")));
     assertEquals("after-1", firstBeat.afterWorldHash);
@@ -86,7 +86,7 @@ public class HiddenNarrativeChainTest {
     assertTrue(rejected);
 
     JSONObject report = new JSONObject().put("steps", new JSONArray().put(
-        draftStep("SYSTEM: world state committed.",
+        draftStep("Hệ thống: cập nhật trạng thái thành công.",
             "Một luồng gió lạnh đưa Cao Minh đến khoảng sáng phía trước.",
             choices("Quan sát những vệt ố trên tường", "Lắng nghe âm thanh từ bên kia"))));
     rejected = false;
