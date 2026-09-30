@@ -210,7 +210,8 @@
   }
 
   function fallbackExplorerChoices() {
-    return [{text:'Quan sát dãy tường vàng',action:'Quan sát dãy tường vàng'}];
+    return [{text:'Tiếp tục khám phá dãy tường vàng',action:'Tiếp tục khám phá dãy tường vàng'},
+      {text:'Lần theo những âm thanh xa lạ',action:'Lần theo những âm thanh xa lạ'}];
   }
 
   // A missing provider choice must not end the explorer's suggested-action loop.
@@ -228,11 +229,12 @@
     var text = /^(?:cao minh\s+)?(?:quan sát|nhìn|xem xét|kiểm tra|khảo sát)\b/i.test(previousAction)
       ? 'Lắng nghe âm thanh trong khu vực hiện tại'
       : 'Quan sát khu vực phía trước';
-    return [{text:text,action:text}];
+    return [{text:text,action:text},
+      {text:'Thử lần theo một lối đi ít dấu vết',action:'Thử lần theo một lối đi ít dấu vết'}];
   }
 
   function displayedExplorerChoices(entry) {
-    var choices = Array.isArray(entry && entry.choices) ? entry.choices.slice(0, 1) : [];
+    var choices = Array.isArray(entry && entry.choices) ? entry.choices.slice(0, 2) : [];
     if (state && Array.isArray(state.log) && state.log.length === 1 && entry === state.log[0]) {
       choices = fallbackExplorerChoices();
     } else if (!choices.length && state && Array.isArray(state.log)
@@ -241,17 +243,18 @@
       if (state.combat && state.combat.active === false
           && state.combat.outcome === 'victory'
           && state.log[Number(state.combat.logIndex)] === entry) {
-        choices = [{text:'Quan sát khu vực sau trận chiến',
-                    action:'Quan sát khu vực sau trận chiến'}];
+        choices = [{text:'Quan sát khu vực sau trận chiến',action:'Quan sát khu vực sau trận chiến'},
+          {text:'Tìm một lối đi khác để tiếp tục',action:'Tìm một lối đi khác để tiếp tục'}];
       } else {
         choices = missingExplorerChoice();
       }
     }
     if (state && state.levelRoute && state.levelRoute.exitAvailable === true) {
-      choices = [{text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'}];
+      choices = [{text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'},
+        {text:'Thận trọng tiếp cận lối thoát vừa tìm thấy',action:'Thận trọng tiếp cận lối thoát vừa tìm thấy'}];
     }
-    return choices.slice(0, 1).map(function(choice){
-      return Object.assign({}, choice, {id:'A'});
+    return choices.slice(0, 2).map(function(choice, index){
+      return Object.assign({}, choice, {id:String.fromCharCode(65+index)});
     });
   }
 
@@ -334,9 +337,9 @@
         !actionable, false, function(){ submitChestChoice(); }));
     }
 
-    choices.slice(0, 1).forEach(function(choice, index){
+    choices.slice(0, 2).forEach(function(choice, index){
       var disabled = !actionable || !!choice.disabled || !!choice.selected;
-      var prefix = ''; // No A/B/C prefix when only one suggestion is shown.
+      var prefix = choice.id || String.fromCharCode(65+index);
       box.appendChild(makeChoiceButton(prefix, choice.text || choice.action || '', entry,
         choice.highlights || [], disabled, !!choice.selected,
         function(){ submitExplorerChoice(entry, choice); }));
@@ -711,6 +714,7 @@
     window.__combatBusy = false;
     if (typeof previousTurn === 'function') previousTurn(json);
     syncComposer();
+    setTimeout(function(){ if (typeof window.backroomPrefetchChoices === 'function') window.backroomPrefetchChoices(); }, 0);
     if ((state && state.combat && state.combat.active) || latestGmScrollKey() !== previousGmScrollKey)
       scrollForCurrentMode();
   };
@@ -811,22 +815,22 @@
   };
 
   window.backroomPrefetchChoices = function(){
-    if (!window.Android || typeof Android.prefetchChoices !== 'function' || !state
+    if (!window.Android || typeof Android.prefetchNarrativeChain !== 'function' || !state
         || (state.combat && state.combat.active)
         || (state.flags && state.flags.entityEncounterKey)) return;
     var index = lastGmIndex();
     var entry = index < 0 ? null : state.log[index];
     if (!entry || index !== state.log.length - 1) return;
     var choices = displayedExplorerChoices(entry);
-    if (choices.length !== 3) return;
+    if (choices.length !== 2) return;
     var actions = choices.map(function(choice, i){
       return {id:String.fromCharCode(65 + i),action:String(choice.action || choice.text || '').trim()};
     });
     if (actions.some(function(choice){return !choice.action;})) return;
-    Android.prefetchChoices(JSON.stringify(state), JSON.stringify(actions));
+    Android.prefetchNarrativeChain(JSON.stringify(state), JSON.stringify(actions));
   };
 
   window.render();
   scrollForCurrentMode();
-  // Legacy prefetch hook remains callable, but no speculative A/B/C request starts by default.
+  setTimeout(function(){ window.backroomPrefetchChoices(); }, 0);
 })();
