@@ -16,6 +16,30 @@ test('probe rotates unique configured Gemini keys like the APK',()=>{
   }),['key-a','key-b','legacy']);
   assert.deepEqual(probe.configuredKeys({}),[]);
 });
+test('key rotation performs a real provider attempt without recursion',async()=>{
+  const previousFetch=global.fetch;
+  const previous1=process.env.GEMINI_API_KEY_1;
+  const previousLegacy=process.env.GEMINI_API_KEY;
+  try{
+    process.env.GEMINI_API_KEY_1='fake-key';
+    delete process.env.GEMINI_API_KEY;
+    global.fetch=async()=>({ok:true,json:async()=>({
+      candidates:[{content:{parts:[{text:'{"ok":true}'}]}}],
+      usageMetadata:{totalTokenCount:12}
+    })});
+    const results={httpAttempts:0,calls:[]};
+    const output=await probe.generateAcrossKeys('fixture','rotation_fixture',results);
+    assert.deepEqual(output.parsed,{ok:true});
+    assert.equal(results.httpAttempts,1);
+    assert.equal(results.calls.length,1);
+  }finally{
+    global.fetch=previousFetch;
+    if(previous1===undefined)delete process.env.GEMINI_API_KEY_1;
+    else process.env.GEMINI_API_KEY_1=previous1;
+    if(previousLegacy===undefined)delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY=previousLegacy;
+  }
+});
 test('provider probe classifies failures without persisting secret-bearing error strings',()=>{
   assert.deepEqual(probe.classifyFailure(new Error('Gemini request X failed: HTTP 503')),
     {httpStatus:503,reason:'HTTP 503'});

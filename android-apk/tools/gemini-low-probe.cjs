@@ -125,7 +125,7 @@ async function generateAcrossKeys(prompt, name, results) {
   try {
     for (const key of keys) {
       process.env.GEMINI_API_KEY = key;
-      try { return await generateAcrossKeys(prompt,name,results); }
+      try { return await generate(prompt,name,results); }
       catch (error) {
         lastError = error;
         const status = classifyFailure(error).httpStatus;
@@ -141,7 +141,7 @@ async function generateAcrossKeys(prompt, name, results) {
 
 async function safelyGenerate(prompt, name, results) {
   const started = Date.now();
-  try { return await generate(prompt,name,results); }
+  try { return await generateAcrossKeys(prompt,name,results); }
   catch (error) {
     const failure = classifyFailure(error);
     if (failure.httpStatus === 429) results.quotaLimited = true;
@@ -247,4 +247,4 @@ async function main() {
   }
 }
 if (require.main===module) main();
-module.exports={validChoices,validateBatch,validateSingle,usageOf,classifyFailure,measuredTokensOf,configuredKeys};
+module.exports={validChoices,validateBatch,validateSingle,usageOf,classifyFailure,measuredTokensOf,configuredKeys,generateAcrossKeys};
