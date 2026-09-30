@@ -701,15 +701,13 @@ public class MainActivity extends Activity {
     CanonRetriever.CanonPacket canon = canonRetriever == null ? null
         : canonRetriever.retrieve(state, action, CanonRetriever.DEFAULT_BUDGET,
             BuildConfig.DEBUG, levelName);
-    if (canon == null || canon.budgetExceeded) {
+    if (canon == null || canon.budgetExceeded || !canon.missingMandatoryRefs.isEmpty()) {
       Log.w(TAG, "Canon retrieval unavailable/over budget/missing refs: "
           + (canon == null ? "index unavailable" : "size=" + canon.charCount
               + " missing=" + canon.missingMandatoryRefs + " requires=" + canon.missingRefs));
-      throw new IllegalStateException("Canon bắt buộc không khả dụng trong budget; không gọi AI narration.");
+      throw new IllegalStateException(
+          "Canon bắt buộc không khả dụng, quá budget hoặc thiếu dependency; không gọi AI narration.");
     }
-    if (!canon.missingMandatoryRefs.isEmpty()) Log.w(TAG,
-        "Markdown canon missing/conflicting; Core context remains authoritative: "
-            + canon.missingMandatoryRefs);
     if (BuildConfig.DEBUG) Log.d(TAG, "CANON RETRIEVAL: " + canon.trace);
     return GmNarrativePacket.build(levelContext, entityContext, itemContext, characterContext,
         recentContext(state), state, action, gmStyleExamplesContext(), canon.promptText());
