@@ -700,14 +700,15 @@ public final class GameCoreFacade implements AutoCloseable {
       JSONObject working = deepCopy(persisted);
       JSONObject workingCombat = working.getJSONObject("combat");
       String turnId = emergentTurnEngine.nextTurnId(persisted, "death:restart");
-      LevelCore.returnToCurrentLevelStart(working);
+      // A defeat changes perception, never the actual position or route progress.
+      working.put("perceptionShroud", true);
       workingCombat.put("deathRestartPending", false).put("outcome", "");
       working.put("combat", workingCombat);
 
       JSONArray events = new JSONArray();
       events.put(emergentTurnEngine.event(turnId, events, "PLAYER_RESPAWNED", "LOCAL", "cao_minh",
           new JSONObject()
-              .put("factPredicate", "respawned_at_level_start")
+              .put("factPredicate", "respawned_in_place")
               .put("factValue", working.optString("location", ""))
               .put("causedBy", "system")
               .put("observedByPlayer", true),
