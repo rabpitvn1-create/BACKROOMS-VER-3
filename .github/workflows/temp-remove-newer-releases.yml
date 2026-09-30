@@ -2,6 +2,10 @@ name: TEMP Remove newer releases
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/temp-remove-newer-releases.yml'
 
 permissions:
   contents: write
