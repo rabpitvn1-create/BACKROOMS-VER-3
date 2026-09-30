@@ -155,3 +155,17 @@ assert.equal(resumed.busy,false);
 assert.equal(resumed.window.__combatBusy,false,
   'combat completion unlocks free text and Core stat upgrades');
 console.log('Post-combat unlock passed');
+
+const diceRule = source.match(/\.combat-die\{([^}]*)\}/)?.[1] || '';
+const diceImageRule = source.match(/\.combat-die img\{([^}]*)\}/)?.[1] || '';
+const diceFrameRule = source.match(/\.combat-die::after\{([^}]*)\}/)?.[1] || '';
+const heldFrameRule = source.match(/\.combat-die.held::after\{([^}]*)\}/)?.[1] || '';
+assert.match(diceRule, /padding:0/, 'normal and HOLD dice share the same zero-padding cell');
+assert.match(diceRule, /border:0/, 'border is an overlay and never reduces image space');
+assert.match(diceRule, /overflow:hidden/, 'dice art cannot overflow its rounded frame');
+assert.match(diceImageRule, /width:100%;height:100%;/, 'dice art fills its cell without scaling past 100%');
+assert.match(diceFrameRule, /border:2px solid #343d45/, 'normal frame has a fixed overlay width');
+assert.match(heldFrameRule, /border-color:#f6c85f/, 'HOLD changes color, not geometry');
+assert.match(source, /\.combat-die.rolling::after\{border-color:#72808b\}/,
+  'rolling state uses the same overlay geometry');
+console.log('Dice frame geometry and HOLD overlay passed');
