@@ -48,6 +48,55 @@ public class FullGameplay200TurnSimulationTest {
     System.out.println("FULL_GAMEPLAY_200_ESTABLISHED_PARTY " + party.report());
   }
 
+  @Test public void readOnlyChainForecastMatchesActualCommittedTurnsWithNarration() throws Exception {
+    String graph = asset("level_graph.json");
+    String knowledge = asset("knowledge/level_knowledge.json");
+    String registry = asset("knowledge/entity_encounters.json");
+    boolean foundMultiBeat = false;
+
+    // Encounter interruptions are expected; find a deterministic ordinary-exploration batch.
+    for (int seedIndex = 0; seedIndex < 20 && !foundMultiBeat; seedIndex++) {
+      JSONObject initial = GameCoreFacade.newGameState(new JSONObject())
+          .put("emergent", new JSONObject().put("saveId", "chain-forecast-" + seedIndex));
+      try (GameCoreFacade core = new GameCoreFacade(
+          inMemoryPreferences(initial.toString()), LevelCore.withAssets(knowledge, graph),
+          new EntityCore(registry), false)) {
+        core.normalizeState(initial.toString());
+        String before = core.currentStateHash();
+        JSONObject forecast = new JSONObject(
+            core.previewNarrativeChain("Tiếp tục khám phá", 3, before));
+        JSONArray steps = forecast.optJSONArray("steps");
+        assertEquals("Forecast must never mutate the live state", before, core.currentStateHash());
+        if (!forecast.optBoolean("handled", false) || steps == null || steps.length() < 2) continue;
+        foundMultiBeat = true;
+        for (int index = 0; index < steps.length(); index++) {
+          JSONObject beat = steps.getJSONObject(index);
+          assertEquals("The next beat must start from the actual canonical world",
+              beat.getString("beforeWorldHash"), core.currentNarrativeWorldHash());
+          String canonicalAction = beat.getString("canonicalAction");
+          JSONObject prepared = new JSONObject(core.processRule(core.currentCoreState(), canonicalAction));
+          assertEquals("turn_prepared", prepared.getString("reason"));
+          JSONObject committed = new JSONObject(
+              core.completePreparedTurn(prepared.getString("turnId"), "{}"));
+          assertTrue(committed.optString("error"), committed.optBoolean("handled", false));
+          assertEquals("Menu and free text must consume the same canonical Core outcome",
+              beat.getString("afterWorldHash"), core.currentNarrativeWorldHash());
+
+          // The real app persists player/GM narration before proceeding to the next beat.
+          JSONObject state = committed.getJSONObject("state");
+          JSONArray log = state.optJSONArray("log");
+          if (log == null) log = new JSONArray();
+          log.put(new JSONObject().put("role", "player").put("text", "Tự chọn đường vòng"));
+          log.put(new JSONObject().put("role", "gm")
+              .put("text", "Ánh sáng lay động phía cuối lối đi."));
+          state.put("log", log);
+          core.commitNarration(state.toString(), false, true);
+        }
+      }
+    }
+    assertTrue("At least one fixed-seed scenario should yield a multi-beat batch", foundMultiBeat);
+  }
+
   private static Result play(String seed, boolean establishedParty, int targetActions) throws Exception {
     String graph = asset("level_graph.json");
     String knowledge = asset("knowledge/level_knowledge.json");
