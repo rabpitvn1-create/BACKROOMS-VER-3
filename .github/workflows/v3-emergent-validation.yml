@@ -8,6 +8,8 @@ on:
       - codex/ponytail-abc-prefetch-v3
     paths:
       - 'android-apk/**'
+      - 'canon/**'
+      - 'tools/canon.py'
       - '.github/workflows/v3-emergent-validation.yml'
   workflow_dispatch:
 
@@ -26,6 +28,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
+      - name: Validate canon source and generated projections
+        run: python3 tools/canon.py check
       - name: Validate choice UI
         run: node android-apk/app/src/test/js/gm-choice-ui.test.cjs
       - name: Unit tests (including 200-turn Director simulation) and debug APK

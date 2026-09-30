@@ -1,4 +1,3 @@
-<!-- GENERATED FILE. DO NOT EDIT. Source: canon/characters/luc_tram_codex.md; run python3 tools/canon.py generate. -->
 <!-- canon-document: id=document.luc_tram.r05; type=FOUNDATION; status=CURRENT; source=02_CHARACTERS/Lục_Trầm_Codex; revision=R05 -->
 # **LỤC TRẦM**
 

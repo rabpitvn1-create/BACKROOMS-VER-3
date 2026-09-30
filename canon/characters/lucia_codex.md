@@ -1,4 +1,3 @@
-<!-- GENERATED FILE. DO NOT EDIT. Source: canon/characters/lucia_codex.md; run python3 tools/canon.py generate. -->
 <!-- canon-document: id=document.lucia.r03; type=FOUNDATION; status=CURRENT; source=02_CHARACTERS/Lucia_Codex.docx; revision=R03 -->
 # Lucia Lục / Hứa Thuý Mai
 

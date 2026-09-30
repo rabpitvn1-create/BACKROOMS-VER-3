@@ -1,4 +1,3 @@
-<!-- GENERATED FILE. DO NOT EDIT. Source: canon/world/entities_visual.md; run python3 tools/canon.py generate. -->
 <!-- canon-document: id=document.entity.visuals; type=FOUNDATION; status=CURRENT; source=android-apk/app/src/main/assets/canon/Entity.md; revision=snapshot-main -->
 # MÔ TẢ THỊ GIÁC THỰC THỂ
 

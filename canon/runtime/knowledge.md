@@ -1,10 +1,9 @@
+# Legacy knowledge projection source
+
+> EDITABLE SOURCE. Runtime output: `android-apk/app/src/main/assets/knowledge/knowledge_db.json`. Run `python3 tools/canon.py generate` after editing.
+
+```json
 {
-  "_generated": {
-    "generator": "tools/canon.py",
-    "doNotEdit": true,
-    "schemaVersion": 1,
-    "source": "canon/runtime/knowledge.md"
-  },
   "schemaVersion": 1,
   "records": [
     {
@@ -26,7 +25,24 @@
         "unknown"
       ],
       "references": [],
-      "affordances": []
+      "affordances": [],
+      "_canon": {
+        "id": "GAME.TEXT.CORE",
+        "owner": "knowledge:game_rule",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "05_TextGame/RULES/TEXT_GAME_RULES.md",
+        "revision": "1-12",
+        "scope": [
+          "knowledge:game_rule"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "GAME.GM.FAIRNESS",
@@ -47,7 +63,24 @@
         "information integrity"
       ],
       "references": [],
-      "affordances": []
+      "affordances": [],
+      "_canon": {
+        "id": "GAME.GM.FAIRNESS",
+        "owner": "knowledge:game_rule",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "05_TextGame/RULES/GAME_MASTER_RULES.md",
+        "revision": "1-15",
+        "scope": [
+          "knowledge:game_rule"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "WRITING.PLAYER_AGENCY",
@@ -66,7 +99,24 @@
         "choice"
       ],
       "references": [],
-      "affordances": []
+      "affordances": [],
+      "_canon": {
+        "id": "WRITING.PLAYER_AGENCY",
+        "owner": "knowledge:writing",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "05_TextGame/RULES/TEXT_GAME_RULES.md + 05_TextGame/RULES/GAME_MASTER_RULES.md",
+        "revision": "TEXT_GAME_RULES 4; GM_RULES 2",
+        "scope": [
+          "knowledge:writing"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "WRITING.KNOWLEDGE_BOUNDARY",
@@ -87,7 +137,24 @@
         "uncertainty"
       ],
       "references": [],
-      "affordances": []
+      "affordances": [],
+      "_canon": {
+        "id": "WRITING.KNOWLEDGE_BOUNDARY",
+        "owner": "knowledge:writing",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "00_RULES/worldcodex.md + 00_RULES/Những điều bắt buộc không được làm khi viết tiểu thuyết.md + 00_RULES/CONVERSATION.MD",
+        "revision": "KNOWLEDGE BOUNDARY; NOVEL.KNOWLEDGE; 14-16",
+        "scope": [
+          "knowledge:writing"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "WRITING.COMPETENCE",
@@ -108,7 +175,24 @@
         "horror"
       ],
       "references": [],
-      "affordances": []
+      "affordances": [],
+      "_canon": {
+        "id": "WRITING.COMPETENCE",
+        "owner": "knowledge:writing",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "00_RULES/Những điều bắt buộc không được làm khi viết tiểu thuyết.md + 00_RULES/worldcodex.md + 00_RULES/Supernatural_Horror_Craft_Guide.md",
+        "revision": "NOVEL.COMPETENCE.NO_SUDDEN_STUPIDITY; 7; SH-SUSPENSE-01",
+        "scope": [
+          "knowledge:writing"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "WRITING.DIALOGUE",
@@ -130,7 +214,24 @@
       "references": [],
       "affordances": [
         "dialogue"
-      ]
+      ],
+      "_canon": {
+        "id": "WRITING.DIALOGUE",
+        "owner": "knowledge:writing",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "00_RULES/CONVERSATION.MD",
+        "revision": "RULES.DIALOGUE / 0-32",
+        "scope": [
+          "knowledge:writing"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "WORLD.CORE",
@@ -153,7 +254,24 @@
         "death"
       ],
       "references": [],
-      "affordances": []
+      "affordances": [],
+      "_canon": {
+        "id": "WORLD.CORE",
+        "owner": "knowledge:world",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/world.md",
+        "revision": "0.1-0.5",
+        "scope": [
+          "knowledge:world"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.CAO_MINH.RUNTIME_CORE",
@@ -174,7 +292,24 @@
         "voice"
       ],
       "references": [],
-      "affordances": []
+      "affordances": [],
+      "_canon": {
+        "id": "CHAR.CAO_MINH.RUNTIME_CORE",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+        "revision": "CAO-QUICK-01; CAO-PER-01; CAO-BACKROOMS-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.CAO_MINH.VAN_QUY_MA_TAM",
@@ -196,7 +331,24 @@
       "references": [],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.CAO_MINH.VAN_QUY_MA_TAM",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+        "revision": "CAO-CORE-VQM-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.CAO_MINH.VAN_QUY_MA_THAN",
@@ -219,7 +371,26 @@
       ],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.CAO_MINH.VAN_QUY_MA_THAN",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+        "revision": "CAO-VQMT-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "CHAR.CAO_MINH.VAN_QUY_MA_TAM"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.CAO_MINH.HUYET_MA_KIEM",
@@ -244,7 +415,26 @@
       ],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.CAO_MINH.HUYET_MA_KIEM",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+        "revision": "CAO-EQP-HUYET-MA-KIEM-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "CHAR.CAO_MINH.VAN_QUY_MA_TAM"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.CAO_MINH.HUYET_MA_CHIEN_KHAI",
@@ -268,7 +458,26 @@
       ],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.CAO_MINH.HUYET_MA_CHIEN_KHAI",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+        "revision": "CAO-EQP-HUYET-MA-KHAI-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "CHAR.CAO_MINH.VAN_QUY_MA_TAM"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.CAO_MINH.VAN_TANG_GIOI",
@@ -291,7 +500,24 @@
       "references": [],
       "affordances": [
         "item_manipulation"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.CAO_MINH.VAN_TANG_GIOI",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+        "revision": "CAO-EQP-VAN-TANG-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.CAO_MINH.HUYET_MA_24",
@@ -317,7 +543,27 @@
       ],
       "affordances": [
         "high_tier_target"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.CAO_MINH.HUYET_MA_24",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+        "revision": "CAO-ULT-HUYETMA24-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "CHAR.CAO_MINH.VAN_QUY_MA_THAN",
+          "CHAR.CAO_MINH.HUYET_MA_KIEM"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD",
@@ -345,7 +591,24 @@
         "dialogue",
         "high_tier_target",
         "relationship_context"
-      ]
+      ],
+      "_canon": {
+        "id": "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD",
+        "owner": "knowledge:relationship",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "android-apk/DIEP_MINH_CANON.md",
+        "revision": "DIEP-MINH-CAO-REL-01",
+        "scope": [
+          "knowledge:relationship"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.DIEP_MINH.VISUAL_R01",
@@ -374,7 +637,26 @@
       "affordances": [
         "visual_description",
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.DIEP_MINH.VISUAL_R01",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "android-apk/DIEP_MINH_CANON.md",
+        "revision": "DIEP-MINH-VIS-01",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.DIEP_MINH.BACKROOMS_R01",
@@ -405,7 +687,27 @@
         "direct_threat",
         "identity_check",
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.DIEP_MINH.BACKROOMS_R01",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "android-apk/DIEP_MINH_CANON.md",
+        "revision": "DIEP-MINH-BACKROOMS-01; DIEP-MINH-RUNTIME-01",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.DIEP_MINH.VISUAL_R01",
+          "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "REL.CAO_MINH.SYVIAL.NONE",
@@ -427,7 +729,24 @@
       "references": [],
       "affordances": [
         "dialogue"
-      ]
+      ],
+      "_canon": {
+        "id": "REL.CAO_MINH.SYVIAL.NONE",
+        "owner": "knowledge:relationship",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+        "revision": "CAO-CANON-CLEANUP-R15",
+        "scope": [
+          "knowledge:relationship"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.SYVIAL.RUNTIME_CORE",
@@ -448,7 +767,24 @@
         "voice"
       ],
       "references": [],
-      "affordances": []
+      "affordances": [],
+      "_canon": {
+        "id": "CHAR.SYVIAL.RUNTIME_CORE",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+        "revision": "SYVIAL-QUICK-01; SYVIAL-OVERVIEW-01; SYVIAL-YANDERE-01; SYVIAL-ACTION-LOCK-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.SYVIAL.LUCIFER_CORE",
@@ -470,7 +806,24 @@
       "references": [],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.SYVIAL.LUCIFER_CORE",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+        "revision": "SYVIAL-CORE-LUCIFER-01; SYVIAL-WEAK-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.SYVIAL.DEVIL_TRIGGER",
@@ -491,7 +844,24 @@
       "references": [],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.SYVIAL.DEVIL_TRIGGER",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+        "revision": "SYVIAL-DT-01; SYVIAL-ACTION-LOCK-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.SYVIAL.GODKILLER",
@@ -513,7 +883,24 @@
       "references": [],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.SYVIAL.GODKILLER",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+        "revision": "SYVIAL-EQP-GODKILLER-01; SYVIAL-STYLE-COMBAT-01; SYVIAL-ACTION-LOCK-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.SYVIAL.GODKILLER_OVERRIDE",
@@ -538,7 +925,27 @@
       ],
       "affordances": [
         "high_tier_target"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.SYVIAL.GODKILLER_OVERRIDE",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+        "revision": "SYVIAL-ULT-GKO-01; SYVIAL-ACTION-LOCK-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "CHAR.SYVIAL.GODKILLER",
+          "CHAR.SYVIAL.DEVIL_TRIGGER"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.SYVIAL.COMBAT",
@@ -563,7 +970,26 @@
       ],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.SYVIAL.COMBAT",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+        "revision": "SYVIAL-COMBAT-01; SYVIAL-STYLE-COMBAT-01",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "CHAR.SYVIAL.GODKILLER"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.GLOBAL_HARD_LOCK",
@@ -584,7 +1010,24 @@
       "references": [],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.GLOBAL_HARD_LOCK",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "0.6 Entity — HARD LOCK",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ITEM.GLOBAL_HARD_LOCK",
@@ -606,7 +1049,24 @@
       "references": [],
       "affordances": [
         "item_manipulation"
-      ]
+      ],
+      "_canon": {
+        "id": "ITEM.GLOBAL_HARD_LOCK",
+        "owner": "knowledge:item",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/items.md",
+        "revision": "0.7-0.8; 8.6",
+        "scope": [
+          "knowledge:item"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ITEM.GAMEPLAY_LOOT_LOCK",
@@ -632,7 +1092,27 @@
       ],
       "affordances": [
         "item_manipulation"
-      ]
+      ],
+      "_canon": {
+        "id": "ITEM.GAMEPLAY_LOOT_LOCK",
+        "owner": "knowledge:item",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "GAMEPLAY_RULE",
+        "revision": "Core loot contract 2026-09-18",
+        "scope": [
+          "knowledge:item"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "ITEM.ALMOND_WATER",
+          "ITEM.BANDAGE"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ITEM.ALMOND_WATER",
@@ -653,7 +1133,24 @@
       "references": [],
       "affordances": [
         "resource_check"
-      ]
+      ],
+      "_canon": {
+        "id": "ITEM.ALMOND_WATER",
+        "owner": "knowledge:item",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/items.md",
+        "revision": "8.1 Object 1 — Almond Water",
+        "scope": [
+          "knowledge:item"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ITEM.BANDAGE",
@@ -675,7 +1172,24 @@
       "references": [],
       "affordances": [
         "item_manipulation"
-      ]
+      ],
+      "_canon": {
+        "id": "ITEM.BANDAGE",
+        "owner": "knowledge:item",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "GAMEPLAY_RULE",
+        "revision": "Consumable item contract 2026-09-18",
+        "scope": [
+          "knowledge:item"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ITEM.GREEK_FIRE",
@@ -695,7 +1209,24 @@
       "references": [],
       "affordances": [
         "resource_check"
-      ]
+      ],
+      "_canon": {
+        "id": "ITEM.GREEK_FIRE",
+        "owner": "knowledge:item",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/items.md",
+        "revision": "8.2 Object 5 — Greek Fire",
+        "scope": [
+          "knowledge:item"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ITEM.LIQUID_PAIN",
@@ -716,7 +1247,24 @@
       "affordances": [
         "resource_check",
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "ITEM.LIQUID_PAIN",
+        "owner": "knowledge:item",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/items.md",
+        "revision": "8.3 Object 12 — Liquid Pain",
+        "scope": [
+          "knowledge:item"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.00",
@@ -737,7 +1285,24 @@
       "references": [],
       "affordances": [
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.00",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
+        "revision": "Level 0; entity 1.3",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.0.1",
@@ -758,7 +1323,24 @@
       "references": [],
       "affordances": [
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.0.1",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "Backrooms Wiki",
+        "revision": "Level 0.1 — Zenith Station",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.0.2",
@@ -780,7 +1362,24 @@
       "affordances": [
         "trace_analysis",
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.0.2",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "Backrooms Wiki",
+        "revision": "Level 0.2 — Remodeled Mess",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.0.5",
@@ -802,7 +1401,24 @@
       "affordances": [
         "trace_analysis",
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.0.5",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "Backrooms Wiki",
+        "revision": "Level 0.5 — Aquaclaustrophobic Infirmary",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.0.7",
@@ -823,7 +1439,24 @@
       "references": [],
       "affordances": [
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.0.7",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "Backrooms Wiki",
+        "revision": "Level 0.7 — The Reminiscence District",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.MANILA_ROOM",
@@ -844,7 +1477,24 @@
       "references": [],
       "affordances": [
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.MANILA_ROOM",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "Backrooms Wiki",
+        "revision": "The Manila Room",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.THE_TORMENT",
@@ -866,7 +1516,24 @@
       "affordances": [
         "trace_analysis",
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.THE_TORMENT",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "Backrooms Wiki",
+        "revision": "The Torment",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.RED_ROOMS",
@@ -887,7 +1554,24 @@
       "references": [],
       "affordances": [
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.RED_ROOMS",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "Backrooms Wiki",
+        "revision": "Red Rooms",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.01",
@@ -912,7 +1596,27 @@
       "affordances": [
         "trace_analysis",
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.01",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/level.md",
+        "revision": "2 LEVEL 1 — PARKING ZONE",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.HOUND",
+          "ENTITY.FALSE_PUDDLE"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.02",
@@ -939,7 +1643,29 @@
       "affordances": [
         "trace_analysis",
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.02",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/level.md",
+        "revision": "3 LEVEL 2 — PIPE DREAMS",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.HOUND",
+          "ENTITY.SMILER",
+          "ENTITY.SKIN_STEALER",
+          "ENTITY.BIOLOGICAL_PIPELINE"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.03",
@@ -966,7 +1692,29 @@
       "affordances": [
         "trace_analysis",
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.03",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/level.md",
+        "revision": "4 LEVEL 3 — THE ELECTRICAL STATION",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.DEATHMOTH",
+          "ENTITY.WRETCH",
+          "ENTITY.SKIN_STEALER",
+          "ENTITY.CABLE_MIMIC"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.04",
@@ -987,7 +1735,24 @@
       "references": [],
       "affordances": [
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.04",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
+        "revision": "Level 4; entity 5.2",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.05",
@@ -1013,7 +1778,28 @@
       "affordances": [
         "trace_analysis",
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.05",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/level.md",
+        "revision": "6 LEVEL 5 — TERROR HOTEL",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.BEAST_LEVEL_5",
+          "ENTITY.SKIN_STEALER",
+          "ENTITY.HOUND"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "LEVEL.06",
@@ -1034,7 +1820,24 @@
       "references": [],
       "affordances": [
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "LEVEL.06",
+        "owner": "knowledge:level",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
+        "revision": "7 LEVEL 6; entity 7.3",
+        "scope": [
+          "knowledge:level"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.HOUND",
@@ -1056,7 +1859,26 @@
       ],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.HOUND",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-1A; ENT-2B",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.FALSE_PUDDLE",
@@ -1080,7 +1902,27 @@
       "affordances": [
         "direct_threat",
         "resource_check"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.FALSE_PUDDLE",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-1F",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK",
+          "ITEM.LIQUID_PAIN"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.SMILER",
@@ -1102,7 +1944,26 @@
       ],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.SMILER",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-2C",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.SKIN_STEALER",
@@ -1126,7 +1987,26 @@
       "affordances": [
         "direct_threat",
         "identity_check"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.SKIN_STEALER",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-2D",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.BIOLOGICAL_PIPELINE",
@@ -1149,7 +2029,26 @@
       "affordances": [
         "direct_threat",
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.BIOLOGICAL_PIPELINE",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-2F",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.DEATHMOTH",
@@ -1171,7 +2070,26 @@
       ],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.DEATHMOTH",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-1D; ENT-3A",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.WRETCH",
@@ -1193,7 +2111,26 @@
       ],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.WRETCH",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-3B",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.CABLE_MIMIC",
@@ -1216,7 +2153,26 @@
       "affordances": [
         "direct_threat",
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.CABLE_MIMIC",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-3D",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.BEAST_LEVEL_5",
@@ -1240,7 +2196,26 @@
       "affordances": [
         "direct_threat",
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.BEAST_LEVEL_5",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-5A",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "ENTITY.JEFF",
@@ -1264,7 +2239,26 @@
       "affordances": [
         "direct_threat",
         "trace_analysis"
-      ]
+      ],
+      "_canon": {
+        "id": "ENTITY.JEFF",
+        "owner": "knowledge:entity",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "01_WORLD/entity.md",
+        "revision": "ENT-R01 — JEFF THE KILLER",
+        "scope": [
+          "knowledge:entity"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "MISSING_ORIGIN",
+        "refs": [
+          "ENTITY.GLOBAL_HARD_LOCK"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.LUC_TRAM.IDENTITY",
@@ -1289,7 +2283,24 @@
       "affordances": [
         "character_identity",
         "relationship_context"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.LUC_TRAM.IDENTITY",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Lục_Trầm_Codex",
+        "revision": "LUC-TRAM-THIEN-KIEM-CODEX-R05; 01 · ĐỊNH DANH VÀ VỊ TRÍ",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.LUC_TRAM.VISUAL_R02",
@@ -1314,7 +2325,26 @@
       ],
       "affordances": [
         "visual_description"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.LUC_TRAM.VISUAL_R02",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Lục_Trầm_Codex",
+        "revision": "04 · NGOẠI HÌNH · VISUAL LOCK R02",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "CHAR.LUC_TRAM.IDENTITY"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.LUC_TRAM.CAO_MINH_RELATIONSHIP",
@@ -1341,7 +2371,26 @@
       "affordances": [
         "relationship_context",
         "dialogue_constraint"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.LUC_TRAM.CAO_MINH_RELATIONSHIP",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Lục_Trầm_Codex",
+        "revision": "13-20 · CAO MINH / QUAN HỆ / XƯNG HÔ",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "CHAR.LUC_TRAM.IDENTITY"
+        ],
+        "requires": [],
+        "core": false
+      }
     },
     {
       "id": "CHAR.LUC_TRAM.THIEN_KIEM_DINH_GIOI",
@@ -1367,7 +2416,27 @@
       ],
       "affordances": [
         "direct_threat"
-      ]
+      ],
+      "_canon": {
+        "id": "CHAR.LUC_TRAM.THIEN_KIEM_DINH_GIOI",
+        "owner": "knowledge:character",
+        "type": "KNOWLEDGE",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Lục_Trầm_Codex",
+        "revision": "12 · TUYỆT KỸ — THIÊN KIẾM ĐỊNH GIỚI",
+        "scope": [
+          "knowledge:character"
+        ],
+        "knownBy": "SYSTEM",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [
+          "CHAR.LUC_TRAM.IDENTITY"
+        ],
+        "requires": [],
+        "core": false
+      }
     }
   ]
 }
+```

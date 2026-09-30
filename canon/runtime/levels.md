@@ -1,10 +1,9 @@
+# Level canon projection source
+
+> EDITABLE SOURCE. Runtime output: `android-apk/app/src/main/assets/knowledge/level_knowledge.json`. Run `python3 tools/canon.py generate` after editing.
+
+```json
 {
-  "_generated": {
-    "generator": "tools/canon.py",
-    "doNotEdit": true,
-    "schemaVersion": 1,
-    "source": "canon/runtime/levels.md"
-  },
   "schemaVersion": 2,
   "authority": "BACKROOMsV2_LEVEL_CANON",
   "instruction": "This asset is the authoritative runtime environment knowledge for implemented gameplay Levels. LevelCore must load only the current node. Fields describe environment canon, not automatic character knowledge. Entity spawning, item spawning, stats, combat and hidden route progress remain Core-owned. variationPool contains permitted scene motifs, not guaranteed persistent objects.",
@@ -455,7 +454,24 @@
         "Khi lộ trình gần hoàn tất, một seam kim loại vô hại xuất hiện trong tường nhưng chưa đủ xác định Zenith Station.",
         "Khi exitAvailable, machine hum khác hẳn huỳnh quang tiếng ù trở thành dấu hiệu bền vững qua nhiều room.",
         "Chuyển tầng chỉ hoàn thành khi Cao Minh bước qua ranh giới vào Hui's Family Level 1."
-      ]
+      ],
+      "_canon": {
+        "id": "level.0.foundation",
+        "owner": "world:level:0",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "https://backrooms-wiki.wikidot.com/level-0",
+        "revision": "2026-09-19",
+        "scope": [
+          "level:0"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "1": {
       "name": "Level 1 — Parking Zone",
@@ -526,7 +542,24 @@
         "Ống trần nhỏ giọt tạo puddle không uống được.",
         "Một cụm đèn tắt tạo pocket darkness trước khi Flickering toàn khu.",
         "Bãi xe hiếm với một thân xe không hoạt động và kính bám bụi."
-      ]
+      ],
+      "_canon": {
+        "id": "level.1.foundation",
+        "owner": "world:level:1",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 1 Habitable Zone",
+        "revision": "runtime-current",
+        "scope": [
+          "level:1"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "2": {
       "name": "Level 2 — Pipe Dreams",
@@ -596,7 +629,24 @@
         "Trolley cũ có scrap không phải loot tự động.",
         "Door thép khóa với ô kính nhìn vào phòng tối.",
         "Một đoạn pipe rung mạnh trước khi áp suất giảm."
-      ]
+      ],
+      "_canon": {
+        "id": "level.2.foundation",
+        "owner": "world:level:2",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 2 Abandoned Utility Halls",
+        "revision": "runtime-current",
+        "scope": [
+          "level:2"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "3": {
       "name": "Level 3 — The Electrical Station",
@@ -667,7 +717,24 @@
         "Một bộ contactor đóng cắt gây flash và tiếng nổ khô.",
         "Bar chắn một phòng sáng phía sau nhưng không có gate.",
         "Khu office nhỏ xen giữa machinery báo hiệu transition dần."
-      ]
+      ],
+      "_canon": {
+        "id": "level.3.foundation",
+        "owner": "world:level:3",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 3 Electrical Station",
+        "revision": "runtime-current",
+        "scope": [
+          "level:3"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "4": {
       "name": "Level 4 — The Abandoned Office",
@@ -735,7 +802,24 @@
         "Vending machine có điện nhưng inventory không xác định.",
         "Office carpet đổi dần sang pattern khách sạn ở vùng transition.",
         "Một stairwell yên tĩnh nhưng door signage không khớp tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.4.foundation",
+        "owner": "world:level:4",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 4 Abandoned Office",
+        "revision": "runtime-current",
+        "scope": [
+          "level:4"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "5": {
       "name": "Level 5 — Terror Hotel",
@@ -805,7 +889,24 @@
         "Ballroom có cửa ở vị trí phi lý nhưng tất cả vẫn đóng.",
         "Boiler corridor với valve rung và condensate.",
         "Một guest room vừa đủ ở nhưng dấu hiệu cho thấy không nên ngủ quá lâu."
-      ]
+      ],
+      "_canon": {
+        "id": "level.5.foundation",
+        "owner": "world:level:5",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 5 Terror Hotel",
+        "revision": "runtime-current",
+        "scope": [
+          "level:5"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "6": {
       "name": "Level 6 — Lights Out",
@@ -875,7 +976,24 @@
         "Nền thay đổi độ dốc rất nhẹ chỉ nhận ra qua bước chân.",
         "Nước nông được phát hiện bởi tiếng chạm trước khi chân chạm vào.",
         "Một đoạn hoàn toàn mất mọi âm vang khiến khoảng cách trở nên khó đánh giá."
-      ]
+      ],
+      "_canon": {
+        "id": "level.6.foundation",
+        "owner": "world:level:6",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 6 Lights Out",
+        "revision": "runtime-current",
+        "scope": [
+          "level:6"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_0": {
       "name": "Hui's Family Level 1",
@@ -902,7 +1020,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_0.foundation",
+        "owner": "world:level:hua_1900_0",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_0"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_1": {
       "name": "Hui's Family Level 2",
@@ -929,7 +1064,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_1.foundation",
+        "owner": "world:level:hua_1900_1",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_1"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_2": {
       "name": "Hui's Family Level 3",
@@ -956,7 +1108,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_2.foundation",
+        "owner": "world:level:hua_1900_2",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_2"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_3": {
       "name": "Hui's Family Level 4",
@@ -983,7 +1152,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_3.foundation",
+        "owner": "world:level:hua_1900_3",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_3"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_4": {
       "name": "Hui's Family Level 5",
@@ -1010,7 +1196,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_4.foundation",
+        "owner": "world:level:hua_1900_4",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_4"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_5": {
       "name": "Hui's Family Level 6",
@@ -1037,7 +1240,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_5.foundation",
+        "owner": "world:level:hua_1900_5",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_5"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_6": {
       "name": "Hui's Family Level 7",
@@ -1064,7 +1284,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_6.foundation",
+        "owner": "world:level:hua_1900_6",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_6"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_7": {
       "name": "Hui's Family Level 8",
@@ -1091,7 +1328,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_7.foundation",
+        "owner": "world:level:hua_1900_7",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_7"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_8": {
       "name": "Hui's Family Level 9",
@@ -1118,7 +1372,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_8.foundation",
+        "owner": "world:level:hua_1900_8",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_8"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_9": {
       "name": "Hui's Family Level 10",
@@ -1145,7 +1416,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_9.foundation",
+        "owner": "world:level:hua_1900_9",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_9"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_10": {
       "name": "Hui's Family Level 11",
@@ -1172,7 +1460,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_10.foundation",
+        "owner": "world:level:hua_1900_10",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_10"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_11": {
       "name": "Hui's Family Level 12",
@@ -1199,7 +1504,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_11.foundation",
+        "owner": "world:level:hua_1900_11",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_11"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_12": {
       "name": "Hui's Family Level 13",
@@ -1226,7 +1548,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_12.foundation",
+        "owner": "world:level:hua_1900_12",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_12"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_13": {
       "name": "Hui's Family Level 14",
@@ -1253,7 +1592,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_13.foundation",
+        "owner": "world:level:hua_1900_13",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_13"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_14": {
       "name": "Hui's Family Level 15",
@@ -1280,7 +1636,24 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_14.foundation",
+        "owner": "world:level:hua_1900_14",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_14"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "hua_1900_15": {
       "name": "Hui's Family Level 16",
@@ -1307,7 +1680,25 @@
       "gmConstraints": [
         "Lore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.",
         "Không tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
-      ]
+      ],
+      "_canon": {
+        "id": "level.hua_1900_15.foundation",
+        "owner": "world:level:hua_1900_15",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+        "revision": "runtime-current",
+        "scope": [
+          "level:hua_1900_15"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     }
   }
 }
+```

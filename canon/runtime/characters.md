@@ -1,10 +1,9 @@
+# Character canon projection source
+
+> EDITABLE SOURCE. Runtime output: `android-apk/app/src/main/assets/knowledge/characters_current.json`. Run `python3 tools/canon.py generate` after editing.
+
+```json
 {
-  "_generated": {
-    "generator": "tools/canon.py",
-    "doNotEdit": true,
-    "schemaVersion": 1,
-    "source": "canon/runtime/characters.md"
-  },
   "schemaVersion": 3,
   "syncedAt": "2026-09-28",
   "authority": "Google Drive / 02_CHARACTERS + scoped USER_RETCON android-apk/DIEP_MINH_CANON.md + explicit USER_RETCON Đại Đạo Ma Tôn (2026-09-27) + explicit USER_RETCON Ma Tôn (+99 Stats) (2026-09-27)",
@@ -96,6 +95,26 @@
           "affectsEffectiveCombatStats": true,
           "mutatesBaseStats": false,
           "affectsCoreUpgradeCost": false
+        },
+        "_canon": {
+          "id": "gameplay.character.cao_minh",
+          "owner": "core:combat",
+          "type": "GAMEPLAY",
+          "status": "CURRENT",
+          "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+          "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+          "scope": [
+            "character:cao_minh",
+            "combat"
+          ],
+          "knownBy": "SYSTEM",
+          "sourceKind": "repo",
+          "sourceAvailability": "AVAILABLE",
+          "refs": [
+            "character.cao_minh.foundation"
+          ],
+          "requires": [],
+          "core": false
         }
       },
       "relationships": {
@@ -105,6 +124,23 @@
           "locked": "Diệp Minh trực tiếp góp phần vào đại kiếp thảm sát Cao gia; biến cố là một nguyên nhân quyết định đẩy Cao Minh vào ma đạo.",
           "open": "Chủ mưu cuối cùng, động cơ, mức độ sát hại từng người, quan hệ trước đại kiếp, cán cân thắng bại và kết cục."
         }
+      },
+      "_canon": {
+        "id": "character.cao_minh.foundation",
+        "owner": "character:cao_minh",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+        "revision": "R15",
+        "scope": [
+          "character:cao_minh"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
       }
     },
     "syvial": {
@@ -117,7 +153,24 @@
       ],
       "runtime": "Syvial remains an independent high-tier supernatural swordswoman governed by her own current source. Her Lucifer Core, Devil Trigger, GodKiller and Lucifer Armor remain her own established abilities/equipment. In the Cao Minh R15 campaign she has no pre-existing command history, romance, friendship or other relationship with Cao Minh; any meeting must begin as first contact unless live campaign state later establishes otherwise.",
       "abilities": "Lucifer Core supplies infinite demon power, enhances physical ability/reflex/perception/regeneration, powers Lucifer Armor and synchronizes GodKiller; it is not a second intelligence. Devil Trigger does not remove control and has no invented intrinsic duration/cooldown absent from canon. GodKiller Override / Twenty-Four Severance performs exactly 24 cuts while external time is completely stopped.",
-      "equipment": "GodKiller is a massive purely mechanical greatsword, not a gun or gunblade. It is linked to Syvial and may be recalled unless a sufficiently strong mechanism directly blocks that link. Lucifer Armor is a mobile full-body high-tech/mecha armor in black/gunmetal/silver with magenta light accents. Its pointed headgear modules are mechanical sensors, not biological horns. The armor is very durable and rapidly self-repairing but is not canonically absolutely indestructible."
+      "equipment": "GodKiller is a massive purely mechanical greatsword, not a gun or gunblade. It is linked to Syvial and may be recalled unless a sufficiently strong mechanism directly blocks that link. Lucifer Armor is a mobile full-body high-tech/mecha armor in black/gunmetal/silver with magenta light accents. Its pointed headgear modules are mechanical sensors, not biological horns. The armor is very durable and rapidly self-repairing but is not canonically absolutely indestructible.",
+      "_canon": {
+        "id": "character.syvial.foundation",
+        "owner": "character:syvial",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+        "revision": "CURRENT",
+        "scope": [
+          "character:syvial"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "external",
+        "sourceAvailability": "EXTERNAL_SNAPSHOT",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "luc_tram": {
       "name": "Lục Trầm",
@@ -136,7 +189,24 @@
       "visual": "R02 visual lock: young adult female swordswoman; tall, balanced and agile silhouette; extremely long silver-white hair gathered high with loose flowing locks; cool blue-gray eyes; gold-black sword-crown with blue crystals; white/silver/gold segmented Thiên Cơ Bạch Kim Kiếm Khải over dark flexible underlayers with restrained sapphire accents; multiple split battle-cloth panels; exactly one very long broad Tịch Quang greatsword floating behind/around her on a coherent axis. No helmet, halo, energy wings, guns, strong neon over-glow or modern-tech reinterpretation. Exact height, weight and measurements remain OPEN. Avatar uses avatars/luctram_avatar.png and combat overlay uses luctram_overlay.png.",
       "relationship": "Before Backrooms Lục Trầm repeatedly hunted Cao Minh and considered him a sworn enemy. The Táng Kiếm Cốc truth is backstage knowledge and must not be handed to her automatically. Cao Minh calls her 'Lục tiên tử' with a teasing edge; she uses 'Cao Minh' when serious and 'ma đầu' when angry. Do not switch to anh/em automatically. Do not resolve their hostility with one rescue, one argument or instant romance.",
       "canonVersion": "LUC-TRAM-THIEN-KIEM-CODEX-R05",
-      "dialogue": "R05 voice lock: Lục Trầm speaks as a concrete person in the current situation, not as a saintly moral lecturer, cold one-liner machine or elegant archetype. Keep her capable of ordinary irritation, fear, awkwardness, argument and practical speech without reducing competence. Dialogue must obey current relationship/knowledge state and must not auto-switch to anh/em."
+      "dialogue": "R05 voice lock: Lục Trầm speaks as a concrete person in the current situation, not as a saintly moral lecturer, cold one-liner machine or elegant archetype. Keep her capable of ordinary irritation, fear, awkwardness, argument and practical speech without reducing competence. Dialogue must obey current relationship/knowledge state and must not auto-switch to anh/em.",
+      "_canon": {
+        "id": "character.luc_tram.foundation",
+        "owner": "character:luc_tram",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "canon/characters/luc_tram_codex.md",
+        "revision": "R05",
+        "scope": [
+          "character:luc_tram"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "repo",
+        "sourceAvailability": "AVAILABLE",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     },
     "lucia": {
       "name": "Hứa Thuý Mai / Lucia Lục",
@@ -154,7 +224,25 @@
       "runtime": "Lucia Lục is the callsign of Hứa Thuý Mai, a trained young Vietnamese tactical riflewoman. She is a separate character from Lục Trầm: runtime ids are `lucia` and `luc_tram` and must never be aliased or merged. CharacterEncounterCore exclusively owns spawn/join. Lucia has a 10% first-contact candidate only on original Level 0 (`currentLevelKey = 0`), never on 0.1+ or later Levels. Relationship/address with Cao Minh remain OPEN until live campaign continuity establishes them.",
       "equipment": "Default runtime equipment: personalized M4A1, combat dagger and military navigation watch. Do not substitute Lục Trầm's Tịch Quang or Thiên Cơ Bạch Kim Kiếm Khải.",
       "gameplay": "V3 Core owns HP/stats/progression. Poker Dice preserves Lucia's M4A1 Joint Attack at 150% damage, five firearm proc slots (Toxic Burst, Armor-Piercing Burst, Concussive Burst, Rending Burst, Corrosive Burst), and Too Young To Die as a 60-shot Ultimate using the runtime current-DMG +15% bonus-per-hit rule. These are gameplay projections, not supernatural lore.",
-      "visual": "R03 visual lock: young female face, long black hair in a high ponytail, warm brown eyes, modern camouflage/tactical kit, no helmet, personalized M4A1. Avatar uses avatars/lucia_avatar.jpg."
+      "visual": "R03 visual lock: young female face, long black hair in a high ponytail, warm brown eyes, modern camouflage/tactical kit, no helmet, personalized M4A1. Avatar uses avatars/lucia_avatar.jpg.",
+      "_canon": {
+        "id": "character.lucia.foundation",
+        "owner": "character:lucia",
+        "type": "FOUNDATION",
+        "status": "CURRENT",
+        "sourceRef": "canon/characters/lucia_codex.md",
+        "revision": "R03",
+        "scope": [
+          "character:lucia"
+        ],
+        "knownBy": "SCENE",
+        "sourceKind": "repo",
+        "sourceAvailability": "AVAILABLE",
+        "refs": [],
+        "requires": [],
+        "core": true
+      }
     }
   }
 }
+```

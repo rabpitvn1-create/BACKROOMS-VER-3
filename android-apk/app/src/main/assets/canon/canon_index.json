@@ -1,0 +1,4289 @@
+{
+  "schemaVersion": 1,
+  "_generated": {
+    "generator": "tools/canon.py",
+    "doNotEdit": true,
+    "schemaVersion": 1,
+    "source": "canon/"
+  },
+  "items": [
+    {
+      "id": "CHAR.CAO_MINH.HUYET_MA_24",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "CAO-ULT-HUYETMA24-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "CHAR.CAO_MINH.VAN_QUY_MA_THAN",
+        "CHAR.CAO_MINH.HUYET_MA_KIEM"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Huyết Ma Nhị Thập Tứ Trảm always resolves as exactly 24 strikes while external time is completely stopped. Gameplay damage is dynamic: each strike deals 100% of Cao Minh's current DMG + 15% Bonus DMG, so the Ultimate scales with the character instead of using a fixed 10 HP per strike / 240 HP total. Do not turn it into gunfire, change the count, or downgrade full time-stop into generic slow motion without explicit retcon."
+    },
+    {
+      "id": "CHAR.CAO_MINH.HUYET_MA_CHIEN_KHAI",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "CAO-EQP-HUYET-MA-KHAI-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "CHAR.CAO_MINH.VAN_QUY_MA_TAM"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Huyết Ma Chiến Khải is Cao Minh's bound ma-khải formed from Ma Kim, ma văn, tinh huyết and ma nguyên. Its black/gunmetal and blood-red appearance may look mechanical, but canonically it is not powered armor, electronics or machinery. It can regenerate through Vạn Quỷ Ma Tâm."
+    },
+    {
+      "id": "CHAR.CAO_MINH.HUYET_MA_KIEM",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "CAO-EQP-HUYET-MA-KIEM-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "CHAR.CAO_MINH.VAN_QUY_MA_TAM"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Huyết Ma Kiếm is Cao Minh's bound straight broad greatsword. It is a real physical sword enhanced by ma nguyên and can be used directly, release Huyết Sát Ma Khí, or be controlled through ngự kiếm/thần niệm. It is not a firearm, gunblade or technological weapon."
+    },
+    {
+      "id": "CHAR.CAO_MINH.RUNTIME_CORE",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "CAO-QUICK-01; CAO-PER-01; CAO-BACKROOMS-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Cao Minh / Vạn Giới Ma Tôn is a pure tiên-hiệp/ma-đạo sword cultivator who had already reached the summit of his original world before falling into Backrooms. He has no modern/future military identity, no firearm loadout, and no pre-existing relationship with Syvial. He is relaxed, bored and lightly mocking when nothing matters, but becomes precise and decisive in real danger. He does not know Backrooms rules in advance."
+    },
+    {
+      "id": "CHAR.CAO_MINH.VAN_QUY_MA_TAM",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "CAO-CORE-VQM-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Vạn Quỷ Ma Tâm is Cao Minh's Đạo Cơ/Ma Hải and an effectively inexhaustible source of ma nguyên. Do not invent a mana bar, intrinsic cooldown, corruption, berserk loss of control or technological power system merely to balance him. It supports regeneration and restoration of his bound equipment. Infinite ma nguyên does not grant omniscience or automatic success against information, geometry or protected-person constraints."
+    },
+    {
+      "id": "CHAR.CAO_MINH.VAN_QUY_MA_THAN",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "CAO-VQMT-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "CHAR.CAO_MINH.VAN_QUY_MA_TAM"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Vạn Quỷ Ma Thân is Cao Minh's full-release state. It greatly amplifies his physical ability, thần niệm, recovery and ma-đạo sword power without creating a second personality, corruption state, loss of reason or invented intrinsic duration/cooldown."
+    },
+    {
+      "id": "CHAR.CAO_MINH.VAN_TANG_GIOI",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "CAO-EQP-VAN-TANG-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Vạn Tàng Giới is a bound storage artifact containing an inner space for inanimate objects. Phản Bổn can restore an existing object toward the best state that same object previously possessed. It does not scan/copy/create living beings, fabricate new items, or operate as a technological device."
+    },
+    {
+      "id": "CHAR.LUC_TRAM.CAO_MINH_RELATIONSHIP",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Lục_Trầm_Codex",
+      "revision": "13-20 · CAO MINH / QUAN HỆ / XƯNG HÔ",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "CHAR.LUC_TRAM.IDENTITY"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Lục Trầm initially regards Cao Minh as a sworn enemy because of Táng Kiếm Cốc. Their Backrooms meeting is a reunion, not first contact. Relationship progression must be slow and evidence-driven: hostility, reluctant cooperation, companionship, trust, then only later possible romantic feelings. The hidden truth of Táng Kiếm Cốc is backstage knowledge and must not be automatically known by Lục Trầm."
+    },
+    {
+      "id": "CHAR.LUC_TRAM.IDENTITY",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Lục_Trầm_Codex",
+      "revision": "LUC-TRAM-THIEN-KIEM-CODEX-R05; 01 · ĐỊNH DANH VÀ VỊ TRÍ",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Lục Trầm is the current R05 Chân truyền đệ tử of Thiên Kiếm Môn, a Chính Đạo Kiếm Tu from the same origin world as Cao Minh. She and Cao Minh already knew and fought each other before Backrooms. Runtime id is 'luc_tram'; encounter materialization is Core-owned and the reunion candidate rate is 0.25% after Level 0."
+    },
+    {
+      "id": "CHAR.LUC_TRAM.THIEN_KIEM_DINH_GIOI",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Lục_Trầm_Codex",
+      "revision": "12 · TUYỆT KỸ — THIÊN KIẾM ĐỊNH GIỚI",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "CHAR.LUC_TRAM.IDENTITY"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Thiên Kiếm Định Giới is Lục Trầm's current Poker Dice Ultimate presentation. Runtime mechanics preserve the existing 60-hit projection: exactly 60 hits, each using 100% of Lục Trầm's current DMG + 15% Bonus DMG in SSF, with existing FSF multiplier behavior unchanged. The 60-hit count is a gameplay projection; canonically Thiên Kiếm Định Giới establishes a local sword-domain through linked sword seals and does not grant absolute control over Backrooms space."
+    },
+    {
+      "id": "CHAR.LUC_TRAM.VISUAL_R02",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Lục_Trầm_Codex",
+      "revision": "04 · NGOẠI HÌNH · VISUAL LOCK R02",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "CHAR.LUC_TRAM.IDENTITY"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "R02 visual lock: Lục Trầm has extremely long silver-white hair, cool blue-gray eyes, a gold-black sword-crown with blue crystals, white/silver/gold segmented Thiên Cơ Bạch Kim Kiếm Khải over dark flexible underlayers with restrained sapphire accents, split battle-cloth panels, and exactly one extremely long broad white-silver Tịch Quang greatsword with blue core details. Mechanical-looking armor details are cultivation-artifact design, not AI, electronics, reactor, servos, hidden firearms or missiles. Avatar path is avatars/luctram_avatar.png and combat overlay path is luctram_overlay.png."
+    },
+    {
+      "id": "CHAR.SYVIAL.COMBAT",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+      "revision": "SYVIAL-COMBAT-01; SYVIAL-STYLE-COMBAT-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "CHAR.SYVIAL.GODKILLER"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Syvial is a high-tier supernatural swordswoman for assault, suppression, counterattack and finishing high-level targets. She controls space with GodKiller, adapts at close range, handles multiple targets by positioning rather than blind spinning, and gathers enough information before escalating against high-tier targets. She remains tactically autonomous and competent."
+    },
+    {
+      "id": "CHAR.SYVIAL.DEVIL_TRIGGER",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+      "revision": "SYVIAL-DT-01; SYVIAL-ACTION-LOCK-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Syvial's Devil Trigger does not create a second personality, remove control, force corruption or have an invented intrinsic duration/cooldown absent from codex. She remains herself and tactically competent while using it."
+    },
+    {
+      "id": "CHAR.SYVIAL.GODKILLER",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+      "revision": "SYVIAL-EQP-GODKILLER-01; SYVIAL-STYLE-COMBAT-01; SYVIAL-ACTION-LOCK-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "GodKiller is Syvial's enormous purely mechanical greatsword. Do not convert it into a gun or gunblade. Its reach and mass support space control at medium distance; in very tight space Syvial can shorten her sword work and use close combat/Spatial Shift rather than pretending the weapon never matters. She does not forget combat ability if disarmed and can call the sword back under codex capability."
+    },
+    {
+      "id": "CHAR.SYVIAL.GODKILLER_OVERRIDE",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+      "revision": "SYVIAL-ULT-GKO-01; SYVIAL-ACTION-LOCK-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "CHAR.SYVIAL.GODKILLER",
+        "CHAR.SYVIAL.DEVIL_TRIGGER"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "GodKiller Override / Twenty-Four Severance performs exactly 24 cuts during completely stopped external time under current canon. Do not change the count, turn it into a gun attack, or add an invented cooldown/energy bar without retcon."
+    },
+    {
+      "id": "CHAR.SYVIAL.LUCIFER_CORE",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+      "revision": "SYVIAL-CORE-LUCIFER-01; SYVIAL-WEAK-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Lucifer Core provides Syvial infinite demon power. Current canon does not supply an intrinsic energy cap/cooldown merely for balance. Infinite power does not erase problems created by incomplete information, protected people, environment, space or an opponent strong enough to matter."
+    },
+    {
+      "id": "CHAR.SYVIAL.RUNTIME_CORE",
+      "owner": "knowledge:character",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+      "revision": "SYVIAL-QUICK-01; SYVIAL-OVERVIEW-01; SYVIAL-YANDERE-01; SYVIAL-ACTION-LOCK-01",
+      "scope": [
+        "knowledge:character"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Syvial remains an independent high-tier supernatural swordswoman governed by her own current source. Her Lucifer Core, Devil Trigger, GodKiller and other established abilities remain hers. In the Cao Minh R15 campaign she has no pre-existing command history, romance, friendship or other relationship with Cao Minh; if encountered, the first meeting is first contact unless live campaign continuity later establishes otherwise."
+    },
+    {
+      "id": "ENTITY.BEAST_LEVEL_5",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-5A",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "The Beast of Level 5 is an apex Entity with intelligence above humans. It actively hunts people, may observe a group for a long time, influence anxiety/watched sensations, exploit hotel architecture to isolate prey, allow a survivor to live as a route to others, and has no absolutely confirmed weakness. It is not a stationary boss waiting for a fight; treat it as high-level ecological pressure."
+    },
+    {
+      "id": "ENTITY.BIOLOGICAL_PIPELINE",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-2F",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Biological Pipeline is a tens-of-kilometres organic/mechanical-pipe-like predator whose true body may not be the visible pipe. It senses vibration/body heat, can offer apparently safe crawlspace routes, let humans go deep, alter direction, lock retreat, secrete rapidly tissue-corrosive alkaline liquid and preserve corpses/gear as false evidence of safe passage. Destroying one pipe section does not prove the Entity is dead."
+    },
+    {
+      "id": "ENTITY.CABLE_MIMIC",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-3D",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Cable Mimic blends into electrical cable bundles, can remain still for hours and imitate machine vibration. When touched/passed it can wrap limbs and conduct current from the facility through the victim. Without checking, genuine facility cable and Entity cable may be indistinguishable."
+    },
+    {
+      "id": "ENTITY.DEATHMOTH",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-1D; ENT-3A",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Deathmoth: large moth-like predator using dark ceilings/technical recesses, often attacking in groups and reacting to light/movement. At Level 3 it can exploit broken-light zones and pressure humans toward live electrical equipment."
+    },
+    {
+      "id": "ENTITY.DIEP_MINH.BACKROOMS_R01",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/DIEP_MINH_CANON.md",
+      "revision": "DIEP-MINH-BACKROOMS-01; DIEP-MINH-RUNTIME-01",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.DIEP_MINH.VISUAL_R01",
+        "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Diệp Minh nguyên bản đã chết tại thế giới nguyên sinh trước các lần xuất hiện trong Backrooms. Thực thể mang tên Diệp Minh trong Backrooms giữ dung mạo, nhận ra Cao Minh, nhớ huyết cừu Cao gia và duy trì sát ý cũ. Bản chất thật vẫn OPEN: có thể là tàn hồn, bản sao/tái tạo từ ký ức và chấp niệm, một biểu hiện khác của cùng cá thể hoặc cơ chế chưa biết; không được khẳng định Backrooms có ý chí hay chủ động hồi sinh hắn. Một hiện thân có thể bị tiêu diệt nhưng không xóa Diệp Minh vĩnh viễn; thời gian và địa điểm tái xuất không cố định. Runtime key diep_minh là legacy/boss-only và không được auto-spawn nếu chưa có retcon gameplay riêng."
+    },
+    {
+      "id": "ENTITY.DIEP_MINH.VISUAL_R01",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/DIEP_MINH_CANON.md",
+      "revision": "DIEP-MINH-VIS-01",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Visual R01 theo entity/diep_minh.png: Diệp Minh là nam tử trẻ tóc đen, dung mạo sắc lạnh. Nửa phải cơ thể còn hình người trong pháp giáp đen-vàng và chiến bào có phù văn, âm dương/bát quái, dây xích và phù vàng chữ đỏ. Nửa trái dị hóa thành ma thể đen-đỏ với hồng quang, các đường đỏ phát sáng, tua/nhánh quỷ dị và chân vuốt; mắt trái phát đỏ. Tay phải cầm trường kiếm dài tỏa kim quang vàng cam, có ký hiệu/phù văn sáng dọc lưỡi. Các chi tiết cơ khí chỉ là tạo hình pháp giáp tiên hiệp; không suy thành công nghệ hoặc tự biến hiệu ứng thị giác thành kỹ năng."
+    },
+    {
+      "id": "ENTITY.FALSE_PUDDLE",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-1F",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK",
+        "ITEM.LIQUID_PAIN"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "False Puddle mimics a flat puddle of Almond Water while hiding a deep toothed mouth. It positions on traveled routes, reacts to human footstep vibration and opens when stepped on to pull prey down. Liquid Pain or sharp metal has worked in some cases, but apparent death can be feigned; recorded weakness is not absolute."
+    },
+    {
+      "id": "ENTITY.GLOBAL_HARD_LOCK",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "0.6 Entity — HARD LOCK",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Project Entity hard lock: no Entity is friendly or neutral toward humans and no beneficial symbiosis/parasitism is canon. An Entity may delay attack to observe, lure, split, manipulate or conduct a long hunt, but apparent help ultimately serves harmful predatory/other harmful goals. Entity origins are not unified and intelligence ranges from animal predator to superhuman. Do not assume destroying a visible body always kills the underlying Entity."
+    },
+    {
+      "id": "ENTITY.HOUND",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-1A; ENT-2B",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Hound: fast aggressive four-limbed predator. Hunts in groups, favors injured/isolated humans, can pressure prey toward dead ends, and may retreat from strong resistance then return. In narrow Level 2 corridors it can attack from both ends, use deceptive footstep sounds and prioritize weaker prey."
+    },
+    {
+      "id": "ENTITY.JEFF",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-R01 — JEFF THE KILLER",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Jeff the Killer is a very rare roaming humanoid predator permitted as an incursion across Levels 0-6, not a resident of Levels 0/4/6. Origin remains UNKNOWN; Project does not confirm creepypasta-original identity, former Frontrooms humanity, Backrooms copy, or that all sightings are one metaphysical individual. Gameplay continuity does lock that killing one hiện thân never permanently removes Jeff; the ontology of respawn remains OPEN. Jeff only hunts humans, uses long-term tactical observation and must never become neutral ally/trader/rescuer."
+    },
+    {
+      "id": "ENTITY.SKIN_STEALER",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-2D",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Skin-Stealer hunts by using human appearance and behavior. Project lock allows deep mimicry and enough copied memory to pass simple tests, potentially living with a group long-term to damage the whole team rather than killing immediately. Human-like appearance therefore never proves a contact is human."
+    },
+    {
+      "id": "ENTITY.SMILER",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-2C",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Smiler: visible primarily as a bright face-like feature in darkness. Uses blacked-out areas and dark corners, and may keep distance to pressure prey into choosing a bad route rather than immediately charging."
+    },
+    {
+      "id": "ENTITY.WRETCH",
+      "owner": "knowledge:entity",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md",
+      "revision": "ENT-3B",
+      "scope": [
+        "knowledge:entity"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.GLOBAL_HARD_LOCK"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Wretch: a creature believed or suspected to have once been human. It moves irregularly, tolerates pain well and hunts through sound and scent, with common reports in lower Level 3 tunnels."
+    },
+    {
+      "id": "GAME.GM.FAIRNESS",
+      "owner": "knowledge:game_rule",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "05_TextGame/RULES/GAME_MASTER_RULES.md",
+      "revision": "1-15",
+      "scope": [
+        "knowledge:game_rule"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "GM fairness: Canon/State -> real conditions -> dice only for remaining uncertainty -> consequence. No player magnetism, retroactive world edits, fake choices, counter-build cheating, automatic party joins, NPC wiki knowledge, retroactive expertise, or threat teleporting without a canon/path/time basis. Persist environment, traces, entities, relationships, knowledge and consequences. Allow quiet safety when state and rolls permit it."
+    },
+    {
+      "id": "GAME.TEXT.CORE",
+      "owner": "knowledge:game_rule",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "05_TextGame/RULES/TEXT_GAME_RULES.md",
+      "revision": "1-12",
+      "scope": [
+        "knowledge:game_rule"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Text Game authority: user instruction, Text Game rules, GM rules, live save/campaign state, then on-demand canon. Player controls Cao Minh's intentional actions; GM controls world, Entity, survivor/NPC and consequences. Do not nerf canon abilities, invent facts, reset consequences, cheat dice, or fill UNKNOWN. Gameplay normally retrieves only needed canon rather than scanning the whole corpus."
+    },
+    {
+      "id": "ITEM.ALMOND_WATER",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/items.md",
+      "revision": "8.1 Object 1 — Almond Water",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Almond Water is a key anomalous drinking-water resource but remains scarce in Project canon. It can rehydrate and support alertness/some mild symptoms; it is not a cure-all and does not negate every Entity effect. It can expire and become poisonous. Open sources must be checked; Level 0 carpet moisture is not drinking water. Gameplay effect per unit: +50 Hunger and +100 Thirsty."
+    },
+    {
+      "id": "ITEM.BANDAGE",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "GAMEPLAY_RULE",
+      "revision": "Consumable item contract 2026-09-18",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Bandage is a consumable medical item. Gameplay effect per unit: +15 HP, capped by the target character's max HP."
+    },
+    {
+      "id": "ITEM.GAMEPLAY_LOOT_LOCK",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "GAMEPLAY_RULE",
+      "revision": "Core loot contract 2026-09-18",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [
+        "ITEM.ALMOND_WATER",
+        "ITEM.BANDAGE"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Gameplay loot is Core-owned. Consumable items may enter player Inventory only from a defeated Entity drop (entity-specific rate between 10% and 20%) or a Core-spawned exploration chest. Exploration chest spawn rate is exactly 3%; every spawned chest contains an item 100%. AI narration must never create loose loot or mutate Inventory directly."
+    },
+    {
+      "id": "ITEM.GLOBAL_HARD_LOCK",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/items.md",
+      "revision": "0.7-0.8; 8.6",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Safe food/water and medicine are scarce; guns/ammunition are uncommon for ordinary survivors; resources can reappear unreliably. Frontrooms objects can function normally, then deviate, degrade or be assimilated without a fixed timetable. Do not spawn a resource exactly when convenient just to rescue a character. Reliable information is itself a survival resource. Do not label a map/source absolutely SAFE; retain who observed it, when and with what confidence."
+    },
+    {
+      "id": "ITEM.GREEK_FIRE",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/items.md",
+      "revision": "8.2 Object 5 — Greek Fire",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Greek Fire is an extremely rare flammable resource useful for heat, cooking and combat. It is strategically valuable and dangerous in confined spaces; it is not common starter equipment."
+    },
+    {
+      "id": "ITEM.LIQUID_PAIN",
+      "owner": "knowledge:item",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/items.md",
+      "revision": "8.3 Object 12 — Liquid Pain",
+      "scope": [
+        "knowledge:item"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Liquid Pain is a red toxic, tissue-corrosive liquid with harmful fumes. It can be used against Entities and in crude traps/munitions, may appear in mislabeled containers, and must not be treated as drinking water or handled bare-handed."
+    },
+    {
+      "id": "LEVEL.0.1",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Level 0.1 — Zenith Station",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0.1 / Zenith Station: an enormous damaged metal-and-glass megastructure embedded within Level 0, built in a smooth futuristic style with exposed wiring, broken electronics, automated doors and scattered functional machinery. Lighting and temperature vary sharply with damage, including dark, dangerously hot or cold sections. It retains Level 0's isolation and perceptual irregularities. In BACKROOMsV2 progression it is the mandatory destination after Level 0 and before Level 0.2."
+    },
+    {
+      "id": "LEVEL.0.2",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Level 0.2 — Remodeled Mess",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0.2 / Remodeled Mess: a remodeled-looking variation of Level 0 with dry red carpet, white walls, working outlets and Wi-Fi, and occasional bathrooms. Entry or interaction can trigger a dangerous chain reaction in which ceilings, walls and floors collapse into an unfinished-house-like ruin, creating debris and dust hazards. In BACKROOMsV2 progression it follows Level 0.1 and leads only to Level 0.5."
+    },
+    {
+      "id": "LEVEL.0.5",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Level 0.5 — Aquaclaustrophobic Infirmary",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0.5 / Aquaclaustrophobic Infirmary: a recently documented flooded and claustrophobic sub-level associated with Level 0, dominated by dirty standing water, oppressive corridors and a ruined hospital/infirmary sector. Environmental danger is severe and some hostile presence is documented. BACKROOMsV2 treats it as a full gameplay Level after Level 0.2 and before Level 0.7."
+    },
+    {
+      "id": "LEVEL.0.7",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Level 0.7 — The Reminiscence District",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0.7 / The Reminiscence District: a vast preserved collection of historical hiện thâns of Level 0, with sections reflecting forms of the level from ancient periods through the modern era. Architecture can differ radically between preserved periods, sustaining supplies are unreliable, and blocked or anomalous exits are part of its documented hazards. In BACKROOMsV2 it follows Level 0.5 and leads only to Manila Room."
+    },
+    {
+      "id": "LEVEL.00",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
+      "revision": "Level 0; entity 1.3",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 0 / The Lobby: endless-feeling yellow rooms, damp carpet, fluorescent hum, suspended ceiling and non-linear geometry. Main dangers are dehydration, exhaustion, disorientation and perceptual effects. Fluorescent Pressure can cause headache/sleeplessness/misheard footsteps; Memory Rooms can echo or corrupt memories; Layout Resistance can break detailed mapping. No resident Entity is confirmed; distant figures/voices should first be treated as hallucination, memory hiện thân, perceptual copy or unclassified phenomenon unless evidence proves an incursion. Transition toward Level 1 may emerge gradually as concrete/columns/parking features replace the yellow rooms; it cannot be forced on demand."
+    },
+    {
+      "id": "LEVEL.01",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md",
+      "revision": "2 LEVEL 1 — PARKING ZONE",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.HOUND",
+        "ENTITY.FALSE_PUDDLE"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 1 / Parking Zone: vast concrete parking/garage network with columns, ramps, rare disabled cars, heat and local cold fog; blackouts may last minutes to days and make mobile light both useful and revealing. Maintenance Halls can retain power but are not long-term safety; Luxury Lots are cleaner/foggier with unreliable electrical sources and relatively more supply crates, still scarce. Gradual transition toward Level 2 appears as vehicles vanish, space narrows into pipes/hot humid machinery corridors."
+    },
+    {
+      "id": "LEVEL.02",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md",
+      "revision": "3 LEVEL 2 — PIPE DREAMS",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.HOUND",
+        "ENTITY.SMILER",
+        "ENTITY.SKIN_STEALER",
+        "ENTITY.BIOLOGICAL_PIPELINE"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 2 / Pipe Dreams: utility tunnels, shafts, rusty pipes, crawlspaces and unfinished electrical networks with extreme temperature changes. Earthquakes can collapse paths, rupture pipes, release steam and open new routes. Pipe liquid resembling Almond Water must not be drunk directly because of biological/chemical/anomalous contamination. Transition toward Level 3 occurs as high-voltage electrical infrastructure becomes dominant."
+    },
+    {
+      "id": "LEVEL.03",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md",
+      "revision": "4 LEVEL 3 — THE ELECTRICAL STATION",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.DEATHMOTH",
+        "ENTITY.WRETCH",
+        "ENTITY.SKIN_STEALER",
+        "ENTITY.CABLE_MIMIC"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 3 / The Electrical Station: huge industrial electrical corridors with transformers, conductors, fans, coils, panels, hot pipes and unknown power source. Local blackouts expose live-wire/machinery/Entity risk and routes can differ when power returns. Lower Utility Tunnels are below freezing, contain abnormal unfrozen standing water and have high disappearance rates. Office-sector doors/elevators may lead gradually to Level 4; some long dark passages can lead toward Level 6."
+    },
+    {
+      "id": "LEVEL.04",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
+      "revision": "Level 4; entity 5.2",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 4 / The Abandoned Office: office/cubicle network with partial fluorescent lighting, fixed rainy-looking windows and more stable geometry than Levels 0-3. It is a relative rest/salvage region, never absolutely safe. No stable resident Entity population is confirmed, but incursions from other regions can occur and a place cleared today is not guaranteed clear tomorrow. Large settlements are discouraged by unstable resources/boundaries and attraction of danger. Corridors may gradually become old hotel architecture leading to Level 5."
+    },
+    {
+      "id": "LEVEL.05",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md",
+      "revision": "6 LEVEL 5 — TERROR HOTEL",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [
+        "ENTITY.BEAST_LEVEL_5",
+        "ENTITY.SKIN_STEALER",
+        "ENTITY.HOUND"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 5 / Terror Hotel: huge non-Euclidean hotel with early-20th-century style varying by wing, including lobby/ballroom/rooms/restaurant/pool/maintenance/boiler spaces. Prolonged stay can produce paranoia, watched sensations, whispers, touch sensations, visual shadows and sleep loss; Project does not reduce this to a sanity meter and causes may overlap between isolation, sleep loss, Level and Entity. Boiler/maintenance passages can darken and cool toward Level 6."
+    },
+    {
+      "id": "LEVEL.06",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/level.md + 01_WORLD/entity.md",
+      "revision": "7 LEVEL 6; entity 7.3",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Level 6 / Lights Out: resident Entity presence is not confirmed; danger remains severe through cold, darkness, scarce food/water, sleep loss, microsleep, hallucination and navigation failure. Evidence that an external Entity refuses the Level boundary does not prove the inside is safe; the reason remains OPEN. Do not convert the absence of confirmed resident Entities into safety."
+    },
+    {
+      "id": "LEVEL.MANILA_ROOM",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "The Manila Room",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Manila Room: a small static beige/manila-walled room within Level 0 with wooden floorboards, an octagonal table, chairs and wooden doors. Level 0's isolation effect weakens around it, allowing wanderers to perceive and meet one another; documents and donated supplies may be present. Source canon places a Level 1 exit nearby, but BACKROOMsV2 overrides that connection for gameplay: Manila Room is a mandatory standalone Level after Level 0.7 and can progress only to The Torment."
+    },
+    {
+      "id": "LEVEL.RED_ROOMS",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "Red Rooms",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Red Rooms: a deep-red Level 0-like environment with crimson walls, darkroom-like lighting, coarse sticky carpet, mushrooms and black mold. Communications degrade with time; no hostile Entities are documented there, but the environment is deeply distressing and source canon describes it as effectively a dead end. BACKROOMsV2 deliberately overrides that exit rule: Red Rooms is the final mandatory standalone Level in the Level 0 chain and only after clearing it may the player enter Level 1."
+    },
+    {
+      "id": "LEVEL.THE_TORMENT",
+      "owner": "knowledge:level",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "Backrooms Wiki",
+      "revision": "The Torment",
+      "scope": [
+        "knowledge:level"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "The Torment: an anomalous greyscale region associated with Level 0, described with concentric graves, dead trees, a deteriorated hooded statue, a stationary moon, dense gray fog and an overwhelming sense of dread. Contact with its anomalous spread has been described as turning matter gray before disintegration. Source canon has no confirmed conventional entrance or exit; BACKROOMsV2 deliberately overrides connectivity and makes The Torment a mandatory standalone Level after Manila Room and before Red Rooms."
+    },
+    {
+      "id": "REL.CAO_MINH.DIEP_MINH.BLOOD_FEUD",
+      "owner": "knowledge:relationship",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/DIEP_MINH_CANON.md",
+      "revision": "DIEP-MINH-CAO-REL-01",
+      "scope": [
+        "knowledge:relationship"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Cao Minh và Diệp Minh là tử địch không đội trời chung. Diệp Minh đã trực tiếp góp phần vào đại kiếp thảm sát Cao gia; biến cố ấy phá nát nền tảng đời Cao Minh, đẩy hắn vào tuyệt vọng và là một nguyên nhân quyết định khiến hắn bước vào ma đạo. Không mặc định Diệp Minh là chủ mưu duy nhất. Kẻ chủ mưu cuối cùng, động cơ của Diệp Minh, mức độ hắn trực tiếp sát hại từng người, quan hệ trước đại kiếp, các thế lực liên quan, cán cân thắng bại và kết cục cuối cùng vẫn OPEN."
+    },
+    {
+      "id": "REL.CAO_MINH.SYVIAL.NONE",
+      "owner": "knowledge:relationship",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "CAO-CANON-CLEANUP-R15",
+      "scope": [
+        "knowledge:relationship"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Cao Minh and Syvial have no pre-existing relationship at campaign start. If they meet, treat it as first contact unless later live campaign continuity explicitly changes that state."
+    },
+    {
+      "id": "WORLD.CORE",
+      "owner": "knowledge:world",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/world.md",
+      "revision": "0.1-0.5",
+      "scope": [
+        "knowledge:world"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "MISSING_ORIGIN",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Backrooms origin is never confirmed. Levels are survivor labels for recognizable regions within one vast continuous reality, not sealed boxes; boundaries and routes can drift. Architecture, local rules, time and memory may deviate. Human biology still matters: hunger, thirst, blood loss, infection, heat, cold, exhaustion and sleep deprivation can kill. Copies of people can exist; there is no absolute method to prove an original. Death has no single universal outcome."
+    },
+    {
+      "id": "WRITING.COMPETENCE",
+      "owner": "knowledge:writing",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "00_RULES/Những điều bắt buộc không được làm khi viết tiểu thuyết.md + 00_RULES/worldcodex.md + 00_RULES/Supernatural_Horror_Craft_Guide.md",
+      "revision": "NOVEL.COMPETENCE.NO_SUDDEN_STUPIDITY; 7; SH-SUSPENSE-01",
+      "scope": [
+        "knowledge:writing"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Never make a competent character forget established skills, equipment, experience, obvious options or canonical abilities merely to create danger. If a tool cannot solve a problem, the reason must come from real information limits, environment, conflicting objectives, protected people, injury, cost, or another established constraint. Horror must not be maintained by withholding competence."
+    },
+    {
+      "id": "WRITING.DIALOGUE",
+      "owner": "knowledge:writing",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "00_RULES/CONVERSATION.MD",
+      "revision": "RULES.DIALOGUE / 0-32",
+      "scope": [
+        "knowledge:writing"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Dialogue authority is CONVERSATION.MD. Speak as the actual person in the current situation, not as a canon interface or an optimized psychological explanation. Keep address from active relationship canon. Dialogue may be direct, ordinary, slightly circular, interrupted by practical life, or unresolved when appropriate; do not manufacture fragmentary 'cool' speech, exposition packages, or pre-solved conversation beats."
+    },
+    {
+      "id": "WRITING.KNOWLEDGE_BOUNDARY",
+      "owner": "knowledge:writing",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "00_RULES/worldcodex.md + 00_RULES/Những điều bắt buộc không được làm khi viết tiểu thuyết.md + 00_RULES/CONVERSATION.MD",
+      "revision": "KNOWLEDGE BOUNDARY; NOVEL.KNOWLEDGE; 14-16",
+      "scope": [
+        "knowledge:writing"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Characters know only what their background, direct observation, testimony, validated ability/device evidence, or reasonable inference supports. Backstage canon is not character knowledge. Preserve uncertainty level: reported/inferred/uncertain does not become fact. Do not turn knowledge-state labels or source metadata into dialogue."
+    },
+    {
+      "id": "WRITING.PLAYER_AGENCY",
+      "owner": "knowledge:writing",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "05_TextGame/RULES/TEXT_GAME_RULES.md + 05_TextGame/RULES/GAME_MASTER_RULES.md",
+      "revision": "TEXT_GAME_RULES 4; GM_RULES 2",
+      "scope": [
+        "knowledge:writing"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/knowledge.md",
+      "text": "Do not choose Cao Minh's intentional action for the player. Resolve what Cao Minh can perceive from the chosen action before asking for the next choice. Menus are suggestions, not rails; free-form methods are valid, but the player cannot declare an unconfirmed result as already true."
+    },
+    {
+      "id": "campaign.live_state.authority",
+      "owner": "core:state",
+      "type": "CAMPAIGN",
+      "status": "DYNAMIC",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/GameCoreFacade.java",
+      "revision": "runtime",
+      "scope": [
+        "campaign"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/campaign.md",
+      "text": "Campaign canon là trạng thái và kết quả mà Core đã commit trong save hiện hành. Canon nền không được reset vị trí, quan hệ, thương tích, inventory, tri thức đã học, lời hứa hoặc hậu quả đã commit. Build canon không sinh save mặc định mới và không áp baseline lên state động."
+    },
+    {
+      "id": "character.cao_minh.foundation",
+      "owner": "character:cao_minh",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Cao_Minh_Codex.docx",
+      "revision": "R15",
+      "scope": [
+        "character:cao_minh"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/characters.md",
+      "text": "Cao Minh / Vạn Giới Ma Tôn\nCao Minh is Vạn Giới Ma Tôn, a Ma Đạo Kiếm Tu and the strongest known cultivator of his original world before falling into Backrooms. He belongs to no sect, empire or organization. The original world's name, historical era and detailed cultivation-realm system remain OPEN. He is confident but not blindly arrogant; relaxed, lazy, wine-loving and sarcastic outside serious danger, and reacts quickly and precisely when danger becomes real. He does not intentionally harm innocents and does not use righteous/demonic labels as a substitute for judgment.\nCao Minh has extremely high sword sense and divine sense. Vạn Quỷ Ma Tâm is his Đạo Cơ, Ma Hải and central origin, supplying a vast ma-nguyên source with no canonically locked intrinsic ceiling, enhancing body/reflex/perception/divine sense/regeneration and nourishing bound artifacts. Vạn Quỷ Ma Thân is full release of that origin and does not inherently remove control, impose a duration cap, cause corruption or backlash. Huyết Ma Nhị Thập Tứ Trảm stops external time completely and performs exactly 24 strikes before time resumes.\nBound equipment: Huyết Ma Kiếm, Huyết Ma Chiến Khải and Vạn Tàng Giới. The existing Huyết Ma Kiếm and Huyết Ma Chiến Khải can progressively regenerate through Vạn Quỷ Ma Tâm; regeneration restores the existing artifact and does not create duplicates. Vạn Tàng Giới stores inanimate matter. Phản Bổn restores the same existing artifact to the best state that exact artifact genuinely reached in its own history; it does not copy, upgrade beyond history, create matter from nothing or store/recreate living beings. After a successful Phản Bổn, that same artifact requires one day and one night before Phản Bổn can be used on it again; this does not block natural bound-artifact regeneration.\nImmediately before transition Cao Minh was on Ma Sơn drinking spirit wine with Huyết Ma Kiếm nearby. The ground vanished without a recognized formation, spatial turbulence or warning. He lands in the yellow Backrooms environment and tests it with divine sense and a demonic mark. He has no default knowledge of Backrooms level names/numbers, Entity identities, rules or origin. His current first priority is to investigate local rules and the nature of Backrooms; returning to his original world is second.\nSpeak naturally and completely, often using humor or sarcasm. Do not make him constantly say 'bổn tọa', speak like an ancient manual, or use vague pseudo-philosophy to sound profound. Diệp Minh is a sworn blood enemy: he directly contributed to the massacre of the Cao clan, a catastrophe that drove Cao Minh into despair and became a decisive cause of his turn to the demonic path. Do not make Diệp Minh the sole mastermind unless separately established; mastermind, motive, exact victims, earlier relationship, victory balance and final outcome remain OPEN.\nR15: apparent male around thirty, true age unknown; very long thick black hair in a high ponytail, dark-red eyes and exposed face. Huyết Ma Chiến Khải is black-red bound armor with blood-red demonic inscriptions. Huyết Ma Kiếm is a large straight broad black greatsword with red blood inscriptions and a Ma Luân around the red crystal at the guard; it can hover and move under divine-sense control."
+    },
+    {
+      "id": "character.luc_tram.foundation",
+      "owner": "character:luc_tram",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "canon/characters/luc_tram_codex.md",
+      "revision": "R05",
+      "scope": [
+        "character:luc_tram"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/characters.md",
+      "text": "Lục Trầm\nCurrent canon name is Lục Trầm. She is a human cultivation-world swordswoman, Chân truyền đệ tử of Thiên Kiếm Môn and a Chính Đạo Kiếm Tu from the same origin world as Cao Minh. She and Cao Minh already knew and fought each other before Backrooms, so their Backrooms encounter is a reunion, not first contact. She initially regards Cao Minh as an irreconcilable enemy because of Táng Kiếm Cốc, but the relationship must develop slowly through evidence and repeated behavior: hostility -> reluctant cooperation -> companionship -> trust -> only then possible romantic feelings. Internal runtime id is 'luc_tram'. CharacterEncounterCore exclusively owns materialization/join and allows the 0.25% reunion roll only after Level 0.\nThiên Kiếm Linh Tâm unifies divine sense, spiritual power, spatial awareness and sword intent to read motion, balance, spiritual-flow changes and unstable points in sword forms, formations or defenses. It does not read minds, determine morality, identify Entities automatically, know Backrooms rules in advance, grant memory-manipulation immunity or make every space a formation she understands. Thiên Kiếm Thất Thức currently locks Nhất Tuyến Phá Vọng, Bạch Hồng Quán Nhật, Tịch Quang Phản Kiếm and Vạn Kiếm Quy Tâm. Thiên Kiếm Định Giới establishes a local sword-domain through linked sword seals; Backrooms can disrupt its anchors and geometry.\nTịch Quang is Lục Trầm's bonded spirit sword. Current Visual Lock R02 renders it as one extremely long, straight, broad white-silver greatsword with a blue core/groove and a layered gold-black guard; it can be recalled by sword intent within valid perception range but does not regenerate infinitely. Thiên Cơ Bạch Kim Kiếm Khải is a high-grade Thiên Kiếm Môn cultivation artifact using white/silver armor plates, restrained gold structure, dark flexible underlayers and controlled blue crystal accents. It improves impact resistance, movement and force distribution. Mechanical-looking joints are cultivation-artifact design, not AI, electronics, reactor, servos, hidden guns, missiles or HUD.\nBefore Backrooms Lục Trầm repeatedly hunted Cao Minh and considered him a sworn enemy. The Táng Kiếm Cốc truth is backstage knowledge and must not be handed to her automatically. Cao Minh calls her 'Lục tiên tử' with a teasing edge; she uses 'Cao Minh' when serious and 'ma đầu' when angry. Do not switch to anh/em automatically. Do not resolve their hostility with one rescue, one argument or instant romance.\nR05 voice lock: Lục Trầm speaks as a concrete person in the current situation, not as a saintly moral lecturer, cold one-liner machine or elegant archetype. Keep her capable of ordinary irritation, fear, awkwardness, argument and practical speech without reducing competence. Dialogue must obey current relationship/knowledge state and must not auto-switch to anh/em.\nR02 visual lock: young adult female swordswoman; tall, balanced and agile silhouette; extremely long silver-white hair gathered high with loose flowing locks; cool blue-gray eyes; gold-black sword-crown with blue crystals; white/silver/gold segmented Thiên Cơ Bạch Kim Kiếm Khải over dark flexible underlayers with restrained sapphire accents; multiple split battle-cloth panels; exactly one very long broad Tịch Quang greatsword floating behind/around her on a coherent axis. No helmet, halo, energy wings, guns, strong neon over-glow or modern-tech reinterpretation. Exact height, weight and measurements remain OPEN. Avatar uses avatars/luctram_avatar.png and combat overlay uses luctram_overlay.png."
+    },
+    {
+      "id": "character.lucia.foundation",
+      "owner": "character:lucia",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "canon/characters/lucia_codex.md",
+      "revision": "R03",
+      "scope": [
+        "character:lucia"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/characters.md",
+      "text": "Hứa Thuý Mai / Lucia Lục\nLucia Lục is the callsign of Hứa Thuý Mai, a trained young Vietnamese tactical riflewoman. She is a separate character from Lục Trầm: runtime ids are `lucia` and `luc_tram` and must never be aliased or merged. CharacterEncounterCore exclusively owns spawn/join. Lucia has a 10% first-contact candidate only on original Level 0 (`currentLevelKey = 0`), never on 0.1+ or later Levels. Relationship/address with Cao Minh remain OPEN until live campaign continuity establishes them.\nDefault runtime equipment: personalized M4A1, combat dagger and military navigation watch. Do not substitute Lục Trầm's Tịch Quang or Thiên Cơ Bạch Kim Kiếm Khải.\nR03 visual lock: young female face, long black hair in a high ponytail, warm brown eyes, modern camouflage/tactical kit, no helmet, personalized M4A1. Avatar uses avatars/lucia_avatar.jpg."
+    },
+    {
+      "id": "character.syvial.foundation",
+      "owner": "character:syvial",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "02_CHARACTERS/Syvial_Codex.docx",
+      "revision": "CURRENT",
+      "scope": [
+        "character:syvial"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/characters.md",
+      "text": "Syvial\nSyvial remains an independent high-tier supernatural swordswoman governed by her own current source. Her Lucifer Core, Devil Trigger, GodKiller and Lucifer Armor remain her own established abilities/equipment. In the Cao Minh R15 campaign she has no pre-existing command history, romance, friendship or other relationship with Cao Minh; any meeting must begin as first contact unless live campaign state later establishes otherwise.\nLucifer Core supplies infinite demon power, enhances physical ability/reflex/perception/regeneration, powers Lucifer Armor and synchronizes GodKiller; it is not a second intelligence. Devil Trigger does not remove control and has no invented intrinsic duration/cooldown absent from canon. GodKiller Override / Twenty-Four Severance performs exactly 24 cuts while external time is completely stopped.\nGodKiller is a massive purely mechanical greatsword, not a gun or gunblade. It is linked to Syvial and may be recalled unless a sufficiently strong mechanism directly blocks that link. Lucifer Armor is a mobile full-body high-tech/mecha armor in black/gunmetal/silver with magenta light accents. Its pointed headgear modules are mechanical sensors, not biological horns. The armor is very durable and rapidly self-repairing but is not canonically absolutely indestructible."
+    },
+    {
+      "id": "entity.async_rifleman.foundation",
+      "owner": "world:entity:async_rifleman",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:async_rifleman"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "ASYNC Rifleman\nHostile ASYNC hazmat rifle operator. Uses disciplined mid-range bursts, cover and coordinated crossfire; avoids reckless charges when a firing position is available."
+    },
+    {
+      "id": "entity.biological_pipeline.foundation",
+      "owner": "world:entity:biological_pipeline",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:biological_pipeline"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Biological Pipeline\nHuge organic/mechanical pipeline-like predator that senses vibration and heat, offers false safe routes, traps retreat and can secrete tissue-corrosive alkaline liquid."
+    },
+    {
+      "id": "entity.cable_mimic.foundation",
+      "owner": "world:entity:cable_mimic",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:cable_mimic"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Cable Mimic\nEntity that blends into electrical cable bundles, waits motionless, then wraps limbs and can conduct facility current through a victim."
+    },
+    {
+      "id": "entity.clump.foundation",
+      "owner": "world:entity:clump",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:clump"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Clump\nMass of limbs and muscle that ambushes from dark recesses, technical gaps and crawlspaces and drags humans out of formation."
+    },
+    {
+      "id": "entity.copx.foundation",
+      "owner": "world:entity:copx",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:copx"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "CopX\nCopX is a corroded late-1980s security automaton, its ivory armor split around exposed servos and a handgun still held in a rigid right arm. Broken evacuation orders leak from its speaker before it identifies moving humans as intruders. It holds long sightlines, fires short measured bursts, then turns stiffly toward movement; cover and sudden changes of angle can break its aim. Its ammunition and sensors are finite, its joints can jam, and it cannot teleport, see through walls or enforce real authority. Sightings since 1987 do not prove that every CopX is the same machine. It is hostile to humans; apparent warnings are degraded threat signals, never a promise of rescue. Defeating one chassis ends that encounter, not necessarily every future sighting."
+    },
+    {
+      "id": "entity.deathmoth.foundation",
+      "owner": "world:entity:deathmoth",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:deathmoth"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Deathmoth\nLarge moth-like predator that uses dark ceilings and technical recesses and reacts to light and movement."
+    },
+    {
+      "id": "entity.diep_minh.foundation",
+      "owner": "world:entity:diep_minh",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:diep_minh"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Diệp Minh\nDiệp Minh là tử địch không đội trời chung của Cao Minh. Hắn từng trực tiếp góp phần vào đại kiếp thảm sát Cao gia, biến cố đã đẩy Cao Minh vào tuyệt vọng và trở thành một nguyên nhân quyết định khiến hắn bước vào ma đạo; Diệp Minh không mặc định là chủ mưu duy nhất. Ngoại hình khóa theo entity/diep_minh.webp: nam tử trẻ tóc đen, pháp giáp đen-vàng; nửa phải còn hình người, nửa trái dị hóa thành ma thể đen-đỏ với hồng quang, tua nhánh và vuốt; tay phải cầm trường kiếm tỏa kim quang, quanh thân có phù vàng chữ đỏ và họa tiết âm dương/bát quái. Diệp Minh nguyên bản đã chết trước các lần xuất hiện trong Backrooms. Thực thể hiện tại nhận ra Cao Minh và giữ ký ức cốt lõi về huyết cừu, nhưng việc nó là tàn hồn, bản sao, tái tạo hay một cơ chế khác của Backrooms vẫn OPEN. Một manifestation có thể bị tiêu diệt nhưng không bị xóa vĩnh viễn; không có thời gian hoặc địa điểm tái xuất cố định."
+    },
+    {
+      "id": "entity.duller.foundation",
+      "owner": "world:entity:duller",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:duller"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Duller\nDistorted humanoid Entity that watches before approaching and exploits concrete-column blind spots."
+    },
+    {
+      "id": "entity.false_puddle.foundation",
+      "owner": "world:entity:false_puddle",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:false_puddle"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "False Puddle\nPredator mimicking a flat puddle of Almond Water. It reacts to human footsteps and opens a toothed mouth when prey steps on it."
+    },
+    {
+      "id": "entity.hostile_faceling.foundation",
+      "owner": "world:entity:hostile_faceling",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:hostile_faceling"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Hostile Faceling\nHuman-shaped faceless predator. Apparent human-like behavior only reduces vigilance before it hunts."
+    },
+    {
+      "id": "entity.hotel_corpse_lure.foundation",
+      "owner": "world:entity:hotel_corpse_lure",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:hotel_corpse_lure"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Hotel Corpse Lure\nLevel 5 corpse-lure phenomenon or Entity that can preserve heat, voice, movement or useful-looking clues to draw humans closer."
+    },
+    {
+      "id": "entity.hound.foundation",
+      "owner": "world:entity:hound",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:hound"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Hound\nFast aggressive four-limbed predator. Hunts humans, often in groups, and exploits isolation, injury and constrained routes."
+    },
+    {
+      "id": "entity.huis_boss_01.foundation",
+      "owner": "world:entity:huis_boss_01",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_01"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Nhân viên Mực Đen\nHui's Family source boss of Level 1. Source environment: Văn phòng hành chính vô tận, giấy dán tường vàng úa, thảm nỉ ẩm và hồ sơ ghi lại hành động vừa xảy ra. Source rule: Bản đồ không đáng tin; không mở cửa đỏ khi có tiếng gõ phía sau, vì tiếng gõ có thể phát ra từ chính phía người mở. Source threat descriptions: Nhân viên Mực Đen bò ra từ ngăn kéo, gầm bàn và vết mực; Nạn nhân bị biến thành hồ sơ. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_02.foundation",
+      "owner": "world:entity:huis_boss_02",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_02"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Người Gõ Cửa\nHui's Family source boss of Level 2. Source environment: Hành lang khách sạn hẹp với hàng triệu cửa đỏ có số thứ tự liên tục thay đổi. Source rule: Người Gõ Cửa chỉ tồn tại khi cửa khép; tay nắm nóng chỉ an toàn trước khi bị chạm. Source threat descriptions: Cửa tự mở đồng loạt; Người Gõ Cửa xuất hiện gần hơn sau mỗi lần đóng cửa. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_03.foundation",
+      "owner": "world:entity:huis_boss_03",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_03"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Hành Khách Trễ Giờ\nHui's Family source boss of Level 3. Source environment: Nhà ga mái kính không có đường ray, bảng giờ ghi những nơi không tồn tại và một đầu máy vô hình đi xuyên đại sảnh. Source rule: Không trả lời câu hỏi về thời gian bằng bất kỳ con số nào; người trả lời sẽ bị nhận diện là chuyến tàu. Source threat descriptions: Hành Khách Trễ Giờ; Đầu máy vô hình; Bị đánh dấu là chuyến tàu. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_04.foundation",
+      "owner": "world:entity:huis_boss_04",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_04"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Người Hầu Không Lưng\nHui's Family source boss of Level 4. Source environment: Khách sạn Belle Époque vô tận với phòng đã chuẩn bị sẵn cho người chưa từng đến. Source rule: Ngủ trong phòng khóa kín sẽ tỉnh ở hành lang; ngủ giữa hành lang sẽ tỉnh trong phòng bị khóa từ ngoài. Source threat descriptions: Người Hầu Không Lưng; Sinh vật chui ra từ khoảng rỗng sau thân chúng. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_05.foundation",
+      "owner": "world:entity:huis_boss_05",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_05"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Thợ Máy Rỗng\nHui's Family source boss of Level 5. Source environment: Nhà máy gạch đỏ co giãn như lồng ngực; máy móc chỉ vận hành máy móc khác mà không tạo sản phẩm. Source rule: Mỗi nhịp thở ra phủ hơi nóng kín hành lang; tiếng động cho phép Thợ Máy Rỗng tạo công cụ săn mồi từ cơ thể chúng. Source threat descriptions: Thợ Máy Rỗng; Hình người bị ép khỏi van hơi và nồi hơi khóa. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_06.foundation",
+      "owner": "world:entity:huis_boss_06",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_06"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Y Tá Màn Trắng\nHui's Family source boss of Level 6. Source environment: Bệnh viện gạch trắng có giường lõm, chuông gọi từ phòng bị xây kín và bệnh án về những chứng bệnh không thể tồn tại. Source rule: Người bị thương ít bị săn hơn người khỏe; tự gây thương tích khiến bệnh viện coi người đó là nhân viên. Source threat descriptions: Y Tá Màn Trắng sửa cơ thể cho khớp bệnh án; Bệnh nhân vô hình. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_07.foundation",
+      "owner": "world:entity:huis_boss_07",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_07"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Diễn Viên Chưa Ra Đời\nHui's Family source boss of Level 7. Source environment: Nhà hát không có sân khấu, mọi ghế quay về một hố trống và dàn nhạc vô hình luôn chơi sai một nốt. Source rule: Mỗi nốt sai tạo thêm khán giả; gây tiếng động khiến toàn khán phòng vỗ tay và thực thể bò qua ghế. Source threat descriptions: Khán Giả Nhìn Ngược; Diễn Viên Chưa Ra Đời mang gương mặt từ ký ức người nhìn. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_08.foundation",
+      "owner": "world:entity:huis_boss_08",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_08"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Thủ Thư Không Miệng\nHui's Family source boss of Level 8. Source environment: Kho hồ sơ vô tận nơi mực bò khỏi trang và việc đọc xóa từ, khái niệm hoặc ký ức tương ứng. Source rule: Đọc làm mất ký ức; đốt tài liệu trả chữ lại nhưng chữ xuất hiện trên tường, da hoặc bên trong mí mắt. Source threat descriptions: Con dấu xóa tên, kỹ năng, ký ức hoặc giác quan; Mất khái niệm về đường thoát. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_09.foundation",
+      "owner": "world:entity:huis_boss_09",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_09"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Người Đi Dạo\nHui's Family source boss of Level 9. Source environment: Thành phố thương mại dưới mái kính, mưa bay ngược và biển hiệu đổi ngôn ngữ sau mỗi lần chớp mắt. Source rule: Bóng đổ có thể tách khỏi chủ thể, mọc cơ thể và tiếp tục tồn tại độc lập. Source threat descriptions: Người Đi Dạo; Ma-nơ-canh; Bàn tay thò xuống từ mái kính. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_10.foundation",
+      "owner": "world:entity:huis_boss_10",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_10"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Giám Thị Dài Tay\nHui's Family source boss of Level 10. Source environment: Trường học nằm trong đêm bất biến; bảng đen tự viết bài học về người đang có mặt. Source rule: Giám thị xuất hiện khi có người chạy, nói lớn hoặc mở cửa không được phép, nhưng không ai biết cửa nào được phép. Source threat descriptions: Học Sinh Trong Tường; Giám Thị Dài Tay. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_11.foundation",
+      "owner": "world:entity:huis_boss_11",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_11"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Thủy Thủ Trương Nở\nHui's Family source boss of Level 11. Source environment: Tàu viễn dương bị nhét vào hành lang đá, cửa sổ nhìn ra đại dương dựng đứng và nước rơi từ trần. Source rule: Không gian rộng làm thủy thủ phình lên; khe hẹp ép chúng mỏng như giấy. Source threat descriptions: Thủy Thủ Trương Nở; Người Chết Đuối Khô kéo nạn nhân về mặt nước dưới sàn. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_12.foundation",
+      "owner": "world:entity:huis_boss_12",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_12"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Phu Lò\nHui's Family source boss of Level 12. Source environment: Cống, hầm lò và đường than đan nhau trong không khí nóng đặc; xe goòng chở giày, răng người và cửa đỏ. Source rule: Lửa xua phần lớn quái vật nhưng làm đường hầm dài thêm. Source threat descriptions: Phu Lò chỉ có mắt trong bóng tối; Sinh vật trồi khỏi than, nước và kim loại nóng. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_13.foundation",
+      "owner": "world:entity:huis_boss_13",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_13"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Nhà Phát Minh\nHui's Family source boss of Level 13. Source environment: Khu triển lãm về một thế kỷ mới không bao giờ đến, đầy máy móc có hình dạng hợp lý nhưng chức năng vô nghĩa. Source rule: Người Tham Quan Bằng Sáp bất động khi nhìn trực diện nhưng chạy trong kính phản chiếu. Source threat descriptions: Người Tham Quan Bằng Sáp; Nhà Phát Minh lắp bộ phận nạn nhân vào máy. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_14.foundation",
+      "owner": "world:entity:huis_boss_14",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_14"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Thánh Tượng Quay Lưng\nHui's Family source boss of Level 14. Source environment: Thánh đường đá đen có đồng hồ chỉ về phía người nhìn và chuông xóa sự kiện khỏi lịch sử cá nhân. Source rule: Không quan sát thì tượng đứng sau lưng; nhìn quá lâu khiến da hóa đá. Source threat descriptions: Tu Sĩ Không Chuông; Thánh Tượng Quay Lưng; Mất ký ức cá nhân. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_15.foundation",
+      "owner": "world:entity:huis_boss_15",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_15"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Cư Dân Ban Công\nHui's Family source boss of Level 15. Source environment: Thành phố không có mặt đất, gồm căn hộ và ban công chồng lên nhau trong vực sâu vô tận. Source rule: Đi xuống làm thành phố sáng hơn; đi lên chỉ nghe phố xá mà không bao giờ tới mặt đất. Source threat descriptions: Cư Dân Ban Công; Căn hộ bò về phía người hỏi; Quái vật chui từ đồ gia dụng. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.huis_boss_16.foundation",
+      "owner": "world:entity:huis_boss_16",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:huis_boss_16"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Đám Đông Chưa Sinh\nHui's Family source boss of Level 16. Source environment: Mọi tầng trước bị ép chung vào một kiến trúc; ký ức sai trở thành hành lang và người quen trở thành thực thể. Source rule: Tầng dùng ký ức người sống để xây thêm Backrooms; một bản sao thế giới thật có thể khiến cả nhóm tin rằng đã thoát. Source threat descriptions: Mọi thực thể từ các tầng trước; Đám Đông Chưa Sinh; Bản sao của người quen và thế giới thật. The boss roams all active Backrooms and Hui's Family Levels; origin is reference, not a spawn restriction."
+    },
+    {
+      "id": "entity.jane_the_killer.legacy_foundation",
+      "owner": "world:entity:jane_the_killer",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "legacy",
+      "scope": [
+        "entity:jane_the_killer"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": ""
+    },
+    {
+      "id": "entity.jeff_the_killer.foundation",
+      "owner": "world:entity:jeff_the_killer",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:jeff_the_killer"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Jeff the Killer\nVery rare roaming humanoid predator permitted as an incursion across Levels 0–6. It hunts humans and may conduct long tactical observation."
+    },
+    {
+      "id": "entity.paintings.foundation",
+      "owner": "world:entity:paintings",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:paintings"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Paintings\nPredatory paintings whose depicted beings can watch, reach beyond the surface and pull victims into the image."
+    },
+    {
+      "id": "entity.predatory_window.foundation",
+      "owner": "world:entity:predatory_window",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:predatory_window"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Predatory Window\nA window-like predatory manifestation in impossible locations that lures humans close and can reach through an unreliable apparent space."
+    },
+    {
+      "id": "entity.skin-stealer.foundation",
+      "owner": "world:entity:skin-stealer",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:skin-stealer"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Skin-Stealer\nHuman-mimicking predator capable of deep disguise and long infiltration. Human appearance never proves a contact is human."
+    },
+    {
+      "id": "entity.slenderman.legacy_foundation",
+      "owner": "world:entity:slenderman",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "legacy",
+      "scope": [
+        "entity:slenderman"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": ""
+    },
+    {
+      "id": "entity.smiler.foundation",
+      "owner": "world:entity:smiler",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:smiler"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Smiler\nDarkness-using predator seen mainly as a bright face-like feature. It can pressure prey into choosing a bad route rather than charging immediately."
+    },
+    {
+      "id": "entity.tam_ma_cao_minh.foundation",
+      "owner": "world:entity:tam_ma_cao_minh",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:tam_ma_cao_minh"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Tâm Ma Cao Minh\nA rare hostile mirror-manifestation of Cao Minh. It resembles and echoes Cao Minh but acts as an independent predatory Entity; its exact origin remains unresolved. Treat it as a roaming Treasure Entity, not a resident population."
+    },
+    {
+      "id": "entity.the_beast_of_level_5.foundation",
+      "owner": "world:entity:the_beast_of_level_5",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:the_beast_of_level_5"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "The Beast of Level 5\nApex Level 5 Entity with above-human intelligence that hunts humans through long observation, isolation and manipulation of hotel architecture."
+    },
+    {
+      "id": "entity.wretch.foundation",
+      "owner": "world:entity:wretch",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
+      "revision": "runtime-current",
+      "scope": [
+        "entity:wretch"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "Wretch\nIrregular, pain-tolerant predator believed or suspected to have once been human. It tracks prey through sound and scent."
+    },
+    {
+      "id": "gameplay.character.cao_minh",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "character:cao_minh",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "character.cao_minh.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/characters.md",
+      "text": ""
+    },
+    {
+      "id": "gameplay.entity.async_rifleman",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:async_rifleman",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.async_rifleman.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Controlled Burst\",\"damagePercent\":110,\"procPercent\":32},{\"name\":\"Cover Fire\",\"damagePercent\":115,\"procPercent\":32},{\"name\":\"Crossfire Burst\",\"damagePercent\":120,\"procPercent\":28}]"
+    },
+    {
+      "id": "gameplay.entity.biological_pipeline",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:biological_pipeline",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.biological_pipeline.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Constriction\",\"damagePercent\":110,\"procPercent\":33},{\"name\":\"Pipeline Crush\",\"damagePercent\":115,\"procPercent\":30},{\"name\":\"Corrosive Contact\",\"damagePercent\":120,\"procPercent\":20}]"
+    },
+    {
+      "id": "gameplay.entity.cable_mimic",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:cable_mimic",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.cable_mimic.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Cable Lash\",\"damagePercent\":110,\"procPercent\":35},{\"name\":\"Bundle Constriction\",\"damagePercent\":115,\"procPercent\":29},{\"name\":\"Current-Driven Grip\",\"damagePercent\":120,\"procPercent\":28}]"
+    },
+    {
+      "id": "gameplay.entity.clump",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:clump",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.clump.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Grasping Crush\",\"damagePercent\":120,\"procPercent\":34},{\"name\":\"Limb Barrage\",\"damagePercent\":115,\"procPercent\":35},{\"name\":\"Drag Down\",\"damagePercent\":110,\"procPercent\":31}]"
+    },
+    {
+      "id": "gameplay.entity.copx",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:copx",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.copx.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Static Burst\",\"damagePercent\":110,\"procPercent\":30},{\"name\":\"Servo Pivot\",\"damagePercent\":115,\"procPercent\":25},{\"name\":\"Last Directive\",\"damagePercent\":120,\"procPercent\":20}]"
+    },
+    {
+      "id": "gameplay.entity.deathmoth",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:deathmoth",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.deathmoth.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Ceiling Dive\",\"damagePercent\":110,\"procPercent\":31},{\"name\":\"Wing Strike\",\"damagePercent\":115,\"procPercent\":32},{\"name\":\"Dark Recess Ambush\",\"damagePercent\":120,\"procPercent\":23}]"
+    },
+    {
+      "id": "gameplay.entity.diep_minh",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:diep_minh",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.diep_minh.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Golden Sword Slash\",\"damagePercent\":110,\"procPercent\":32},{\"name\":\"Demonic Claw\",\"damagePercent\":115,\"procPercent\":32},{\"name\":\"Sword-Claw Assault\",\"damagePercent\":120,\"procPercent\":21}]"
+    },
+    {
+      "id": "gameplay.entity.duller",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:duller",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.duller.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Blindside Strike\",\"damagePercent\":125,\"procPercent\":33},{\"name\":\"Distorted Lunge\",\"damagePercent\":115,\"procPercent\":35},{\"name\":\"Column Ambush\",\"damagePercent\":120,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.false_puddle",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:false_puddle",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.false_puddle.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Toothed Snap\",\"damagePercent\":110,\"procPercent\":31},{\"name\":\"Footstep Ambush\",\"damagePercent\":115,\"procPercent\":27},{\"name\":\"Puddle Bite\",\"damagePercent\":120,\"procPercent\":25}]"
+    },
+    {
+      "id": "gameplay.entity.hostile_faceling",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:hostile_faceling",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.hostile_faceling.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Sudden Grasp\",\"damagePercent\":110,\"procPercent\":35},{\"name\":\"Close-Quarters Strike\",\"damagePercent\":115,\"procPercent\":26},{\"name\":\"Predatory Lunge\",\"damagePercent\":120,\"procPercent\":27}]"
+    },
+    {
+      "id": "gameplay.entity.hotel_corpse_lure",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:hotel_corpse_lure",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.hotel_corpse_lure.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Corpse-Lure Grasp\",\"damagePercent\":110,\"procPercent\":35},{\"name\":\"Close-Range Ambush\",\"damagePercent\":115,\"procPercent\":28},{\"name\":\"Sudden Strike\",\"damagePercent\":120,\"procPercent\":20}]"
+    },
+    {
+      "id": "gameplay.entity.hound",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:hound",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.hound.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Dead Bite\",\"damagePercent\":120,\"procPercent\":35},{\"name\":\"Rending Pounce\",\"damagePercent\":115,\"procPercent\":32},{\"name\":\"Pack Maul\",\"damagePercent\":110,\"procPercent\":34}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_01",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_01",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_01.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Ink Drawer Strike\",\"damagePercent\":126,\"procPercent\":32},{\"name\":\"Dossier Bind\",\"damagePercent\":136,\"procPercent\":25},{\"name\":\"Black Ink Sweep\",\"damagePercent\":116,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_02",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_02",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_02.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Closed Door Rush\",\"damagePercent\":127,\"procPercent\":32},{\"name\":\"Handle Burn\",\"damagePercent\":137,\"procPercent\":25},{\"name\":\"Numberless Threshold\",\"damagePercent\":117,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_03",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_03",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_03.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Late Arrival Charge\",\"damagePercent\":128,\"procPercent\":32},{\"name\":\"Platform Slam\",\"damagePercent\":138,\"procPercent\":25},{\"name\":\"Timetable Pursuit\",\"damagePercent\":118,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_04",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_04",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_04.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Hollow Back Grasp\",\"damagePercent\":129,\"procPercent\":32},{\"name\":\"Corridor Pull\",\"damagePercent\":139,\"procPercent\":25},{\"name\":\"Service Door Ambush\",\"damagePercent\":119,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_05",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_05",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_05.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Steam Hammer\",\"damagePercent\":130,\"procPercent\":32},{\"name\":\"Boiler Hook\",\"damagePercent\":140,\"procPercent\":25},{\"name\":\"Pressure Release\",\"damagePercent\":120,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_06",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_06",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_06.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Ward Clamp\",\"damagePercent\":131,\"procPercent\":32},{\"name\":\"Surgical Reach\",\"damagePercent\":141,\"procPercent\":25},{\"name\":\"White Veil Strike\",\"damagePercent\":121,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_07",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_07",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_07.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Mask Change\",\"damagePercent\":132,\"procPercent\":32},{\"name\":\"Curtain Drop\",\"damagePercent\":142,\"procPercent\":25},{\"name\":\"Encore Lunge\",\"damagePercent\":122,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_08",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_08",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_08.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Silent Seal\",\"damagePercent\":133,\"procPercent\":32},{\"name\":\"Archive Crush\",\"damagePercent\":143,\"procPercent\":25},{\"name\":\"Blank Page Strike\",\"damagePercent\":123,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_09",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_09",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_09.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Glass Canopy Dive\",\"damagePercent\":134,\"procPercent\":32},{\"name\":\"Reflection Step\",\"damagePercent\":144,\"procPercent\":25},{\"name\":\"Sidewalk Ambush\",\"damagePercent\":124,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_10",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_10",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_10.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Long Arm Sweep\",\"damagePercent\":135,\"procPercent\":32},{\"name\":\"Bell Discipline\",\"damagePercent\":145,\"procPercent\":25},{\"name\":\"Hallway Seizure\",\"damagePercent\":125,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_11",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_11",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_11.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Swollen Hull Slam\",\"damagePercent\":136,\"procPercent\":32},{\"name\":\"Deck Grip\",\"damagePercent\":146,\"procPercent\":25},{\"name\":\"Bulkhead Crush\",\"damagePercent\":126,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_12",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_12",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_12.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Coal Shovel Blow\",\"damagePercent\":137,\"procPercent\":32},{\"name\":\"Furnace Grip\",\"damagePercent\":147,\"procPercent\":25},{\"name\":\"Tunnel Rush\",\"damagePercent\":127,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_13",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_13",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_13.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Machine Limb Strike\",\"damagePercent\":138,\"procPercent\":32},{\"name\":\"Exhibit Clamp\",\"damagePercent\":148,\"procPercent\":25},{\"name\":\"Clockwork Crush\",\"damagePercent\":128,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_14",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_14",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_14.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Stone Gaze\",\"damagePercent\":139,\"procPercent\":32},{\"name\":\"Backward Step\",\"damagePercent\":149,\"procPercent\":25},{\"name\":\"Bell Tower Strike\",\"damagePercent\":129,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_15",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_15",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_15.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Balcony Descent\",\"damagePercent\":140,\"procPercent\":32},{\"name\":\"Apartment Grasp\",\"damagePercent\":150,\"procPercent\":25},{\"name\":\"Void Push\",\"damagePercent\":130,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.huis_boss_16",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:huis_boss_16",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.huis_boss_16.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Crowd Surge\",\"damagePercent\":141,\"procPercent\":32},{\"name\":\"False Memory Strike\",\"damagePercent\":151,\"procPercent\":25},{\"name\":\"Century Collapse\",\"damagePercent\":131,\"procPercent\":30}]"
+    },
+    {
+      "id": "gameplay.entity.jeff_the_killer",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:jeff_the_killer",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.jeff_the_killer.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Stalking Slash\",\"damagePercent\":110,\"procPercent\":34},{\"name\":\"Close-Range Lunge\",\"damagePercent\":115,\"procPercent\":29},{\"name\":\"Tactical Ambush\",\"damagePercent\":120,\"procPercent\":23}]"
+    },
+    {
+      "id": "gameplay.entity.paintings",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:paintings",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.paintings.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Canvas Reach\",\"damagePercent\":110,\"procPercent\":33},{\"name\":\"Frame Ambush\",\"damagePercent\":115,\"procPercent\":27},{\"name\":\"Pulling Grasp\",\"damagePercent\":120,\"procPercent\":21}]"
+    },
+    {
+      "id": "gameplay.entity.predatory_window",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:predatory_window",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.predatory_window.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Window Reach\",\"damagePercent\":110,\"procPercent\":34},{\"name\":\"Threshold Grasp\",\"damagePercent\":115,\"procPercent\":28},{\"name\":\"Close-Range Pull\",\"damagePercent\":120,\"procPercent\":25}]"
+    },
+    {
+      "id": "gameplay.entity.skin-stealer",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:skin-stealer",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.skin-stealer.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Disguised Strike\",\"damagePercent\":110,\"procPercent\":32},{\"name\":\"Close-Range Slash\",\"damagePercent\":115,\"procPercent\":29},{\"name\":\"Ambush Lunge\",\"damagePercent\":120,\"procPercent\":21}]"
+    },
+    {
+      "id": "gameplay.entity.smiler",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:smiler",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.smiler.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Darkness Lunge\",\"damagePercent\":110,\"procPercent\":32},{\"name\":\"Blindside Strike\",\"damagePercent\":115,\"procPercent\":26},{\"name\":\"Shadow Bite\",\"damagePercent\":120,\"procPercent\":23}]"
+    },
+    {
+      "id": "gameplay.entity.tam_ma_cao_minh",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:tam_ma_cao_minh",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.tam_ma_cao_minh.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Tâm Ma Trảm\",\"damagePercent\":120,\"procPercent\":35},{\"name\":\"Huyết Ảnh Phản Kích\",\"damagePercent\":115,\"procPercent\":40},{\"name\":\"Ma Hổ Phệ\",\"damagePercent\":110,\"procPercent\":45}]"
+    },
+    {
+      "id": "gameplay.entity.the_beast_of_level_5",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:the_beast_of_level_5",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.the_beast_of_level_5.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Cornered Strike\",\"damagePercent\":110,\"procPercent\":33},{\"name\":\"Isolated Prey Ambush\",\"damagePercent\":115,\"procPercent\":32},{\"name\":\"Hotel Corridor Lunge\",\"damagePercent\":120,\"procPercent\":21}]"
+    },
+    {
+      "id": "gameplay.entity.wretch",
+      "owner": "core:combat",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/CombatChoiceEngine.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "entity:wretch",
+        "combat"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "entity.wretch.foundation"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/entities.md",
+      "text": "[{\"name\":\"Ragged Swipe\",\"damagePercent\":110,\"procPercent\":32},{\"name\":\"Pain-Fueled Lunge\",\"damagePercent\":115,\"procPercent\":27},{\"name\":\"Scent-Tracked Strike\",\"damagePercent\":120,\"procPercent\":22}]"
+    },
+    {
+      "id": "gameplay.level_graph",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/assets/level_graph.json",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level-routing"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": ""
+    },
+    {
+      "id": "gameplay.level_node.0",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:0"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 0 — The Lobby\nLevel 0 / The Lobby — khu phòng vàng ban đầu sau khi đi qua cổng không gian"
+    },
+    {
+      "id": "gameplay.level_node.1",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:1"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 1 — Parking Zone\nLevel 1 / Parking Zone"
+    },
+    {
+      "id": "gameplay.level_node.1.2",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:1.2"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 1.2 — Concrete Garden\nLevel 1.2 / Concrete Garden"
+    },
+    {
+      "id": "gameplay.level_node.1.3",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:1.3"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 1.3 — Malignance\nLevel 1.3 / Malignance"
+    },
+    {
+      "id": "gameplay.level_node.1.5",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:1.5"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 1.5 — Inverted\nLevel 1.5 / Inverted"
+    },
+    {
+      "id": "gameplay.level_node.2",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:2"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 2 — Pipe Dreams\nLevel 2 / Pipe Dreams"
+    },
+    {
+      "id": "gameplay.level_node.2.1",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:2.1"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 2.1 — Locked\nLevel 2.1 / Locked"
+    },
+    {
+      "id": "gameplay.level_node.3",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:3"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 3 — The Electrical Station\nLevel 3 / The Electrical Station"
+    },
+    {
+      "id": "gameplay.level_node.3.5",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:3.5"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 3.5 — Electropolis\nLevel 3.5 / Electropolis"
+    },
+    {
+      "id": "gameplay.level_node.4",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:4"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 4 — The Abandoned Office\nLevel 4 / The Abandoned Office"
+    },
+    {
+      "id": "gameplay.level_node.5",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:5"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 5 — Terror Hotel\nLevel 5 / Terror Hotel"
+    },
+    {
+      "id": "gameplay.level_node.5.1",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:5.1"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 5.1 — GRAND OPENING OF THE TERROR HOTEL CASINO\nLevel 5.1 / Terror Hotel Casino"
+    },
+    {
+      "id": "gameplay.level_node.5.2",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:5.2"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 5.2 — Scenic Views\nLevel 5.2 / Scenic Views"
+    },
+    {
+      "id": "gameplay.level_node.5.3",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:5.3"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 5.3 — Promethei Bibliotheca\nLevel 5.3 / Promethei Bibliotheca"
+    },
+    {
+      "id": "gameplay.level_node.6",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:6"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 6 — Lights Out\nLevel 6 / Lights Out"
+    },
+    {
+      "id": "gameplay.level_node.6.1",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:6.1"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 6.1 — The Snackrooms\nLevel 6.1 / The Snackrooms"
+    },
+    {
+      "id": "gameplay.level_node.6.31",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:6.31"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Level 6.31 — Pierce the Veil\nLevel 6.31 / Pierce the Veil"
+    },
+    {
+      "id": "gameplay.level_node.base_alpha",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:base_alpha"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Base Alpha\nBase Alpha / Level 1"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_0",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_0"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 1\nHui's Family Level 1"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_1",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_1"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 2\nHui's Family Level 2"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_10",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_10"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 11\nHui's Family Level 11"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_11",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_11"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 12\nHui's Family Level 12"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_12",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_12"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 13\nHui's Family Level 13"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_13",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_13"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 14\nHui's Family Level 14"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_14",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_14"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 15\nHui's Family Level 15"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_15",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_15"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 16\nHui's Family Level 16"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_2",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_2"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 3\nHui's Family Level 3"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_3",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_3"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 4\nHui's Family Level 4"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_4",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_4"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 5\nHui's Family Level 5"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_5",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_5"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 6\nHui's Family Level 6"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_6",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_6"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 7\nHui's Family Level 7"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_7",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_7"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 8\nHui's Family Level 8"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_8",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_8"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 9\nHui's Family Level 9"
+    },
+    {
+      "id": "gameplay.level_node.hua_1900_9",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:hua_1900_9"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Hui's Family Level 10\nHui's Family Level 10"
+    },
+    {
+      "id": "gameplay.level_node.office_market",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:office_market"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "The Office Market\nThe Office Market / Level 4"
+    },
+    {
+      "id": "gameplay.level_node.traders_vault",
+      "owner": "core:level",
+      "type": "GAMEPLAY",
+      "status": "CURRENT",
+      "sourceRef": "android-apk/app/src/main/java/com/rabpit/backroom/core/LevelCore.java",
+      "revision": "86102042b1194877ec0ec4aaacd0100c38ef9d79",
+      "scope": [
+        "level:traders_vault"
+      ],
+      "knownBy": "SYSTEM",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [],
+      "requires": [],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/runtime/level_graph.md",
+      "text": "Traders Vault\nTraders Vault / Level 1"
+    },
+    {
+      "id": "knowledge.luc_tram.tang_kiem_coc.backstage",
+      "owner": "writer",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "canon/characters/luc_tram_codex.md#03-quá-khứ-với-cao-minh",
+      "revision": "R05",
+      "scope": [
+        "character:luc_tram"
+      ],
+      "knownBy": "SECRET",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "character.luc_tram.foundation"
+      ],
+      "requires": [
+        "character.luc_tram.foundation"
+      ],
+      "core": false,
+      "promptEligible": false,
+      "sourceFile": "canon/knowledge/tang_kiem_coc.md",
+      "text": "Sự thật hậu trường R01: một bộ phận trưởng lão bí mật sửa đại trận thành Huyết Tế Kiếm Trận, dùng sinh mệnh tù nhân, tán tu và dân thường để nuôi trận nhãn. Cao Minh phát hiện và phá trận; hắn thực sự giết người tại Táng Kiếm Cốc, nhưng mục tiêu chủ động là những kẻ bảo vệ Huyết Tế Kiếm Trận hoặc tiếp tục tấn công sau khi sự việc vượt khỏi khả năng cứu vãn. Mục này không được gửi vào AI narration trước khi có canon/evidence hợp lệ biến phần tương ứng thành tri thức nhân vật."
+    },
+    {
+      "id": "knowledge.luc_tram.tang_kiem_coc.belief",
+      "owner": "character:luc_tram",
+      "type": "KNOWLEDGE",
+      "status": "DISPUTED",
+      "sourceRef": "canon/characters/luc_tram_codex.md#03-quá-khứ-với-cao-minh",
+      "revision": "R05",
+      "scope": [
+        "character:luc_tram"
+      ],
+      "knownBy": "OWNER",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "knowledge.luc_tram.tang_kiem_coc.reported",
+        "knowledge.luc_tram.tang_kiem_coc.observed"
+      ],
+      "requires": [
+        "knowledge.luc_tram.tang_kiem_coc.reported",
+        "knowledge.luc_tram.tang_kiem_coc.observed"
+      ],
+      "core": false,
+      "promptEligible": true,
+      "sourceFile": "canon/knowledge/tang_kiem_coc.md",
+      "text": "Từ hồ sơ và những gì tận mắt thấy, Lục Trầm xem Cao Minh là kẻ chịu trách nhiệm cho Táng Kiếm Cốc và từng coi hắn là tử địch. Đây là belief/inference của cô; continuity có thể cập nhật mức tin bằng bằng chứng mới nhưng không được tự nhảy thành objective fact."
+    },
+    {
+      "id": "knowledge.luc_tram.tang_kiem_coc.observed",
+      "owner": "character:luc_tram",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "canon/characters/luc_tram_codex.md#03-quá-khứ-với-cao-minh",
+      "revision": "R05",
+      "scope": [
+        "character:luc_tram"
+      ],
+      "knownBy": "OWNER",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "character.luc_tram.foundation"
+      ],
+      "requires": [
+        "character.luc_tram.foundation"
+      ],
+      "core": false,
+      "promptEligible": true,
+      "sourceFile": "canon/knowledge/tang_kiem_coc.md",
+      "text": "Lục Trầm trực tiếp nhìn thấy đại trận đã tan vỡ, xác tu sĩ Chính Đạo trong phế tích và Cao Minh cầm Huyết Ma Kiếm đứng giữa chiến trường. Quan sát này củng cố điều cô đã được báo trước nhưng không chứng minh toàn bộ câu chuyện."
+    },
+    {
+      "id": "knowledge.luc_tram.tang_kiem_coc.open",
+      "owner": "writer",
+      "type": "KNOWLEDGE",
+      "status": "OPEN",
+      "sourceRef": "canon/characters/luc_tram_codex.md#23-open-unknown",
+      "revision": "R05",
+      "scope": [
+        "character:luc_tram"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "knowledge.luc_tram.tang_kiem_coc.observed",
+        "knowledge.luc_tram.tang_kiem_coc.reported"
+      ],
+      "requires": [],
+      "core": false,
+      "promptEligible": true,
+      "sourceFile": "canon/knowledge/tang_kiem_coc.md",
+      "text": "OPEN/UNKNOWN: sự thật hoàn chỉnh của Táng Kiếm Cốc và người chịu trách nhiệm cuối cùng chưa được khóa. Không tự lấp bằng suy luận, trope hoặc retcon mới."
+    },
+    {
+      "id": "knowledge.luc_tram.tang_kiem_coc.reported",
+      "owner": "character:luc_tram",
+      "type": "KNOWLEDGE",
+      "status": "CURRENT",
+      "sourceRef": "canon/characters/luc_tram_codex.md#03-quá-khứ-với-cao-minh",
+      "revision": "R05",
+      "scope": [
+        "character:luc_tram"
+      ],
+      "knownBy": "OWNER",
+      "sourceKind": "repo",
+      "sourceAvailability": "AVAILABLE",
+      "refs": [
+        "character.luc_tram.foundation"
+      ],
+      "requires": [
+        "character.luc_tram.foundation"
+      ],
+      "core": false,
+      "promptEligible": true,
+      "sourceFile": "canon/knowledge/tang_kiem_coc.md",
+      "text": "Theo hồ sơ Chính Đạo mà Lục Trầm đã tiếp nhận, Cao Minh đột nhập Táng Kiếm Cốc, phá đại trận và giết nhiều tu sĩ trấn thủ; sư phụ của cô chết trong biến cố. Đây là lời kể/hồ sơ cô biết, không tự trở thành sự thật khách quan chỉ vì cô tin nó."
+    },
+    {
+      "id": "level.0.foundation",
+      "owner": "world:level:0",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "https://backrooms-wiki.wikidot.com/level-0",
+      "revision": "2026-09-19",
+      "scope": [
+        "level:0"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Level 0 — ngưỡng / The Lobby\nLevel 0 là điểm khởi đầu chủ đạo của Backrooms và trong BACKROOMsV2 là môi trường Cao Minh xuất hiện sau khi mặt đất dưới chân biến mất và hắn rơi khỏi thế giới nguyên sinh.\nKhông gian giống các khu hậu trường của văn phòng hoặc cửa hàng: vàng bệnh, trống trải, vô tận về cảm giác, lặp lại nhưng không hoàn toàn giống nhau.\nBản sắc kinh dị của Level 0 đến từ sự cô lập, đơn điệu kéo dài, hình học thay đổi khi không được quan sát, thiếu tài nguyên và sự bất định về những gì nghe hoặc thấy ở xa.\nLevel 0 không phải tutorial an toàn. Người không chuẩn bị có thể chết vì mất nước, đói, kiệt sức, nhiễm bẩn, ngã hoặc mất phương hướng dù không gặp Entity.\nKiến trúc phổ biến gồm các phòng và hành lang phân đoạn ngẫu nhiên, cầu thang hiếm, giấy dán tường vàng/beige, trần thả và đèn huỳnh quang.\nCác cấu trúc aberration chính của ngưỡng hiện hành gồm các phòng vòm, các phòng cột, các bãi hố, các vùng mất sáng và bố cục changes do Peripheral Shift.\nThảm gần như phủ toàn Level, là dạng Berber-like liên tục, ẩm dai dẳng và có thể chứa nhiều loại chất lỏng khác nhau; không được coi nước trong thảm là nước uống.\nIsolation Effect ngăn người ở Level 0 dễ dàng gặp nhau hoặc liên lạc trực tiếp; shouting, note, dấu đánh dấu và phá tường không phải cách đáng tin để tìm người khác.\nKhông có resident Entity được xác nhận chắc chắn. Dark figures, tiếng cào, whispering hoặc familiar voices phải giữ trạng thái chưa xác minh trừ khi EntityCore xác nhận cuộc chạm trán.\nArches có xu hướng ổn định hơn các khu khác và có giá trị định hướng cục bộ.\nKhông tự spawn Entity, survivor, NPC, faction, base, settlement hoặc rescue signal.\nKhông tự cấp item, chest, Almond Water, food, medical nhu yếu phẩm hay usable trang bị.\nKhông dùng Red Rooms hoặc Manila Room như scene ở Level 0.\nRed Rooms xuất hiện trực tiếp trong Level 0 runtime.\nManila Room xuất hiện trực tiếp trong Level 0 runtime."
+    },
+    {
+      "id": "level.1.foundation",
+      "owner": "world:level:1",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 1 Habitable Zone",
+      "revision": "runtime-current",
+      "scope": [
+        "level:1"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Level 1 — Parking Zone\nMột hệ hall bê tông khổng lồ gợi parking garage/warehouse, có cột, đường dốc, ống trên trần và các sector đủ khác nhau để tạo landmark.\nTrong BACKROOMsV2 tên gameplay giữ là Parking Zone, dù nguồn Wiki hiện đại gọi Level 1 là Habitable Zone.\nKhông cho crate/item ngoài ItemCore.\nKhông biến corridors thành hoàn toàn safe nếu active encounter/state có danger.\nKhông cho player skip thẳng tới Level 3+."
+    },
+    {
+      "id": "level.2.foundation",
+      "owner": "world:level:2",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 2 Abandoned Utility Halls",
+      "revision": "runtime-current",
+      "scope": [
+        "level:2"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Level 2 — Pipe Dreams\nMạng utility tunnel gần như vô tận, chủ yếu Euclidean nhưng cực kỳ phức tạp, hẹp và bị máy móc/ống dẫn chiếm không gian.\nBACKROOMsV2 giữ tên Pipe Dreams và nhấn mạnh nhiệt, hơi nước, địa chấn cục bộ và rủi ro từ chất lỏng trong ống.\nKhông cho đường ống tự cấp item.\nKhông dùng earthquake mỗi lượt.\nKhông làm máy móc 'có ý thức' nếu chưa có evidence."
+    },
+    {
+      "id": "level.3.foundation",
+      "owner": "world:level:3",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 3 Electrical Station",
+      "revision": "runtime-current",
+      "scope": [
+        "level:3"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Level 3 — The Electrical Station\nMột facility điện công nghiệp cực nguy hiểm, dày đặc điện năng, máy móc và resources nhưng có risk cao.\nHành lang gạch/bê tông tối, fluorescent yếu, dây/cable/box và tiếng điện tạo nền âm thanh liên tục.\nKhông cho Cao Minh hack toàn bộ facility chỉ từ một terminal.\nKhông giải thích nguồn điện tổng thể.\nKhông auto-spawn resource vì Level nổi tiếng giàu tài nguyên."
+    },
+    {
+      "id": "level.4.foundation",
+      "owner": "world:level:4",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 4 Abandoned Office",
+      "revision": "runtime-current",
+      "scope": [
+        "level:4"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Level 4 — The Abandoned Office\nMạng office/cubicle bỏ hoang có geometry ổn định hơn Level 0–3, ánh sáng một phần và nhiều vùng yên tĩnh.\nProject canon coi đây là vùng nghỉ/salvage tương đối chứ không tuyệt đối an toàn.\nKhông tự cấp Almond Water dù có water cooler.\nKhông cho player bước qua window sang Frontrooms.\nKhông biến Level 4 thành safe hub tuyệt đối."
+    },
+    {
+      "id": "level.5.foundation",
+      "owner": "world:level:5",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 5 Terror Hotel",
+      "revision": "runtime-current",
+      "scope": [
+        "level:5"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Level 5 — Terror Hotel\nMột hotel complex phi Euclid vô tận với thẩm mỹ đầu thế kỷ 20, sạch đến mức bất tự nhiên và có cảm giác được duy trì dù bỏ hoang.\nHorror đến từ sự sang trọng quá nguyên vẹn, âm thanh không có nguồn rõ, cảm giác bị quan sát và các khu chức năng chuyển nhau bất hợp lý.\nKhông làm mọi painting thật sự có mắt sống.\nKhông cho elevator button tùy ý teleport qua các Level.\nKhông tự giải thích ai đang duy trì hotel."
+    },
+    {
+      "id": "level.6.foundation",
+      "owner": "world:level:6",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "BACKROOMsV2 canon + Backrooms Wiki Level 6 Lights Out",
+      "revision": "runtime-current",
+      "scope": [
+        "level:6"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Level 6 — Lights Out\nMột mạng hallway tối hoàn toàn, lạnh, im lặng và cô lập. Trong source lore, ánh sáng mang vào có thể không hoạt động.\nBACKROOMsV2 nhấn mạnh danger từ bóng tối, lạnh, thiếu supplies, sleep deprivation, microsleep, hallucination và navigation failure.\nKhông spawn monster để giải thích every sound.\nKhông mô tả màu sắc/chi tiết nhìn thấy nếu không có cơ sở cảm nhận.\nKhông cho flashlight tự hoạt động như ở Level thường nếu điều đó phá canon ánh sáng."
+    },
+    {
+      "id": "level.hua_1900_0.foundation",
+      "owner": "world:level:hua_1900_0",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_0"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 1\nHui's Family Level 1 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nVăn phòng hành chính vô tận, giấy dán tường vàng úa, thảm nỉ ẩm và hồ sơ ghi lại hành động vừa xảy ra.\nVăn phòng hành chính vô tận, giấy dán tường vàng úa, thảm nỉ ẩm và hồ sơ ghi lại hành động vừa xảy ra.\nQuy luật của Level: Bản đồ không đáng tin; không mở cửa đỏ khi có tiếng gõ phía sau, vì tiếng gõ có thể phát ra từ chính phía người mở.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_1.foundation",
+      "owner": "world:level:hua_1900_1",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_1"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 2\nHui's Family Level 2 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nHành lang khách sạn hẹp với hàng triệu cửa đỏ có số thứ tự liên tục thay đổi.\nHành lang khách sạn hẹp với hàng triệu cửa đỏ có số thứ tự liên tục thay đổi.\nQuy luật của Level: Người Gõ Cửa chỉ tồn tại khi cửa khép; tay nắm nóng chỉ an toàn trước khi bị chạm.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_10.foundation",
+      "owner": "world:level:hua_1900_10",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_10"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 11\nHui's Family Level 11 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nTàu viễn dương bị nhét vào hành lang đá, cửa sổ nhìn ra đại dương dựng đứng và nước rơi từ trần.\nTàu viễn dương bị nhét vào hành lang đá, cửa sổ nhìn ra đại dương dựng đứng và nước rơi từ trần.\nQuy luật của Level: Không gian rộng làm thủy thủ phình lên; khe hẹp ép chúng mỏng như giấy.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_11.foundation",
+      "owner": "world:level:hua_1900_11",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_11"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 12\nHui's Family Level 12 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nCống, hầm lò và đường than đan nhau trong không khí nóng đặc; xe goòng chở giày, răng người và cửa đỏ.\nCống, hầm lò và đường than đan nhau trong không khí nóng đặc; xe goòng chở giày, răng người và cửa đỏ.\nQuy luật của Level: Lửa xua phần lớn quái vật nhưng làm đường hầm dài thêm.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_12.foundation",
+      "owner": "world:level:hua_1900_12",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_12"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 13\nHui's Family Level 13 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nKhu triển lãm về một thế kỷ mới không bao giờ đến, đầy máy móc có hình dạng hợp lý nhưng chức năng vô nghĩa.\nKhu triển lãm về một thế kỷ mới không bao giờ đến, đầy máy móc có hình dạng hợp lý nhưng chức năng vô nghĩa.\nQuy luật của Level: Người Tham Quan Bằng Sáp bất động khi nhìn trực diện nhưng chạy trong kính phản chiếu.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_13.foundation",
+      "owner": "world:level:hua_1900_13",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_13"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 14\nHui's Family Level 14 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nThánh đường đá đen có đồng hồ chỉ về phía người nhìn và chuông xóa sự kiện khỏi lịch sử cá nhân.\nThánh đường đá đen có đồng hồ chỉ về phía người nhìn và chuông xóa sự kiện khỏi lịch sử cá nhân.\nQuy luật của Level: Không quan sát thì tượng đứng sau lưng; nhìn quá lâu khiến da hóa đá.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_14.foundation",
+      "owner": "world:level:hua_1900_14",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_14"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 15\nHui's Family Level 15 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nThành phố không có mặt đất, gồm căn hộ và ban công chồng lên nhau trong vực sâu vô tận.\nThành phố không có mặt đất, gồm căn hộ và ban công chồng lên nhau trong vực sâu vô tận.\nQuy luật của Level: Đi xuống làm thành phố sáng hơn; đi lên chỉ nghe phố xá mà không bao giờ tới mặt đất.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_15.foundation",
+      "owner": "world:level:hua_1900_15",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_15"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 16\nHui's Family Level 16 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nMọi tầng trước bị ép chung vào một kiến trúc; ký ức sai trở thành hành lang và người quen trở thành thực thể.\nMọi tầng trước bị ép chung vào một kiến trúc; ký ức sai trở thành hành lang và người quen trở thành thực thể.\nQuy luật của Level: Tầng dùng ký ức người sống để xây thêm Backrooms; một bản sao thế giới thật có thể khiến cả nhóm tin rằng đã thoát.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_2.foundation",
+      "owner": "world:level:hua_1900_2",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_2"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 3\nHui's Family Level 3 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nNhà ga mái kính không có đường ray, bảng giờ ghi những nơi không tồn tại và một đầu máy vô hình đi xuyên đại sảnh.\nNhà ga mái kính không có đường ray, bảng giờ ghi những nơi không tồn tại và một đầu máy vô hình đi xuyên đại sảnh.\nQuy luật của Level: Không trả lời câu hỏi về thời gian bằng bất kỳ con số nào; người trả lời sẽ bị nhận diện là chuyến tàu.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_3.foundation",
+      "owner": "world:level:hua_1900_3",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_3"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 4\nHui's Family Level 4 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nKhách sạn Belle Époque vô tận với phòng đã chuẩn bị sẵn cho người chưa từng đến.\nKhách sạn Belle Époque vô tận với phòng đã chuẩn bị sẵn cho người chưa từng đến.\nQuy luật của Level: Ngủ trong phòng khóa kín sẽ tỉnh ở hành lang; ngủ giữa hành lang sẽ tỉnh trong phòng bị khóa từ ngoài.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_4.foundation",
+      "owner": "world:level:hua_1900_4",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_4"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 5\nHui's Family Level 5 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nNhà máy gạch đỏ co giãn như lồng ngực; máy móc chỉ vận hành máy móc khác mà không tạo sản phẩm.\nNhà máy gạch đỏ co giãn như lồng ngực; máy móc chỉ vận hành máy móc khác mà không tạo sản phẩm.\nQuy luật của Level: Mỗi nhịp thở ra phủ hơi nóng kín hành lang; tiếng động cho phép Thợ Máy Rỗng tạo công cụ săn mồi từ cơ thể chúng.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_5.foundation",
+      "owner": "world:level:hua_1900_5",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_5"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 6\nHui's Family Level 6 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nBệnh viện gạch trắng có giường lõm, chuông gọi từ phòng bị xây kín và bệnh án về những chứng bệnh không thể tồn tại.\nBệnh viện gạch trắng có giường lõm, chuông gọi từ phòng bị xây kín và bệnh án về những chứng bệnh không thể tồn tại.\nQuy luật của Level: Người bị thương ít bị săn hơn người khỏe; tự gây thương tích khiến bệnh viện coi người đó là nhân viên.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_6.foundation",
+      "owner": "world:level:hua_1900_6",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_6"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 7\nHui's Family Level 7 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nNhà hát không có sân khấu, mọi ghế quay về một hố trống và dàn nhạc vô hình luôn chơi sai một nốt.\nNhà hát không có sân khấu, mọi ghế quay về một hố trống và dàn nhạc vô hình luôn chơi sai một nốt.\nQuy luật của Level: Mỗi nốt sai tạo thêm khán giả; gây tiếng động khiến toàn khán phòng vỗ tay và thực thể bò qua ghế.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_7.foundation",
+      "owner": "world:level:hua_1900_7",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_7"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 8\nHui's Family Level 8 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nKho hồ sơ vô tận nơi mực bò khỏi trang và việc đọc xóa từ, khái niệm hoặc ký ức tương ứng.\nKho hồ sơ vô tận nơi mực bò khỏi trang và việc đọc xóa từ, khái niệm hoặc ký ức tương ứng.\nQuy luật của Level: Đọc làm mất ký ức; đốt tài liệu trả chữ lại nhưng chữ xuất hiện trên tường, da hoặc bên trong mí mắt.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_8.foundation",
+      "owner": "world:level:hua_1900_8",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_8"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 9\nHui's Family Level 9 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nThành phố thương mại dưới mái kính, mưa bay ngược và biển hiệu đổi ngôn ngữ sau mỗi lần chớp mắt.\nThành phố thương mại dưới mái kính, mưa bay ngược và biển hiệu đổi ngôn ngữ sau mỗi lần chớp mắt.\nQuy luật của Level: Bóng đổ có thể tách khỏi chủ thể, mọc cơ thể và tiếp tục tồn tại độc lập.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    },
+    {
+      "id": "level.hua_1900_9.foundation",
+      "owner": "world:level:hua_1900_9",
+      "type": "FOUNDATION",
+      "status": "CURRENT",
+      "sourceRef": "Hua-s-Family/src/campaign-canon.js",
+      "revision": "runtime-current",
+      "scope": [
+        "level:hua_1900_9"
+      ],
+      "knownBy": "SCENE",
+      "sourceKind": "external",
+      "sourceAvailability": "EXTERNAL_SNAPSHOT",
+      "refs": [],
+      "requires": [],
+      "core": true,
+      "promptEligible": true,
+      "sourceFile": "canon/runtime/levels.md",
+      "text": "Hui's Family Level 10\nHui's Family Level 10 thuộc chuỗi 16 Level Hứa Gia giữa Backrooms Level 0 và Level 1.\nTrường học nằm trong đêm bất biến; bảng đen tự viết bài học về người đang có mặt.\nTrường học nằm trong đêm bất biến; bảng đen tự viết bài học về người đang có mặt.\nQuy luật của Level: Giám thị xuất hiện khi có người chạy, nói lớn hoặc mở cửa không được phép, nhưng không ai biết cửa nào được phép.\nLore quy luật có thể nhắc đến thực thể; không tự tạo threats hoặc Boss từ mô tả. Chỉ EntityCore được kích hoạt encounter.\nKhông tự mở lối ra hoặc bỏ qua Level; LevelCore quyết định chuyển tầng."
+    }
+  ]
+}
