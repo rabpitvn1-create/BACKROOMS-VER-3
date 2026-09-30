@@ -19,7 +19,7 @@ const EXPLORER_FACTS = 'Bối cảnh: Cao Minh ở Level 0 của Backrooms. Khô
 const BEATS = [
   {destination:'một đoạn hành lang vàng có ánh đèn huỳnh quang',result:'khám phá tiến triển; không có biến cố mới',a:'Thận trọng tiến vào khoảng tối',b:'Lần theo tiếng ù của bóng đèn'},
   {destination:'một vùng tường vàng có vết ẩm loang',result:'quan sát thành công; không có Entity',a:'Quan sát kỹ các vệt ẩm',b:'Rời khỏi chỗ sáng để tìm lối khác'},
-  {destination:'một khúc ngoặt tiếp tục thuộc Level 0',result:'khám phá tiến triển; không có chuyển Level',a:'Tiến qua khúc ngoặt',b:'Đánh dấu đường cũ trước khi bước tiếp'}
+  {destination:'một khúc ngoặt tiếp tục thuộc Level 0',result:'khám phá tiến triển; không có chuyển Level',a:'Tiến qua khúc ngoặt',b:'Dừng lại quan sát khúc ngoặt trước khi bước tiếp'}
 ];
 const UNEXPECTED = [
   'Tôi ngồi xuống, nhắm mắt và nhất quyết không bước thêm.',
@@ -250,7 +250,7 @@ async function main() {
       if (results.quotaLimited) break;
       const prompt=EXPLORER_FACTS+'\nPLAYER ACTION: '+action
         +'\nKết quả Core không đổi: '+beat.result+'. Đích đến bắt buộc: '+beat.destination
-        +'. Hãy kể có quan hệ nhân quả tự nhiên từ hành động THỰC TẾ đến kết quả này. '
+        +'. Hãy kể có quan hệ nhân quả tự nhiên từ hành động THỰC TẾ đến kết quả này. Nếu Player Action đứng yên, ngồi, áp tai lắng nghe hoặc từ chối di chuyển thì không được cho Cao Minh đứng dậy, rời vị trí hay tiến tới đích trong lượt này; chỉ mô tả thông tin có thể nhận biết từ vị trí hiện tại. '
         + 'Không giả vờ nhân vật đã tự nguyện chọn một hành động khác; không kể chuyện theo kiểu thông báo hệ thống, '
         + 'không lạm dụng bất tỉnh, dịch chuyển hoặc hành lang đột ngột biến dạng. '
         + 'Viết 120–220 từ. Trả JSON duy nhất {"reply":"...","choices":[{"text":"..."},{"text":"..."}]}.';

@@ -40,6 +40,7 @@ jobs:
             echo "Live probe unavailable: no Gemini API key secret is configured."
             exit 1
           fi
+          node --test android-apk/app/src/test/js/gemini-low-probe.test.cjs
           node android-apk/tools/gemini-low-probe.cjs
       - name: Save safe synthetic narrative samples and usage metadata
         if: always()
