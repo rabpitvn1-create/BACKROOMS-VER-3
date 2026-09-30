@@ -28,7 +28,7 @@ test('key rotation performs a real provider attempt without recursion',async()=>
       usageMetadata:{totalTokenCount:12}
     })});
     const results={httpAttempts:0,calls:[]};
-    const output=await probe.generateAcrossKeys('fixture','rotation_fixture',results);
+    const output=await probe.generateAcrossKeys('fixture','rotation_fixture',results,'gemini-3.8-flash');
     assert.deepEqual(output.parsed,{ok:true});
     assert.equal(results.httpAttempts,1);
     assert.equal(results.calls.length,1);
@@ -38,6 +38,26 @@ test('key rotation performs a real provider attempt without recursion',async()=>
     else process.env.GEMINI_API_KEY_1=previous1;
     if(previousLegacy===undefined)delete process.env.GEMINI_API_KEY;
     else process.env.GEMINI_API_KEY=previousLegacy;
+  }
+});
+test('probe falls back across Gemini Flash generations after quota',async()=>{
+  assert.deepEqual(probe.configuredModels({}),['gemini-3.8-flash','gemini-3.7-flash','gemini-3.6-flash','gemini-3.5-flash']);
+  const previousFetch=global.fetch, previousKey=process.env.GEMINI_API_KEY_1, previousModels=process.env.GEMINI_MODELS;
+  try{
+    process.env.GEMINI_API_KEY_1='fake-key';
+    process.env.GEMINI_MODELS='gemini-3.8-flash,gemini-3.7-flash';
+    global.fetch=async url=>String(url).includes('gemini-3.8-flash')
+      ? {ok:false,status:429,headers:{get:()=>null}}
+      : {ok:true,json:async()=>({candidates:[{content:{parts:[{text:'{"ok":true}'}]}}],usageMetadata:{totalTokenCount:9}})};
+    const results={httpAttempts:0,calls:[],selectedModels:{},modelFailures:[]};
+    const output=await probe.safelyGenerate('fixture','model_fallback_fixture',results);
+    assert.deepEqual(output.parsed,{ok:true});
+    assert.equal(results.modelFailures[0].model,'gemini-3.8-flash');
+    assert.equal(results.selectedModels['gemini-3.7-flash'],1);
+  }finally{
+    global.fetch=previousFetch;
+    if(previousKey===undefined)delete process.env.GEMINI_API_KEY_1; else process.env.GEMINI_API_KEY_1=previousKey;
+    if(previousModels===undefined)delete process.env.GEMINI_MODELS; else process.env.GEMINI_MODELS=previousModels;
   }
 });
 test('probe style validator rejects real Gemini failure modes',()=>{

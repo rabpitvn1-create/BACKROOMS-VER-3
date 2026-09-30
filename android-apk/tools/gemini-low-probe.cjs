@@ -9,7 +9,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+const DEFAULT_MODELS = ['gemini-3.8-flash','gemini-3.7-flash','gemini-3.6-flash','gemini-3.5-flash'];
+function configuredModels(env=process.env) {
+  const raw = env.GEMINI_MODELS || env.GEMINI_MODEL || DEFAULT_MODELS.join(',');
+  return [...new Set(raw.split(',').map(v => v.trim()).filter(Boolean))];
+}
 const OUTPUT = process.env.PROBE_OUTPUT || path.resolve('android-apk/probe-results/gemini-low-probe.json');
 const EXPLORER_FACTS = 'Bối cảnh: Cao Minh ở Level 0 của Backrooms. Không có Entity, nhân vật phụ hay vật phẩm mới. Core đã quyết định kết quả các lượt trước khi GM kể chuyện. Không thay đổi Core. Kể ngôi thứ ba hạn định quanh Cao Minh, không gọi nhân vật là "bạn". Không tự bịa sợ hãi, hoang mang, hy vọng hay quyết định nội tâm. Không tuyên bố khu vực an toàn hoặc không có mối đe dọa chỉ vì lượt này không có biến cố. Không tự tạo vết đánh dấu hay thay đổi thế giới tồn tại lâu dài. Nếu Player Action đứng yên, ngồi lại hoặc chỉ lắng nghe thì không tự bắt Cao Minh đứng dậy hay di chuyển.';
 const BEATS = [
@@ -88,7 +92,7 @@ function usageOf(data) {
     totalTokens: Number.isFinite(u.totalTokenCount) ? u.totalTokenCount : null
   };
 }
-async function generate(prompt, name, results) {
+async function generate(prompt, name, results, model) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error('Gemini API secret not configured');
   const started = Date.now();
@@ -98,7 +102,7 @@ async function generate(prompt, name, results) {
   for (let attempt = 0; attempt < 3; attempt++) {
     results.httpAttempts++;
     response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/'
-        + encodeURIComponent(MODEL) + ':generateContent', {
+        + encodeURIComponent(model) + ':generateContent', {
       method: 'POST',
       headers: {'x-goog-api-key': key, 'content-type': 'application/json'},
       body: JSON.stringify({
@@ -132,7 +136,7 @@ async function generate(prompt, name, results) {
     .map(p => p.text || '').join('').trim();
   let parsed;
   try { parsed = JSON.parse(text); } catch (_) { parsed = null; }
-  const entry = {name,latencyMs:Date.now()-started,usage:usageOf(data),parseable:parsed!==null};
+  const entry = {name,model,latencyMs:Date.now()-started,usage:usageOf(data),parseable:parsed!==null};
   results.calls.push(entry);
   return {parsed,entry};
 }
@@ -142,7 +146,7 @@ function classifyFailure(error) {
   return {httpStatus: match ? Number(match[1]) : null,
     reason: match ? 'HTTP '+match[1] : 'request failed'};
 }
-async function generateAcrossKeys(prompt, name, results) {
+async function generateAcrossKeys(prompt, name, results, model) {
   const keys = configuredKeys();
   if (!keys.length) throw new Error('Gemini API secret not configured');
   const original = process.env.GEMINI_API_KEY;
@@ -150,7 +154,7 @@ async function generateAcrossKeys(prompt, name, results) {
   try {
     for (const key of keys) {
       process.env.GEMINI_API_KEY = key;
-      try { return await generate(prompt,name,results); }
+      try { return await generate(prompt,name,results,model); }
       catch (error) {
         lastError = error;
         const status = classifyFailure(error).httpStatus;
@@ -166,14 +170,22 @@ async function generateAcrossKeys(prompt, name, results) {
 
 async function safelyGenerate(prompt, name, results) {
   const started = Date.now();
-  try { return await generateAcrossKeys(prompt,name,results); }
-  catch (error) {
-    const failure = classifyFailure(error);
-    if (failure.httpStatus === 429) results.quotaLimited = true;
-    results.calls.push({name,latencyMs:Date.now()-started,
-      parseable:false,failed:true,httpStatus:failure.httpStatus});
-    return {parsed:null,failed:failure.reason};
+  let lastFailure = {httpStatus:null,reason:'request failed'};
+  for (const model of configuredModels()) {
+    try {
+      const output = await generateAcrossKeys(prompt,name,results,model);
+      results.selectedModels[model] = (results.selectedModels[model] || 0) + 1;
+      return output;
+    } catch (error) {
+      lastFailure = classifyFailure(error);
+      results.modelFailures.push({name,model,httpStatus:lastFailure.httpStatus});
+      if (![429,500,502,503,504].includes(lastFailure.httpStatus || 0)) break;
+    }
   }
+  if (lastFailure.httpStatus === 429) results.quotaLimited = true;
+  results.calls.push({name,latencyMs:Date.now()-started,
+    parseable:false,failed:true,httpStatus:lastFailure.httpStatus});
+  return {parsed:null,failed:lastFailure.reason};
 }
 /** Missing usage on a failed HTTP attempt must never crash probe reporting. */
 function measuredTokensOf(calls) {
@@ -187,7 +199,9 @@ function flush(results) {
 async function main() {
   const results = {
     kind:'synthetic_gemini_low_probe_not_actual_gameplay',
-    model:MODEL,
+    models:configuredModels(),
+    selectedModels:{},
+    modelFailures:[],
     thinking:'low',
     commit:process.env.GITHUB_SHA || null,
     timestamp:new Date().toISOString(),
@@ -279,4 +293,4 @@ async function main() {
   }
 }
 if (require.main===module) main();
-module.exports={validChoices,validateBatch,validateSingle,validateProse,stationaryAction,usageOf,classifyFailure,measuredTokensOf,configuredKeys,generateAcrossKeys};
+module.exports={validChoices,validateBatch,validateSingle,validateProse,stationaryAction,usageOf,classifyFailure,measuredTokensOf,configuredKeys,configuredModels,generateAcrossKeys,safelyGenerate};

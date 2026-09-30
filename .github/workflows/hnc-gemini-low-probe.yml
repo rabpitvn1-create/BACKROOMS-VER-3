@@ -27,14 +27,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Probe actual configured Gemini Low (synthetic narrative fixtures)
+      - name: Probe Gemini Flash fallback ladder at Low thinking (synthetic narrative fixtures)
         env:
           GEMINI_API_KEY_1: ${{ secrets.GEMINI_API_KEY_1 }}
           GEMINI_API_KEY_2: ${{ secrets.GEMINI_API_KEY_2 }}
           GEMINI_API_KEY_3: ${{ secrets.GEMINI_API_KEY_3 }}
           GEMINI_API_KEY_4: ${{ secrets.GEMINI_API_KEY_4 }}
           GEMINI_API_KEY_5: ${{ secrets.GEMINI_API_KEY_5 }}
-          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_MODELS: gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash,gemini-3.5-flash
         run: |
           if [ -z "${GEMINI_API_KEY_1}${GEMINI_API_KEY_2}${GEMINI_API_KEY_3}${GEMINI_API_KEY_4}${GEMINI_API_KEY_5}" ]; then
             echo "Live probe unavailable: no Gemini API key secret is configured."
