@@ -48,6 +48,39 @@ public class HiddenNarrativeChainTest {
     assertEquals(0, chain.remaining());
   }
 
+  @Test public void multiBeatChainAdvancesAcrossMatchingWorldStatesAndChoices() throws Exception {
+    JSONArray first = choices("Kiểm tra lối đi", "Lần theo tiếng gió");
+    JSONArray second = choices("Quan sát khe cửa", "Lắng nghe phía sau tường");
+    JSONArray third = choices("Tiếp tục quan sát", "Đổi hướng khám phá");
+
+    JSONObject forecast = new JSONObject().put("steps", new JSONArray()
+        .put(forecastStep("before", "middle"))
+        .put(forecastStep("middle", "after")));
+    JSONObject generated = new JSONObject().put("steps", new JSONArray()
+        .put(new JSONObject()
+            .put("replyA", "Cao Minh kiểm tra những dấu vết gần lối đi.")
+            .put("replyB", "Cao Minh lần theo tiếng động nhỏ trong hành lang.")
+            .put("nextChoices", second))
+        .put(new JSONObject()
+            .put("replyA", "Cao Minh quan sát kỹ khu vực vừa tới.")
+            .put("replyB", "Cao Minh đổi góc tiếp cận nhưng vẫn giữ cảnh giác.")
+            .put("nextChoices", third)));
+
+    HiddenNarrativeChain chain = HiddenNarrativeChain.parse(forecast, generated, first);
+    HiddenNarrativeChain.Beat firstBeat = chain.current("before", first);
+    assertNotNull(firstBeat);
+    assertEquals("Tiếp tục khám phá",
+        HiddenNarrativeChain.resolveCoreAction("Lần theo tiếng gió", "B", firstBeat));
+    assertTrue(chain.consume(firstBeat));
+
+    HiddenNarrativeChain.Beat secondBeat = chain.current("middle", firstBeat.nextChoices);
+    assertNotNull(secondBeat);
+    assertEquals("Tiếp tục khám phá",
+        HiddenNarrativeChain.resolveCoreAction("Quan sát khe cửa", "A", secondBeat));
+    assertFalse(chain.consume(secondBeat));
+    assertEquals(0, chain.remaining());
+  }
+
   @Test public void freeformActionIsNeverReplacedByHiddenCanonicalAction() throws Exception {
     JSONArray first = choices("Kiểm tra lối đi", "Lần theo tiếng gió");
     HiddenNarrativeChain.Beat beat = oneBeat(first).current("before", first);
