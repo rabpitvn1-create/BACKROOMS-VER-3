@@ -257,6 +257,82 @@ public final class GameCoreFacade implements AutoCloseable {
     }
   }
 
+
+  /**
+   * Experimental, read-only forecast for a small canonical story chain.
+   *
+   * The forecast is speculative: combat, chest and companion encounters stop the batch.
+   * A caller MUST compare the world hashes again before reusing any predicted narration.
+   * Log text and narrator-only continuity cooldowns do not change Core gameplay.
+   */
+  public synchronized String previewNarrativeChain(
+      String firstAction, int requestedSteps, String expectedBaseHash) {
+    JSONObject persisted = parseState(liveStateJson);
+    try {
+      String first = firstAction == null ? "" : firstAction.trim();
+      if (persisted.length() == 0 || first.isEmpty()
+          || !fingerprint(persisted).equals(expectedBaseHash)
+          || CombatChoiceEngine.isActive(persisted)
+          || !encounterKey(persisted).isEmpty()
+          || GameCoreRules.isDirectPlayerPickupAction(first)
+          || GameCoreRules.isInventoryQuery(first)
+          || GameCoreRules.isPartyQuery(first)) {
+        return new JSONObject().put("handled", false)
+            .put("reason", "preview_unavailable").toString();
+      }
+      JSONObject current = deepCopy(persisted);
+      normalizeCoreState(current);
+      emergentTurnEngine.normalizeState(current);
+      emergentTurnEngine.catchUpProjections(current);
+      JSONArray steps = new JSONArray();
+      int limit = Math.max(1, Math.min(4, requestedSteps));
+      for (int index = 0; index < limit; index++) {
+        JSONObject flags = current.optJSONObject("flags");
+        if (CombatChoiceEngine.isActive(current) || !encounterKey(current).isEmpty()
+            || (flags != null && flags.optBoolean("chestPresent", false))) break;
+        String action = index == 0 ? first
+            : current.optJSONObject("levelRoute") != null
+                && current.getJSONObject("levelRoute").optBoolean("exitAvailable", false)
+                ? "Đi qua lối ra" : "Tiếp tục khám phá";
+        String beforeWorldHash = narrativeWorldHash(current);
+        PreparedTurn attempt = prepareExplorerTurnData(current, action);
+        JSONObject predicted = finishWorkingTurn(current, attempt, new JSONObject());
+        projectBeforePersist(predicted);
+        emergentTurnEngine.catchUpProjections(predicted);
+        projectBeforePersist(predicted);
+        String kind = attempt.selected.optString("kind", "NONE");
+        steps.put(new JSONObject()
+            .put("index", index).put("canonicalAction", action)
+            .put("turnId", attempt.turnId)
+            .put("beforeWorldHash", beforeWorldHash)
+            .put("afterWorldHash", narrativeWorldHash(predicted))
+            .put("replyHint", attempt.replyHint)
+            .put("selectedKind", kind)
+            .put("state", clientSafeState(predicted)));
+        current = predicted;
+        if ("ENTITY".equals(kind) || "CHARACTER".equals(kind) || "CHEST".equals(kind)) break;
+      }
+      return new JSONObject().put("handled", steps.length() > 0)
+          .put("baseHash", expectedBaseHash).put("steps", steps).toString();
+    } catch (Exception e) {
+      return new JSONObject().put("handled", false)
+          .put("reason", "preview_unavailable").toString();
+    }
+  }
+
+  /** Excludes only presentation data from a forecast freshness check. */
+  public synchronized String currentNarrativeWorldHash() {
+    return narrativeWorldHash(parseState(liveStateJson));
+  }
+
+  private static String narrativeWorldHash(JSONObject source) {
+    JSONObject copy = deepCopy(source);
+    copy.remove("log");
+    JSONObject emergent = copy.optJSONObject(EmergentTurnEngine.ROOT_KEY);
+    if (emergent != null) emergent.remove("continuitySurfaces");
+    return fingerprint(copy);
+  }
+
   public synchronized String currentStateHash() {
     return fingerprint(parseState(liveStateJson));
   }
