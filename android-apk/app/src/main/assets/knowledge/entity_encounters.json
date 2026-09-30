@@ -1,4 +1,10 @@
 {
+  "_generated": {
+    "generator": "tools/canon.py",
+    "doNotEdit": true,
+    "schemaVersion": 1,
+    "source": "canon/runtime/entities.md"
+  },
   "schemaVersion": 1,
   "rollMode": "independent_per_entity",
   "source": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
@@ -591,7 +597,7 @@
     {
       "key": "huis_boss_01",
       "name": "Nhân viên Mực Đen",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 1",
@@ -617,7 +623,7 @@
     {
       "key": "huis_boss_02",
       "name": "Người Gõ Cửa",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 2",
@@ -643,7 +649,7 @@
     {
       "key": "huis_boss_03",
       "name": "Hành Khách Trễ Giờ",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 3",
@@ -669,7 +675,7 @@
     {
       "key": "huis_boss_04",
       "name": "Người Hầu Không Lưng",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 4",
@@ -695,7 +701,7 @@
     {
       "key": "huis_boss_05",
       "name": "Thợ Máy Rỗng",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 5",
@@ -721,7 +727,7 @@
     {
       "key": "huis_boss_06",
       "name": "Y Tá Màn Trắng",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 6",
@@ -747,7 +753,7 @@
     {
       "key": "huis_boss_07",
       "name": "Diễn Viên Chưa Ra Đời",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 7",
@@ -773,7 +779,7 @@
     {
       "key": "huis_boss_08",
       "name": "Thủ Thư Không Miệng",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 8",
@@ -799,7 +805,7 @@
     {
       "key": "huis_boss_09",
       "name": "Người Đi Dạo",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 9",
@@ -825,7 +831,7 @@
     {
       "key": "huis_boss_10",
       "name": "Giám Thị Dài Tay",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 10",
@@ -851,7 +857,7 @@
     {
       "key": "huis_boss_11",
       "name": "Thủy Thủ Trương Nở",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 11",
@@ -877,7 +883,7 @@
     {
       "key": "huis_boss_12",
       "name": "Phu Lò",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 12",
@@ -903,7 +909,7 @@
     {
       "key": "huis_boss_13",
       "name": "Nhà Phát Minh",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 13",
@@ -929,7 +935,7 @@
     {
       "key": "huis_boss_14",
       "name": "Thánh Tượng Quay Lưng",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 14",
@@ -955,7 +961,7 @@
     {
       "key": "huis_boss_15",
       "name": "Cư Dân Ban Công",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 15",
@@ -981,7 +987,7 @@
     {
       "key": "huis_boss_16",
       "name": "Đám Đông Chưa Sinh",
-      "ratePercent": 3.0,
+      "ratePercent": 3,
       "spawnClass": "boss",
       "tier": "boss",
       "originLevel": "Hui's Family Level 16",

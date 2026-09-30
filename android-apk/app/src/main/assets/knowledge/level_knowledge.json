@@ -1,4 +1,10 @@
 {
+  "_generated": {
+    "generator": "tools/canon.py",
+    "doNotEdit": true,
+    "schemaVersion": 1,
+    "source": "canon/runtime/levels.md"
+  },
   "schemaVersion": 2,
   "authority": "BACKROOMsV2_LEVEL_CANON",
   "instruction": "This asset is the authoritative runtime environment knowledge for implemented gameplay Levels. LevelCore must load only the current node. Fields describe environment canon, not automatic character knowledge. Entity spawning, item spawning, stats, combat and hidden route progress remain Core-owned. variationPool contains permitted scene motifs, not guaranteed persistent objects.",

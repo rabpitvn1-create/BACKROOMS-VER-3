@@ -1,4 +1,10 @@
 {
+  "_generated": {
+    "generator": "tools/canon.py",
+    "doNotEdit": true,
+    "schemaVersion": 1,
+    "source": "canon/runtime/level_graph.md"
+  },
   "schemaVersion": 1,
   "nodes": [
     {

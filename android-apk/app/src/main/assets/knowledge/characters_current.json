@@ -1,4 +1,10 @@
 {
+  "_generated": {
+    "generator": "tools/canon.py",
+    "doNotEdit": true,
+    "schemaVersion": 1,
+    "source": "canon/runtime/characters.md"
+  },
   "schemaVersion": 3,
   "syncedAt": "2026-09-28",
   "authority": "Google Drive / 02_CHARACTERS + scoped USER_RETCON android-apk/DIEP_MINH_CANON.md + explicit USER_RETCON Đại Đạo Ma Tôn (2026-09-27) + explicit USER_RETCON Ma Tôn (+99 Stats) (2026-09-27)",
@@ -56,10 +62,12 @@
           "name": "Huyết Ma Nhị Thập Tứ Trảm",
           "priorityTurns": "combat turn 3 and multiples of 3",
           "hits": 24,
-          "damageHpPerHit": 10,
           "accuracyPercent": 200,
           "ignoresEvasion": true,
-          "suppressAutoSkillRollsOnUltimateTurn": true
+          "suppressAutoSkillRollsOnUltimateTurn": true,
+          "damageModel": "CURRENT_DMG_PLUS_BONUS_PER_HIT",
+          "baseDamagePercentPerHit": 100,
+          "bonusDamagePercentPerHit": 15
         },
         "hardLock": "AUTO rolls are independent and multiple AUTO skills may proc in one eligible turn. A successful AUTO proc hits without an additional accuracy/evasion roll.",
         "daiDaoMaTon": {
