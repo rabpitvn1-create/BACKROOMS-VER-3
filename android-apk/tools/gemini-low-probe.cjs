@@ -100,7 +100,7 @@ async function generate(prompt, name, results) {
 }
 /** Continue collecting independent samples even when the provider rejects one. */
 function classifyFailure(error) {
-  const match = String(error && error.message || '').match(/\\bHTTP\\s+(\\d{3})\\b/);
+  const match = String(error && error.message || '').match(/\bHTTP\s+(\d{3})\b/);
   return {httpStatus: match ? Number(match[1]) : null,
     reason: match ? 'HTTP '+match[1] : 'request failed'};
 }
