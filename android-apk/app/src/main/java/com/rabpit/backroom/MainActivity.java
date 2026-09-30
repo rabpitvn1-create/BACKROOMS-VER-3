@@ -732,20 +732,61 @@ public class MainActivity extends Activity {
   }
 
 
+  /** Mirror the exact deterministic WebView choices for cache authorization. */
   private static JSONArray initialNarrativeChoices(JSONObject state) throws Exception {
+    JSONArray empty = new JSONArray();
+    if (state == null) return empty;
+    JSONObject combat = state.optJSONObject("combat");
+    JSONObject flags = state.optJSONObject("flags");
+    if (combat != null && (combat.optBoolean("active", false)
+        || "defeat".equals(combat.optString("outcome", "")))) return empty;
+    if (flags != null && !flags.optString("entityEncounterKey", "").isEmpty()) return empty;
+
     JSONArray log = state.optJSONArray("log");
-    JSONObject entry = log == null || log.length() == 0 ? null
-        : log.optJSONObject(lastGmLogIndexStatic(state));
+    int gmIndex = lastGmLogIndexStatic(state);
+    JSONObject entry = log == null || gmIndex < 0 ? null : log.optJSONObject(gmIndex);
     JSONArray current = entry == null ? null : entry.optJSONArray("choices");
-    if (current != null && current.length() == 2) return current;
-    if (current != null && current.length() == 1) return new JSONArray()
-        .put(current.getJSONObject(0))
-        .put(new JSONObject().put("text", "Khảo sát những âm thanh khác thường gần đó"));
-    // The shipped prologue predates generated choices. Match its WebView fallback.
-    if (state.optInt("turn", 1) == 1) return new JSONArray()
-        .put(new JSONObject().put("text", "Tiếp tục khám phá dãy tường vàng"))
-        .put(new JSONObject().put("text", "Lần theo những âm thanh xa lạ"));
-    return current == null ? new JSONArray() : current;
+    JSONArray result;
+    // The opening WebView override takes precedence over any prologue choices.
+    if (log != null && log.length() == 1 && entry == log.optJSONObject(0)) {
+      result = new JSONArray()
+          .put(new JSONObject().put("text", "Tiếp tục khám phá dãy tường vàng"))
+          .put(new JSONObject().put("text", "Lần theo những âm thanh xa lạ"));
+    } else if (current != null && current.length() > 0) {
+      result = new JSONArray();
+      for (int i = 0; i < Math.min(2, current.length()); i++)
+        result.put(current.get(i));
+    } else {
+      boolean postVictory = combat != null && "victory".equals(combat.optString("outcome", ""))
+          && combat.optInt("logIndex", -1) == gmIndex;
+      String previous = "";
+      if (log != null) for (int i = log.length() - 1; i >= 0; i--) {
+        JSONObject item = log.optJSONObject(i);
+        if (item != null && "player".equals(item.optString("role", ""))) {
+          previous = item.optString("text", "").trim();
+          break;
+        }
+      }
+      String fallback = previous.matches("(?iu)^(?:cao minh\\s+)?(?:quan sát|nhìn|xem xét|kiểm tra|khảo sát)\\b.*")
+          ? "Lắng nghe âm thanh trong khu vực hiện tại" : "Quan sát khu vực phía trước";
+      result = postVictory
+          ? new JSONArray()
+              .put(new JSONObject().put("text", "Quan sát khu vực sau trận chiến"))
+              .put(new JSONObject().put("text", "Tìm một lối đi khác để tiếp tục"))
+          : new JSONArray()
+              .put(new JSONObject().put("text", fallback))
+              .put(new JSONObject().put("text", "Thử lần theo một lối đi ít dấu vết"));
+    }
+    if (result.length() == 1)
+      result.put(new JSONObject().put("text", "Khảo sát những âm thanh khác thường gần đó"));
+    JSONObject route = state.optJSONObject("levelRoute");
+    if (route != null && route.optBoolean("exitAvailable", false)) {
+      result = new JSONArray()
+          .put(new JSONObject().put("text", "Đi qua lối ra đến chặng kế tiếp")
+              .put("action", "Đi qua lối ra"))
+          .put(new JSONObject().put("text", "Thận trọng tiếp cận lối thoát vừa tìm thấy"));
+    }
+    return result;
   }
 
   private static int lastGmLogIndexStatic(JSONObject state) {
