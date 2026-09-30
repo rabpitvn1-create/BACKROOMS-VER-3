@@ -11,11 +11,16 @@ final class EpistemicView {
     JSONObject output = new JSONObject();
     if (state == null) return output;
 
+    boolean perceptionShrouded = state.optBoolean("perceptionShroud", false);
     String[] simpleRoots = {
         "title", "turn", "currentLevel", "currentLevelKey", "location",
         "player", "party", "inventory", "gameTime", "partyDetails", "characterProgression"
     };
     for (String key : simpleRoots) {
+      if (perceptionShrouded && ("currentLevel".equals(key)
+          || "currentLevelKey".equals(key) || "location".equals(key))) {
+        continue;
+      }
       if (CanonVisibilityRegistry.rootVisibility(key) == CanonVisibilityRegistry.Visibility.EPISTEMIC) {
         continue;
       }
