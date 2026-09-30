@@ -83,7 +83,7 @@ jobs:
           {
             echo "## Agent Ponytail branch cleanup"
             echo
-            echo "- Mode: `$([[ "$APPLY_DELETE" == "true" ]] && echo delete || echo audit)`"
+            echo "- Mode: $([[ "$APPLY_DELETE" == "true" ]] && printf delete || printf audit)"
             echo "- Safe merged age: ${MERGED_AGE_DAYS} days"
             echo "- Stale unmerged report age: ${STALE_UNMERGED_DAYS} days"
             echo
