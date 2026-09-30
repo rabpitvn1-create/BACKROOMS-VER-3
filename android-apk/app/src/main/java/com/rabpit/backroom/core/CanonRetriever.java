@@ -4,6 +4,7 @@ import android.content.Context;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
@@ -22,16 +23,19 @@ import java.util.regex.Pattern;
 
 /** Read-only, deterministic Markdown canon selector. No game state is modified. */
 public final class CanonRetriever {
-  public static final int DEFAULT_BUDGET = 5200;
+  public static final int DEFAULT_BUDGET = 9000;
+  private static final String INDEX_ASSET = "canon/canon_index.json";
   private static final Pattern HEADING = Pattern.compile("^(#{1,6})[ \\t]+(.+?)[ \\t]*#*[ \\t]*(?:\\r?\\n)?$");
   private static final Pattern META = Pattern.compile("<!--\\s*canon:\\s*(.*?)\\s*-->", Pattern.CASE_INSENSITIVE);
   private final List<Section> sections;
   private final Map<String, Section> byId;
+  private final boolean stableIndex;
 
   public static final class Section {
     public final String sourceFile, headingPath, sectionId, rawText, searchableText;
-    public final List<String> aliases, requires, refs;
-    public final boolean core;
+    public final String owner, type, status, knownBy;
+    public final List<String> aliases, requires, refs, scope;
+    public final boolean core, promptEligible;
     private final String heading, fileTerms;
 
     private Section(String file, List<String> path, String raw, int ordinal) {
@@ -60,8 +64,47 @@ public final class CanonRetriever {
       aliases = Collections.unmodifiableList(a);
       requires = Collections.unmodifiableList(r);
       refs = Collections.unmodifiableList(f);
+      scope = Collections.emptyList();
       core = marked;
+      owner = "";
+      type = "FOUNDATION";
+      status = "CURRENT";
+      knownBy = "SCENE";
+      promptEligible = true;
     }
+
+    private Section(JSONObject item) {
+      sectionId = item.optString("id", "").trim();
+      if (sectionId.isEmpty()) throw new IllegalArgumentException("Canon index item missing stable id");
+      sourceFile = item.optString("sourceFile", item.optString("sourceRef", "canon/")).trim();
+      headingPath = sectionId;
+      heading = sectionId;
+      rawText = item.optString("text", "").trim();
+      owner = item.optString("owner", "").trim();
+      type = item.optString("type", "FOUNDATION").trim();
+      status = item.optString("status", "CURRENT").trim();
+      knownBy = item.optString("knownBy", "SYSTEM").trim();
+      core = item.optBoolean("core", false);
+      promptEligible = item.optBoolean("promptEligible", false);
+      aliases = jsonStrings(item.optJSONArray("aliases"));
+      requires = jsonStrings(item.optJSONArray("requires"));
+      refs = jsonStrings(item.optJSONArray("refs"));
+      scope = jsonStrings(item.optJSONArray("scope"));
+      fileTerms = normalize(sourceFile.replace('_', ' '));
+      searchableText = normalize(sectionId + " " + owner + " " + String.join(" ", scope)
+          + " " + rawText + " " + String.join(" ", aliases));
+    }
+
+    private static List<String> jsonStrings(JSONArray values) {
+      if (values == null || values.length() == 0) return Collections.emptyList();
+      List<String> output = new ArrayList<>();
+      for (int i = 0; i < values.length(); i++) {
+        String value = values.optString(i, "").trim();
+        if (!value.isEmpty()) output.add(value);
+      }
+      return Collections.unmodifiableList(output);
+    }
+
     public int size() { return rawText.length() + headingPath.length() + sourceFile.length() + 32; }
   }
 
@@ -92,7 +135,8 @@ public final class CanonRetriever {
       StringBuilder out = new StringBuilder();
       for (Selected selected : all()) {
         Section s = selected.section;
-        out.append("\nSOURCE: ").append(s.sourceFile).append(" | ").append(s.headingPath)
+        out.append("\nCANON ID: ").append(s.sectionId).append(" | SOURCE: ").append(s.sourceFile)
+            .append(" | TYPE: ").append(s.type).append(" | STATUS: ").append(s.status)
             .append("\n").append(s.rawText).append('\n');
       }
       return out.toString();
@@ -106,20 +150,46 @@ public final class CanonRetriever {
   }
 
   public static CanonRetriever fromAssets(Context context) throws Exception {
-    Map<String, String> files = new LinkedHashMap<>();
-    String[] names = context.getAssets().list("canon");
-    if (names == null) throw new IllegalStateException("Cannot list canon assets");
-    Arrays.sort(names);
-    for (String name : names) if (name.toLowerCase(Locale.ROOT).endsWith(".md")) {
-      try (InputStream in = context.getAssets().open("canon/" + name)) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        byte[] buffer = new byte[8192];
-        int count;
-        while ((count = in.read(buffer)) != -1) bytes.write(buffer, 0, count);
-        files.put(name, new String(bytes.toByteArray(), StandardCharsets.UTF_8));
+    try (InputStream in = context.getAssets().open(INDEX_ASSET)) {
+      return fromIndexJson(readUtf8(in));
+    } catch (IOException missingIndex) {
+      Map<String, String> files = new LinkedHashMap<>();
+      String[] names = context.getAssets().list("canon");
+      if (names == null) throw new IllegalStateException("Cannot list canon assets", missingIndex);
+      Arrays.sort(names);
+      for (String name : names) if (name.toLowerCase(Locale.ROOT).endsWith(".md")) {
+        try (InputStream in = context.getAssets().open("canon/" + name)) {
+          files.put(name, readUtf8(in));
+        }
       }
+      return new CanonRetriever(files);
     }
-    return new CanonRetriever(files);
+  }
+
+  public static CanonRetriever fromIndexJson(String json) throws Exception {
+    JSONObject root = new JSONObject(json == null ? "{}" : json);
+    if (root.optInt("schemaVersion", 0) < 1) throw new IllegalArgumentException("Unsupported canon index schema");
+    JSONArray items = root.optJSONArray("items");
+    if (items == null) throw new IllegalArgumentException("Canon index missing items");
+    List<Section> result = new ArrayList<>();
+    Map<String, Section> lookup = new LinkedHashMap<>();
+    for (int i = 0; i < items.length(); i++) {
+      JSONObject item = items.optJSONObject(i);
+      if (item == null) continue;
+      Section section = new Section(item);
+      if (lookup.put(section.sectionId, section) != null)
+        throw new IllegalArgumentException("Duplicate stable canon id: " + section.sectionId);
+      result.add(section);
+    }
+    return new CanonRetriever(result, lookup, true);
+  }
+
+  private static String readUtf8(InputStream in) throws Exception {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    byte[] buffer = new byte[8192];
+    int count;
+    while ((count = in.read(buffer)) != -1) bytes.write(buffer, 0, count);
+    return new String(bytes.toByteArray(), StandardCharsets.UTF_8);
   }
 
   public CanonRetriever(Map<String, String> markdownFiles) {
@@ -134,6 +204,13 @@ public final class CanonRetriever {
     }
     sections = Collections.unmodifiableList(result);
     byId = Collections.unmodifiableMap(lookup);
+    stableIndex = false;
+  }
+
+  private CanonRetriever(List<Section> sections, Map<String, Section> lookup, boolean stableIndex) {
+    this.sections = Collections.unmodifiableList(new ArrayList<>(sections));
+    this.byId = Collections.unmodifiableMap(new LinkedHashMap<>(lookup));
+    this.stableIndex = stableIndex;
   }
 
   private static void parse(String file, String text, List<Section> out, Map<String, Section> ids) {
@@ -188,7 +265,16 @@ public final class CanonRetriever {
     JSONArray party = safe.optJSONArray("party");
     if (party != null) for (int i = 0; i < party.length(); i++) {
       JSONObject member = party.optJSONObject(i);
-      if (member != null && member.optBoolean("present", false)) subjects.add("character:" + member.optString("id"));
+      if (member != null && (member.optBoolean("joined", false) || member.optBoolean("present", false))) {
+        String id = member.optString("id", "").trim();
+        if (!id.isEmpty()) subjects.add("character:" + id);
+      }
+    }
+    JSONObject encounter = safe.optJSONObject("characterEncounter");
+    JSONArray pending = encounter == null ? null : encounter.optJSONArray("pendingIntro");
+    if (pending != null) for (int i = 0; i < pending.length(); i++) {
+      String id = pending.optString(i, "").trim();
+      if (!id.isEmpty()) subjects.add("character:" + id);
     }
     JSONObject flags = safe.optJSONObject("flags");
     String entity = flags == null ? "" : flags.optString("entityEncounterKey", "");
@@ -200,7 +286,7 @@ public final class CanonRetriever {
     int size = 0;
     boolean exceeded = false;
     for (String subject : subjects) {
-      Section core = coreFor(subject, levelDisplayName);
+      Section core = coreFor(subject, levelDisplayName, safe, subjects);
       if (core == null) { missing.add(subject); continue; }
       if (used.add(core.sectionId)) {
         mandatory.add(new Selected(core, "authoritative:" + subject));
@@ -211,7 +297,7 @@ public final class CanonRetriever {
       Section s = i < mandatory.size() ? mandatory.get(i).section : dependencies.get(i - mandatory.size()).section;
       for (String ref : s.requires) {
         Section target = byId.get(ref);
-        if (target == null) {
+        if (target == null || !visible(target, safe, subjects)) {
           String failure = s.sectionId + " -> " + ref;
           missingRefs.add(failure);
           missing.add(failure);
@@ -231,13 +317,14 @@ public final class CanonRetriever {
           .thenComparing(s -> s.sectionId));
       for (Section s : ranked) {
         if (supplemental.size() >= 3) break;
+        if (!visible(s, safe, subjects)) continue;
         int score = score(s, query);
         if (conflictsWithLevel(s, level, levelDisplayName)) continue;
         if (score < 12 || used.contains(s.sectionId)) continue;
         List<Section> closure = new ArrayList<>();
         Set<String> local = new LinkedHashSet<>();
         List<String> candidateMissing = new ArrayList<>();
-        collect(s, closure, local, used, candidateMissing);
+        collect(s, safe, subjects, closure, local, used, candidateMissing);
         if (!candidateMissing.isEmpty()) {
           missingRefs.addAll(candidateMissing);
           if (debug) trace.add("missing-ref-skip:" + s.sectionId);
@@ -257,18 +344,31 @@ public final class CanonRetriever {
     return new CanonPacket(mandatory, dependencies, supplemental, missing, missingRefs, trace, size, exceeded);
   }
 
-  private void collect(Section s, List<Section> out, Set<String> local, Set<String> used,
-      List<String> missing) {
+  private void collect(Section s, JSONObject state, Set<String> subjects, List<Section> out,
+      Set<String> local, Set<String> used, List<String> missing) {
     if (used.contains(s.sectionId) || !local.add(s.sectionId)) return;
+    if (!visible(s, state, subjects)) {
+      missing.add(s.sectionId + " -> hidden-by-knowledge-gate");
+      return;
+    }
     out.add(s);
     for (String ref : s.requires) {
       Section next = byId.get(ref);
       if (next == null) missing.add(s.sectionId + " -> " + ref);
-      else collect(next, out, local, used, missing);
+      else collect(next, state, subjects, out, local, used, missing);
     }
   }
 
-  private Section coreFor(String subject, String levelDisplayName) {
+  private Section coreFor(String subject, String levelDisplayName, JSONObject state, Set<String> subjects) {
+    if (stableIndex) {
+      List<Section> matches = new ArrayList<>();
+      for (Section s : sections) {
+        if (s.core && s.scope.contains(subject) && visible(s, state, subjects)) matches.add(s);
+      }
+      if (matches.isEmpty()) return null;
+      matches.sort(Comparator.comparing(s -> s.sectionId));
+      return matches.get(0);
+    }
     String[] parts = subject.split(":", 2);
     String key = normalize(parts[1].replace('_', ' '));
     List<Section> candidates = new ArrayList<>();
@@ -290,6 +390,49 @@ public final class CanonRetriever {
         : normalize(s.heading).matches(".*(ho so nhanh|truy xuat nhanh|identity|dinh danh|tong quan).*" ) ? 1 : 2)
         .thenComparingInt(Section::size).thenComparing(s -> s.sectionId));
     return candidates.get(0);
+  }
+
+  private static boolean visible(Section section, JSONObject state, Set<String> subjects) {
+    if (!section.promptEligible || "SECRET".equals(section.knownBy) || "SYSTEM".equals(section.knownBy)) return false;
+    if ("SCENE".equals(section.knownBy) || "PUBLIC".equals(section.knownBy) || "DIRECT".equals(section.knownBy)) {
+      if (section.scope.isEmpty()) return true;
+      for (String value : section.scope) if (subjects.contains(value)) return true;
+      return false;
+    }
+    if ("OWNER".equals(section.knownBy)) {
+      String actor = ownerActor(section.owner);
+      return !actor.isEmpty() && subjects.contains("character:" + actor);
+    }
+    if (section.knownBy.startsWith("BELIEF:")) {
+      return actorHasBelief(state, ownerActor(section.owner),
+          section.knownBy.substring("BELIEF:".length()), false);
+    }
+    if (section.knownBy.startsWith("FACT:")) {
+      return actorHasBelief(state, ownerActor(section.owner),
+          section.knownBy.substring("FACT:".length()), true);
+    }
+    return false;
+  }
+
+  private static String ownerActor(String owner) {
+    String value = owner == null ? "" : owner.trim();
+    return value.startsWith("character:") ? value.substring("character:".length()).trim() : "";
+  }
+
+  private static boolean actorHasBelief(JSONObject state, String actorId, String expected,
+      boolean confirmedFact) {
+    if (actorId.isEmpty() || expected.isEmpty()) return false;
+    JSONObject root = state.optJSONObject(EmergentTurnEngine.ROOT_KEY);
+    JSONArray beliefs = root == null ? null : root.optJSONArray("beliefs");
+    if (beliefs == null) return false;
+    for (int i = 0; i < beliefs.length(); i++) {
+      JSONObject belief = beliefs.optJSONObject(i);
+      if (belief == null || !actorId.equals(belief.optString("actorId", ""))) continue;
+      String value = confirmedFact ? belief.optString("confirmedFactId", "")
+          : belief.optString("claimId", "");
+      if (expected.equals(value)) return true;
+    }
+    return false;
   }
 
   private static boolean conflictsWithLevel(Section section, String key, String displayName) {
