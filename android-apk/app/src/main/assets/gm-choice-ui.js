@@ -234,6 +234,8 @@
   }
 
   function displayedExplorerChoices(entry) {
+    if (state && ((state.combat && (state.combat.active || state.combat.outcome === 'defeat'))
+        || (state.flags && state.flags.entityEncounterKey))) return [];
     var choices = Array.isArray(entry && entry.choices) ? entry.choices.slice(0, 2) : [];
     if (state && Array.isArray(state.log) && state.log.length === 1 && entry === state.log[0]) {
       choices = fallbackExplorerChoices();
@@ -249,6 +251,10 @@
         choices = missingExplorerChoice();
       }
     }
+    if (choices.length === 1) choices.push({
+      text:'Khảo sát những âm thanh khác thường gần đó',
+      action:'Khảo sát những âm thanh khác thường gần đó'
+    });
     if (state && state.levelRoute && state.levelRoute.exitAvailable === true) {
       choices = [{text:'Đi qua lối ra đến chặng kế tiếp',action:'Đi qua lối ra'},
         {text:'Thận trọng tiếp cận lối thoát vừa tìm thấy',action:'Thận trọng tiếp cận lối thoát vừa tìm thấy'}];
