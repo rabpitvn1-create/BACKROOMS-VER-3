@@ -227,6 +227,18 @@ public final class GameCoreFacade implements AutoCloseable {
       return prepared;
   }
 
+  /** Explicit inventory and chest operations are never reduced to a narrative rewrite. */
+  public synchronized boolean isMechanicalAction(String action) {
+    String text = action == null ? "" : action.trim();
+    JSONObject flags = parseState(liveStateJson).optJSONObject("flags");
+    return text.startsWith("__loot:")
+        || GameCoreRules.isDirectPlayerPickupAction(text)
+        || GameCoreRules.isInventoryQuery(text)
+        || GameCoreRules.isPartyQuery(text)
+        || (itemCore.isOpenChestAction(text)
+            && flags != null && flags.optBoolean("chestPresent", false));
+  }
+
   /** Returns a hypothetical post-turn state without writing preferences or retaining a turn attempt. */
   public synchronized String previewTurn(String action, String expectedBaseHash) {
     JSONObject base = parseState(liveStateJson);
@@ -301,6 +313,8 @@ public final class GameCoreFacade implements AutoCloseable {
         emergentTurnEngine.catchUpProjections(predicted);
         projectBeforePersist(predicted);
         String kind = attempt.selected.optString("kind", "NONE");
+        // Forecast only ordinary exploration turns. Real encounters interrupt the chain.
+        if ("ENTITY".equals(kind) || "CHARACTER".equals(kind) || "CHEST".equals(kind)) break;
         steps.put(new JSONObject()
             .put("index", index).put("canonicalAction", action)
             .put("turnId", attempt.turnId)
@@ -310,7 +324,6 @@ public final class GameCoreFacade implements AutoCloseable {
             .put("selectedKind", kind)
             .put("state", clientSafeState(predicted)));
         current = predicted;
-        if ("ENTITY".equals(kind) || "CHARACTER".equals(kind) || "CHEST".equals(kind)) break;
       }
       return new JSONObject().put("handled", steps.length() > 0)
           .put("baseHash", expectedBaseHash).put("steps", steps).toString();
