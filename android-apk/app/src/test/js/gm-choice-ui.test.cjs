@@ -19,9 +19,9 @@ function choices(state, gmChoices = [], initial = false) {
 }
 
 const opening = choices({currentLevelKey: '0', levelRoute: {exitAvailable: false}}, [], true);
-assert.deepEqual(opening.map(choice => choice.action), ['Quan sát dãy tường vàng']);
+assert.deepEqual(opening.map(choice => choice.action), ['Tiếp tục khám phá dãy tường vàng','Lần theo những âm thanh xa lạ']);
 assert.deepEqual(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}).map(x => x.action),
-  ['Quan sát khu vực phía trước'], 'empty GM output must not end normal exploration');
+  ['Quan sát khu vực phía trước','Thử lần theo một lối đi ít dấu vết'], 'empty GM output must not end normal exploration');
 assert.equal(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}, [
   {text: 'Kiểm tra cửa', action: 'Kiểm tra cửa'}
 ]).length, 1);
@@ -29,32 +29,32 @@ assert.equal(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}
 const open = choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: true}}, [
   {text: 'A', action: 'A'}, {text: 'B', action: 'B'}, {text: 'C', action: 'C'}
 ]);
-assert.equal(open.length, 1);
-assert.deepEqual(open.map(choice => choice.id), ['A']);
+assert.equal(open.length, 2);
+assert.deepEqual(open.map(choice => choice.id), ['A','B']);
 assert.equal(open[0].action, 'Đi qua lối ra');
 assert.equal(open.some(choice => choice.action === 'Tiếp tục khám phá Level 0.1'), false);
 assert.deepEqual(choices({currentLevelKey: '1.2', levelRoute: {exitAvailable: true}})
-  .map(choice => choice.action), ['Đi qua lối ra']);
+  .map(choice => choice.action), ['Đi qua lối ra','Thận trọng tiếp cận lối thoát vừa tìm thấy']);
 
 assert.deepEqual(choices({currentLevelKey:'0',levelRoute:{exitAvailable:false}},[
   {text:'Quan sát cửa',action:'Quan sát cửa'},
   {text:'Rẽ trái',action:'Rẽ trái'},
   {text:'Rẽ phải',action:'Rẽ phải'}
-]).map(choice=>choice.action), ['Quan sát cửa']);
+]).map(choice=>choice.action), ['Quan sát cửa','Rẽ trái']);
 const postFightEntry = {choices:[]};
 context.state = {turn:8,log:[{text:'prologue'},postFightEntry],
   combat:{active:false,outcome:'victory',logIndex:1},levelRoute:{exitAvailable:false}};
 assert.deepEqual(Array.from(context.displayedExplorerChoices(postFightEntry),x=>x.action),
-  ['Quan sát khu vực sau trận chiến']);
+  ['Quan sát khu vực sau trận chiến','Tìm một lối đi khác để tiếp tục']);
 const nextGm = {role:'gm', text:'Cao Minh vẫn đứng trong hành lang.', choices:[]};
 context.state.log.push({role:'player', text:'Quan sát khu vực sau trận chiến'}, nextGm);
 assert.deepEqual(Array.from(context.displayedExplorerChoices(nextGm), x => x.action),
-  ['Lắng nghe âm thanh trong khu vực hiện tại'],
+  ['Lắng nghe âm thanh trong khu vực hiện tại','Thử lần theo một lối đi ít dấu vết'],
   'the next GM entry still offers a suggestion after the post-combat action');
 const followingGm = {role:'gm', text:'Chưa nghe thấy tiếng động lạ.', choices:[]};
 context.state.log.push({role:'player', text:'Lắng nghe âm thanh trong khu vực hiện tại'}, followingGm);
 assert.deepEqual(Array.from(context.displayedExplorerChoices(followingGm), x => x.action),
-  ['Quan sát khu vực phía trước'],
+  ['Quan sát khu vực phía trước','Thử lần theo một lối đi ít dấu vết'],
   'suggestions continue on subsequent turns without repeating the last action');
 const freshChoice = {role:'gm', text:'Cánh cửa hiện ra.', choices:[{text:'Kiểm tra cánh cửa'}]};
 context.state.log.push({role:'player', text:'Đứng chờ'}, freshChoice);
