@@ -1,0 +1,131 @@
+name: Agent Ponytail Branch Cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/branch-cleanup.yml"
+  schedule:
+    - cron: "17 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      delete_merged:
+        description: "Delete safe merged branches instead of audit only"
+        required: true
+        type: boolean
+        default: false
+      merged_age_days:
+        description: "Minimum age for merged branches before deletion"
+        required: true
+        type: string
+        default: "7"
+      stale_unmerged_days:
+        description: "Age for reporting unmerged branches for manual review"
+        required: true
+        type: string
+        default: "30"
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: branch-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    name: Audit and prune branches
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      DEFAULT_BRANCH: main
+      APPLY_DELETE: ${{ github.event_name == 'schedule' || github.event.inputs.delete_merged == 'true' }}
+      MERGED_AGE_DAYS: ${{ github.event.inputs.merged_age_days || '7' }}
+      STALE_UNMERGED_DAYS: ${{ github.event.inputs.stale_unmerged_days || '30' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Audit and prune
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          [[ "$MERGED_AGE_DAYS" =~ ^[0-9]+$ ]] || { echo "merged_age_days must be a non-negative integer"; exit 2; }
+          [[ "$STALE_UNMERGED_DAYS" =~ ^[0-9]+$ ]] || { echo "stale_unmerged_days must be a non-negative integer"; exit 2; }
+
+          git fetch --prune origin '+refs/heads/*:refs/remotes/origin/*'
+
+          mapfile -t open_pr_heads < <(
+            gh pr list --repo "$GITHUB_REPOSITORY" --state open --limit 200 \
+              --json headRefName --jq '.[].headRefName'
+          )
+
+          has_open_pr() {
+            local branch="$1"
+            local head
+            for head in "${open_pr_heads[@]}"; do
+              [[ "$head" == "$branch" ]] && return 0
+            done
+            return 1
+          }
+
+          now=$(date +%s)
+          deleted=0
+          safe_merged=0
+          stale_unmerged=0
+          skipped_open_pr=0
+
+          {
+            echo "## Agent Ponytail branch cleanup"
+            echo
+            echo "- Mode: `$([[ "$APPLY_DELETE" == "true" ]] && echo delete || echo audit)`"
+            echo "- Safe merged age: ${MERGED_AGE_DAYS} days"
+            echo "- Stale unmerged report age: ${STALE_UNMERGED_DAYS} days"
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          while IFS= read -r branch; do
+            [[ -z "$branch" || "$branch" == "HEAD" || "$branch" == "$DEFAULT_BRANCH" ]] && continue
+
+            if has_open_pr "$branch"; then
+              skipped_open_pr=$((skipped_open_pr + 1))
+              echo "- KEEP open PR: `$branch`" >> "$GITHUB_STEP_SUMMARY"
+              continue
+            fi
+
+            last_ts=$(git show -s --format=%ct "origin/$branch")
+            age_days=$(( (now - last_ts) / 86400 ))
+
+            if git merge-base --is-ancestor "origin/$branch" "origin/$DEFAULT_BRANCH"; then
+              if (( age_days >= MERGED_AGE_DAYS )); then
+                safe_merged=$((safe_merged + 1))
+                if [[ "$APPLY_DELETE" == "true" ]]; then
+                  if gh api --method DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$branch"; then
+                    deleted=$((deleted + 1))
+                    echo "- DELETED merged (${age_days}d): `$branch`" >> "$GITHUB_STEP_SUMMARY"
+                  else
+                    echo "- DELETE FAILED: `$branch`" >> "$GITHUB_STEP_SUMMARY"
+                  fi
+                else
+                  echo "- WOULD DELETE merged (${age_days}d): `$branch`" >> "$GITHUB_STEP_SUMMARY"
+                fi
+              fi
+            elif (( age_days >= STALE_UNMERGED_DAYS )); then
+              stale_unmerged=$((stale_unmerged + 1))
+              echo "- REVIEW unmerged stale (${age_days}d): `$branch`" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done < <(git for-each-ref --format='%(refname:strip=3)' refs/remotes/origin | sort)
+
+          {
+            echo
+            echo "### Summary"
+            echo "- Safe merged candidates: $safe_merged"
+            echo "- Deleted: $deleted"
+            echo "- Stale unmerged for manual review: $stale_unmerged"
+            echo "- Open-PR branches skipped: $skipped_open_pr"
+          } >> "$GITHUB_STEP_SUMMARY"
