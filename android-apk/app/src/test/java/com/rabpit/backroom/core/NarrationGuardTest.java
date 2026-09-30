@@ -105,6 +105,22 @@ public class NarrationGuardTest {
         "Quan sát lối đi vừa đi qua"), ordinary).isEmpty());
   }
 
+  @Test public void rejectsGeminiLowInventedSafetyAndEmotion() throws Exception {
+    JSONObject ordinary = new JSONObject();
+    assertFalse(NarrationGuard.validate(narration(
+        "Chẳng có mối đe dọa hay bóng dáng thực thể nào xuất hiện quanh Cao Minh."),
+        ordinary, "Quan sát khu vực").isEmpty());
+    assertFalse(NarrationGuard.validate(narration(
+        "Sự căng thẳng dâng cao khi ánh đèn trước mặt Cao Minh chớp tắt."),
+        ordinary, "Thận trọng tiến vào khoảng tối").isEmpty());
+    assertFalse(NarrationGuard.validate(narration(
+        "Nhịp tim đập dồn dập trong lồng ngực khi Cao Minh nhìn về phía ngã rẽ."),
+        ordinary, "Quan sát ngã rẽ").isEmpty());
+    assertTrue(NarrationGuard.validate(narration(
+        "Cao Minh nhìn dọc hành lang nhưng chưa thấy dấu hiệu chuyển động nào trước mắt."),
+        ordinary, "Quan sát hành lang").isEmpty());
+  }
+
   @Test public void postDefeatLocationMustRemainConcealed() throws Exception {
     JSONObject hidden = new JSONObject().put("perceptionShroud", true)
         .put("location", "Hành lang thực tế mà Cao Minh không nhận ra");

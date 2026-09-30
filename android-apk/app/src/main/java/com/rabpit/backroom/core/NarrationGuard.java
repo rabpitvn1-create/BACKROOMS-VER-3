@@ -29,6 +29,14 @@ public final class NarrationGuard {
   private static final Pattern UNSUPPORTED_SAFETY = Pattern.compile(
       "(?iu)(?:khu vực(?: này)?|nơi(?: đây| này)?|lối đi(?: này)?)\\s+"
           + "(?:hiện\\s+)?(?:hoàn\\s+toàn|tuyệt\\s+đối)\\s+an\\s+toàn");
+  private static final Pattern UNSUPPORTED_ABSENCE = Pattern.compile(
+      "(?iu)(?:không|chẳng)\\s+(?:hề\\s+)?(?:có|xuất hiện).{0,40}?"
+          + "(?:mối\\s+(?:nguy hiểm|đe dọa)|bóng dáng\\s+thực thể|thực thể\\s+nguy hiểm)");
+  private static final Pattern INVENTED_INNER_STATE = Pattern.compile(
+      "(?iu)(?:(?:sự|nỗi)\\s+(?:căng thẳng|hoang mang|sợ hãi)|"
+          + "\\btâm\\s*(?:lý|trí).{0,30}?(?:bình ổn|hoang mang|căng thẳng|sợ hãi)|"
+          + "\\bnhịp\\s+tim.{0,30}?(?:dồn dập|đập dồn)|"
+          + "\\b(?:hy vọng|hoảng loạn|hoang mang|sợ hãi)\\b)");
   private static final Pattern EXPOSED_LEVEL = Pattern.compile("(?iu)\\bLevel\\s*\\d+\\b");
   private static final Pattern PERSISTENT_CHOICE = Pattern.compile(
       "(?iu)^(?:cao minh\\s+)?(?:đánh dấu|khắc|cào|vẽ|viết ký hiệu|đặt dấu mốc)\\b");
@@ -110,6 +118,11 @@ public final class NarrationGuard {
     }
     if (UNSUPPORTED_SAFETY.matcher(reply).find())
       return "Narrator cannot certify absolute safety without a committed world fact.";
+    if (UNSUPPORTED_ABSENCE.matcher(reply).find())
+      return "Narrator cannot certify the absence of threats from a NONE selection.";
+    if (INVENTED_INNER_STATE.matcher(reply).find()
+        && !INVENTED_INNER_STATE.matcher(playerAction == null ? "" : playerAction).find())
+      return "Narrator invents Cao Minh's fear, hope or internal emotional state.";
     if (UNTRACKED_WORLD_EDIT.matcher(reply).find())
       return "Narration claims a persistent world edit that Core did not commit.";
     if (state != null && state.optBoolean("perceptionShroud", false)
