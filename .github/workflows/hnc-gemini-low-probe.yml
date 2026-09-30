@@ -1,0 +1,47 @@
+name: HNC Gemini Low Live Probe
+
+# Does not run on pull_request. Runs only on the controlled experiment branch.
+# Never publishes API keys, headers or a secret-bearing APK.
+on:
+  push:
+    branches: ['experiment/hidden-narrative-chain']
+    paths:
+      - '.github/workflows/hnc-gemini-low-probe.yml'
+      - 'android-apk/tools/gemini-low-probe.cjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hnc-gemini-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: github.repository == 'rabpitvn1-create/BACKROOMS-VER-3'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Probe actual configured Gemini Low (synthetic narrative fixtures)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.8-flash
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "Live probe unavailable: GEMINI_API_KEY secret not configured."
+            exit 1
+          fi
+          node android-apk/tools/gemini-low-probe.cjs
+      - name: Save safe synthetic narrative samples and usage metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hnc-gemini-low-probe-${{ github.run_id }}
+          path: android-apk/probe-results/gemini-low-probe.json
+          if-no-files-found: warn
+          retention-days: 7
