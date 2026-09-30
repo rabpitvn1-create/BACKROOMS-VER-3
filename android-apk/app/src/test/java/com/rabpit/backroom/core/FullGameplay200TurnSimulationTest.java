@@ -48,6 +48,46 @@ public class FullGameplay200TurnSimulationTest {
     }
   }
 
+  @Test public void restartingAfterDefeatReframesStoryWithoutTeleportingOrResettingRoute()
+      throws Exception {
+    String graph = asset("level_graph.json");
+    String knowledge = asset("knowledge/level_knowledge.json");
+    String registry = asset("knowledge/entity_encounters.json");
+    JSONObject initial = GameCoreFacade.newGameState(new JSONObject())
+        .put("emergent", new JSONObject().put("saveId", "death-in-place-fixture"))
+        .put("location", "Vị trí thật mà Cao Minh chưa nhận ra")
+        .put("perceptionShroud", true)
+        .put("levelRoute", new JSONObject()
+            .put("levelKey", "0").put("streak", 4).put("lastResult", "SUCCESS"))
+        .put("combat", new JSONObject()
+            .put("active", false).put("outcome", "defeat")
+            .put("deathRestartPending", true).put("deathRecoveryApplied", true)
+            .put("deathRestartLevelKey", "0")
+            .put("deathRestartAnchorLocation", "Vị trí thật mà Cao Minh chưa nhận ra"));
+    try (GameCoreFacade core = new GameCoreFacade(
+        inMemoryPreferences(initial.toString()), LevelCore.withAssets(knowledge, graph),
+        new EntityCore(registry), false)) {
+      JSONObject before = new JSONObject(core.normalizeState(initial.toString()));
+      String actualLocation = before.getString("location");
+      int routeStreak = before.getJSONObject("levelRoute").optInt("streak");
+      JSONObject result = new JSONObject(core.restartAfterDeath());
+      assertTrue("Restart must commit an authoritative Core event",
+          result.optString("error"), result.optBoolean("handled", false));
+      JSONObject after = result.getJSONObject("state");
+      assertEquals("Defeat cannot teleport Cao Minh", actualLocation, after.getString("location"));
+      assertEquals("Defeat cannot reset route progress", routeStreak,
+          after.getJSONObject("levelRoute").optInt("streak"));
+      assertTrue(after.getBoolean("perceptionShroud"));
+      assertFalse(after.getJSONObject("combat").optBoolean("deathRestartPending"));
+      JSONArray log = after.getJSONArray("log");
+      String description = log.getJSONObject(log.length() - 1).getString("text");
+      assertTrue("After defeat the GM must narrate rather than merely return state",
+          description.contains("Cao Minh"));
+      assertFalse("The reframe cannot reveal the actual location",
+          description.contains(actualLocation));
+    }
+  }
+
   @Test public void realGameFlowFor200ActionsWithCombatEncountersAndNarration() throws Exception {
     Result natural = play("full-natural-20260929", false, WORLD_ACTIONS);
     Result repeatPrefix = play("full-natural-20260929", false, 30);

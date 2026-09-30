@@ -122,7 +122,7 @@ public class CombatChoiceEngineTest {
     assertEquals("Hui's Family Level 1 / hành lang sâu", state.getString("location"));
     assertTrue(state.getBoolean("perceptionShroud"));
     assertEquals(4, state.getJSONObject("levelRoute").getInt("streak"));
-    assertEquals("Backrooms nuốt chửng lấy bạn khi bạn ngã xuống.",
+    assertEquals("Backrooms đã nuốt chửng lấy bạn.",
         state.getJSONArray("log").getJSONObject(state.getJSONArray("log").length() - 1).getString("text"));
     JSONObject resolvedCombat = state.getJSONObject("combat");
     assertEquals("Hui's Family Level 1 / hành lang sâu", resolvedCombat.getString("deathRestartAnchorLocation"));
