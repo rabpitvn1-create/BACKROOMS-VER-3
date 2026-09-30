@@ -36,27 +36,27 @@ function configuredKeys(env=process.env) {
 function validChoices(choices) {
   return Array.isArray(choices) && choices.length === 2
       && choices.every(c => c && typeof c.text === 'string' && c.text.trim().length >= 8
-        && !/^(?:đánh dấu|khắc|cào|vẽ|viết ký hiệu|đặt dấu mốc)\\b/iu.test(c.text.trim()))
+        && !/^(?:đánh dấu|khắc|cào|vẽ|viết ký hiệu|đặt dấu mốc)\b/iu.test(c.text.trim()))
       && choices[0].text.trim() !== choices[1].text.trim();
 }
 function stationaryAction(action='') {
-  const stay=/(?:nhất\\s+quyết\\s+)?không\\s+(?:bước|đi|di\\s+chuyển|rời)|\\b(?:ngồi\\s+(?:yên|xuống)|đứng\\s+yên|áp\\s+tai|chỉ\\s+(?:tập trung\\s+)?lắng nghe)\\b/iu;
-  const move=/(?:^|\\s)(?:đi|chạy|bò|bước|tiến|rẽ|leo|di\\s+chuyển|rời|quay\\s+(?:đầu|gót)|men\\s+theo|đi\\s+theo)\\b/iu;
-  return stay.test(action) || (!move.test(action) && /\\b(?:lắng nghe|quan sát|chờ|đợi|dừng|nghỉ)\\b/iu.test(action));
+  const stay=/(?:nhất\s+quyết\s+)?không\s+(?:bước|đi|di\s+chuyển|rời)|\b(?:ngồi\s+(?:yên|xuống)|đứng\s+yên|áp\s+tai|chỉ\s+(?:tập trung\s+)?lắng nghe)\b/iu;
+  const move=/(?:^|\s)(?:đi|chạy|bò|bước|tiến|rẽ|leo|di\s+chuyển|rời|quay\s+(?:đầu|gót)|men\s+theo|đi\s+theo)\b/iu;
+  return stay.test(action) || (!move.test(action) && /\b(?:lắng nghe|quan sát|chờ|đợi|dừng|nghỉ)\b/iu.test(action));
 }
 function validateProse(reply, action='') {
   const text=String(reply||'');
-  if (!/\\bCao Minh\\b/u.test(text)) return 'reply must use third-person Cao Minh narration';
-  if (/\\bbạn\\b/iu.test(text)) return 'reply uses second-person narration';
-  if (/(?:sự|nỗi)\\s+(?:căng thẳng|hoang mang|sợ hãi)|\\btâm\\s*(?:lý|trí).{0,30}?(?:bình ổn|hoang mang|căng thẳng|sợ hãi)|\\bnhịp\\s+tim.{0,30}?(?:dồn dập|đập dồn)|\\b(?:hy vọng|hoảng loạn|hoang mang|sợ hãi)\\b/iu.test(text))
+  if (!/\bCao Minh\b/u.test(text)) return 'reply must use third-person Cao Minh narration';
+  if (/\bbạn\b/iu.test(text)) return 'reply uses second-person narration';
+  if (/(?:sự|nỗi)\s+(?:căng thẳng|hoang mang|sợ hãi)|\btâm\s*(?:lý|trí).{0,30}?(?:bình ổn|hoang mang|căng thẳng|sợ hãi)|\bnhịp\s+tim.{0,30}?(?:dồn dập|đập dồn)|\b(?:hy vọng|hoảng loạn|hoang mang|sợ hãi)\b/iu.test(text))
     return 'reply invents inner emotion';
-  if (/(?:khu vực(?: này)?|nơi(?: đây| này)?|lối đi(?: này)?)\\s+(?:hiện\\s+)?(?:hoàn\\s+toàn|tuyệt\\s+đối)\\s+an\\s+toàn/iu.test(text)
-      || /(?:không|chẳng)\\s+(?:hề\\s+)?(?:có|xuất hiện).{0,40}?(?:mối\\s+(?:nguy hiểm|đe dọa)|dấu hiệu\\s+nguy hiểm|bóng dáng\\s+thực thể)/iu.test(text))
+  if (/(?:khu vực(?: này)?|nơi(?: đây| này)?|lối đi(?: này)?)\s+(?:hiện\s+)?(?:hoàn\s+toàn|tuyệt\s+đối)\s+an\s+toàn/iu.test(text)
+      || /(?:không|chẳng)\s+(?:hề\s+)?(?:có|xuất hiện).{0,40}?(?:mối\s+(?:nguy hiểm|đe dọa)|dấu hiệu\s+nguy hiểm|bóng dáng\s+thực thể)/iu.test(text))
     return 'reply overclaims safety or threat absence';
-  if (/(?:cao minh|hắn)\\s+(?:cào|khắc|vẽ|đánh dấu|viết).{0,60}?(?:vết\\s+(?:xước|khắc)|ký hiệu|dấu mốc|lên\\s+(?:tường|sàn))/iu.test(text))
+  if (/(?:cao minh|hắn)\s+(?:cào|khắc|vẽ|đánh dấu|viết).{0,60}?(?:vết\s+(?:xước|khắc)|ký hiệu|dấu mốc|lên\s+(?:tường|sàn))/iu.test(text))
     return 'reply invents a persistent world edit';
   if (stationaryAction(action)
-      && /(?:cao minh|hắn|anh)\\s+(?:tự\\s+)?(?:đứng\\s+dậy(?:.{0,24})?|bước|đi|chạy|bò|tiến|rẽ|leo|di\\s+chuyển|rời|quay\\s+gót|men\\s+theo)\\b/iu.test(text))
+      && /(?:cao minh|hắn|anh)\s+(?:tự\s+)?(?:đứng\s+dậy(?:.{0,24})?|bước|đi|chạy|bò|tiến|rẽ|leo|di\s+chuyển|rời|quay\s+gót|men\s+theo)\b/iu.test(text))
     return 'reply moves Cao Minh after a stationary action';
   return '';
 }
