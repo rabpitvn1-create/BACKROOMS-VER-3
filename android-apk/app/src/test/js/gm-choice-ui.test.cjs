@@ -82,7 +82,7 @@ const calls = [];
 const bridge = {
   submitChoice: (...args) => calls.push({kind:'choice', args}),
   submitTurn: (...args) => calls.push({kind:'custom', args}),
-  prefetchChoices: (...args) => calls.push({kind:'prefetch', args})
+  prefetchNarrativeChain: (...args) => calls.push({kind:'prefetch', args})
 };
 const ui = {
   state: {turn:7, log:[entry], flags:{}}, busy:false, submit:{disabled:false},
@@ -116,13 +116,13 @@ const prefetchStart = source.indexOf('  window.backroomPrefetchChoices = functio
 const prefetchEnd = source.indexOf('\n  window.render();', prefetchStart);
 ui.busy = false;
 ui.displayedExplorerChoices = () => [
-  {id:'A',action:'A'}, {id:'B',action:'B'}, {id:'C',action:'C'}
+  {id:'A',action:'A'}, {id:'B',action:'B'}
 ];
 vm.runInNewContext(source.slice(prefetchStart, prefetchEnd), ui);
 ui.window.backroomPrefetchChoices();
 assert.equal(calls[2].kind, 'prefetch');
 assert.equal(JSON.parse(calls[2].args[0]).turn, 7);
-assert.deepEqual(JSON.parse(calls[2].args[1]).map(x => x.action), ['A','B','C']);
+assert.deepEqual(JSON.parse(calls[2].args[1]).map(x => x.action), ['A','B']);
 
 console.log('Choice origin, double tap, and batch source passed');
 
@@ -138,8 +138,8 @@ const turnUi = {
 vm.runInNewContext(turnHandler, turnUi);
 turnUi.window.backroomTurn(JSON.stringify({turn:8,log:[entry]}));
 assert.deepEqual(order, ['render'], 'actual turn renders without automatic speculative A/B/C');
-assert.equal(source.includes('  window.backroomPrefetchChoices();'), false,
-  'legacy prefetch hook must not run on initial render');
+assert.match(source, /setTimeout\(function\(\)\{ window\.backroomPrefetchChoices\(\); \}, 0\)/,
+  'new chain preparation starts after initial render');
 
 console.log('Current story render order passed');
 
