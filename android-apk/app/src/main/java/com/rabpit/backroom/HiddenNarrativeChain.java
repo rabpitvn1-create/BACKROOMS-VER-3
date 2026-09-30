@@ -78,8 +78,13 @@ final class HiddenNarrativeChain {
       actual = GmChoiceContract.sanitizeChoices(visibleChoices);
       if (actual.length() != 2) return null;
       for (int i = 0; i < 2; i++) {
+        // The UI may display a descriptive label while submitting an explicit
+        // Core action (for example, exit label -> "Đi qua lối ra").
+        JSONObject source = visibleChoices.optJSONObject(i);
+        String submittedAction = source == null ? actual.getJSONObject(i).getString("action")
+            : source.optString("action", actual.getJSONObject(i).getString("action")).trim();
         if (!beat.expectedChoices.getJSONObject(i).getString("action")
-            .equals(actual.getJSONObject(i).getString("action"))) return null;
+            .equals(submittedAction)) return null;
       }
     } catch (Exception error) { return null; }
     return beat;
