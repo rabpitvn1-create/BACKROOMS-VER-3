@@ -56,7 +56,7 @@ function validateProse(reply, action='') {
   if (/(?:sự|nỗi)\s+(?:căng thẳng|hoang mang|sợ hãi)|\btâm\s*(?:lý|trí).{0,30}?(?:bình ổn|hoang mang|căng thẳng|sợ hãi)|\bnhịp\s+tim.{0,30}?(?:dồn dập|đập dồn)|\b(?:hy vọng|hoảng loạn|hoang mang|sợ hãi)\b/iu.test(text))
     return 'reply invents inner emotion';
   if (/(?:khu vực(?: này)?|nơi(?: đây| này)?|lối đi(?: này)?)\s+(?:hiện\s+)?(?:hoàn\s+toàn|tuyệt\s+đối)\s+an\s+toàn/iu.test(text)
-      || /(?:không|chẳng)\s+(?:hề\s+)?(?:có|xuất hiện).{0,40}?(?:mối\s+(?:nguy hiểm|đe dọa)|dấu hiệu\s+nguy hiểm|bóng dáng\s+thực thể)/iu.test(text))
+      || /(?:không|chẳng)\s+(?:hề\s+)?(?:có|xuất hiện|tồn tại).{0,50}?(?:mối\s+(?:nguy hiểm|đe dọa)|dấu hiệu\s+(?:nguy hiểm|chuyển động)|bóng dáng\s+thực thể|thực thể|sinh thể|sự sống)/iu.test(text))
     return 'reply overclaims safety or threat absence';
   if (/(?:cao minh|hắn)\s+(?:cào|khắc|vẽ|đánh dấu|viết).{0,60}?(?:vết\s+(?:xước|khắc)|ký hiệu|dấu mốc|lên\s+(?:tường|sàn))/iu.test(text))
     return 'reply invents a persistent world edit';
