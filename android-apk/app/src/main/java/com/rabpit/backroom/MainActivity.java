@@ -1080,6 +1080,29 @@ public class MainActivity extends Activity {
           PrefetchBranch cached = ready != null && ready.baseHash.equals(baseHash)
               && choiceId != null ? ready.forChoice(choiceId, action == null ? "" : action.trim(),
                   sourceTurn, sourceGmIndex, sourceGmText) : null;
+          String actualAction = action == null ? "" : action.trim();
+          boolean mechanical = gameCore.isMechanicalAction(actualAction);
+          JSONArray visibleChoices = initialNarrativeChoices(submitted);
+          if (choiceId != null && visibleChoices.length() == 2) {
+            int slot = "A".equals(choiceId) ? 0 : "B".equals(choiceId) ? 1 : -1;
+            if (slot < 0 || !actualAction.equals(
+                GmChoiceContract.sanitizeChoices(visibleChoices)
+                    .getJSONObject(slot).getString("action"))) {
+              throw new Exception("Lựa chọn không khớp với nội dung đã hiển thị.");
+            }
+          }
+          HiddenNarrativeChain chain = hiddenChain;
+          HiddenNarrativeChain.Beat beat = !mechanical && chain != null
+              ? chain.current(gameCore.currentNarrativeWorldHash(), visibleChoices) : null;
+          if (chain != null && beat == null) hiddenChain = null;
+          String canonicalAction = actualAction;
+          if (!mechanical) {
+            if (beat != null) canonicalAction = beat.canonicalAction;
+            else if (visibleChoices.length() == 2) {
+              canonicalAction = GmChoiceContract.sanitizeChoices(visibleChoices)
+                  .getJSONObject(0).getString("action");
+            }
+          }
 
           if (CombatChoiceEngine.isActive(submitted)) {
             throw new Exception("Đang chiến đấu. Hãy dùng khung Poker Dice trong GAME MASTER.");
@@ -1093,7 +1116,8 @@ public class MainActivity extends Activity {
             return;
           }
 
-          JSONObject prepared = new JSONObject(gameCore.processRule(submitted.toString(), action));
+          JSONObject prepared = new JSONObject(
+              gameCore.processRule(submitted.toString(), canonicalAction));
           if (prepared.optBoolean("handled", false)) {
             emit("backroomTurn", prepared.getJSONObject("state").toString());
             return;
@@ -1118,18 +1142,54 @@ public class MainActivity extends Activity {
           JSONObject generated;
           String reply;
           boolean narrationValidated = false;
+          final HiddenNarrativeChain.Beat selectedBeat = beat;
+          final boolean forecastMatches = selectedBeat != null
+              && selectedBeat.afterWorldHash.equals(gameCore.currentNarrativeWorldHash());
+          if (selectedBeat != null && !forecastMatches) hiddenChain = null;
+          final boolean directCached = forecastMatches
+              && ("A".equals(choiceId) || "B".equals(choiceId));
           try {
             final JSONObject narrationState = state;
+            final String gmAction = actualAction;
+            final String coreAction = canonicalAction;
             generated = awaitNarration(narrationIo, () -> {
-              boolean hit = cached != null && cached.outcomeHash.equals(gameCore.currentStateHash());
-              JSONObject draft = hit ? new JSONObject(cached.narration.toString()) : null;
-              if (hit && !NarrationGuard.validate(draft, narrationState, action).isEmpty()) hit = false;
-              if (!hit) draft = parseModelJson(generateText(narrationPrompt(narrationState, action)));
-              return NarrationGuard.regenerateIfInvalid(draft, narrationState, action, violation ->
-                  parseModelJson(generateText(narrationPrompt(narrationState, action)
-                      + "\nVALIDATION REJECTED: " + violation
-                      + "\nRewrite only reply and choices, preserving encounterDialogue and world state. "
-                      + "Return only valid JSON.")));
+              boolean legacyHit = cached != null && cached.outcomeHash.equals(gameCore.currentStateHash());
+              JSONObject draft = directCached ? selectedBeat.narration(choiceId)
+                  : legacyHit ? new JSONObject(cached.narration.toString()) : null;
+              String prompt = narrationPrompt(narrationState, coreAction);
+              if (!coreAction.equals(gmAction)) {
+                prompt += "\nPLAYER'S ACTUAL ACTION: " + gmAction
+                    + "\nHIDDEN CHAIN: The fixed Core outcome has already happened."
+                    + " Tell how the player's ACTUAL action leads organically to this exact"
+                    + " outcome; do not narrate the hidden canonical action as a player choice."
+                    + " Never reveal that both choices or free action share the same outcome.";
+              }
+              if (forecastMatches && choiceId == null) {
+                prompt += "\nCANONICAL STORY DESTINATION (reference ONLY, not a"
+                    + " mandatory route): " + selectedBeat.replyA
+                    + "\nRebuild a genuinely different, causal scene grounded in the"
+                    + " player's actual action. Never contradict Core state or invent events.";
+              }
+              if (draft == null) {
+                if (BuildConfig.DEBUG) Log.d(TAG, forecastMatches && choiceId == null
+                    ? "HIDDEN_CHAIN_PLAYER_ACTION_REWRITE" : "HIDDEN_CHAIN_UNCACHED_NARRATION");
+                draft = parseModelJson(generateText(prompt));
+              } else if (BuildConfig.DEBUG && directCached) {
+                Log.d(TAG, "HIDDEN_CHAIN_CACHE_HIT choice=" + choiceId);
+              }
+              if (forecastMatches) draft.put("choices",
+                  new JSONArray(selectedBeat.nextChoices.toString()));
+              final String retryPrompt = prompt;
+              return NarrationGuard.regenerateIfInvalid(draft, narrationState, gmAction,
+                  violation -> {
+                    JSONObject retry = parseModelJson(generateText(retryPrompt
+                        + "\nVALIDATION REJECTED: " + violation
+                        + "\nRewrite only the narrative; never change world outcomes."
+                        + " Return valid JSON."));
+                    if (forecastMatches) retry.put("choices",
+                        new JSONArray(selectedBeat.nextChoices.toString()));
+                    return retry;
+                  });
             }, TimeUnit.SECONDS.toMillis(NARRATION_DEADLINE_SECONDS));
             reply = generated.optString("reply", "").trim();
             narrationValidated = true;
@@ -1158,6 +1218,16 @@ public class MainActivity extends Activity {
               && encounterDialogue.length() >= 2 && encounterDialogue.length() <= 5;
           state = new JSONObject(
               gameCore.commitNarration(state.toString(), acknowledgePendingIntro, narrationValidated));
+
+          // Advance only when the predicted Core state and next two choices agree.
+          if (selectedBeat != null && forecastMatches && narrationValidated
+              && generated.optJSONArray("choices") != null
+              && GmChoiceContract.sanitizeChoices(generated.getJSONArray("choices")).toString()
+                  .equals(selectedBeat.nextChoices.toString())) {
+            if (hiddenChain == chain && !chain.consume(selectedBeat)) hiddenChain = null;
+          } else if (hiddenChain == chain) {
+            hiddenChain = null;
+          }
 
           if (CombatChoiceEngine.isKnownEntity(newEncounter)) {
             state = new JSONObject(
