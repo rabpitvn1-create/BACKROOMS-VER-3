@@ -49,6 +49,8 @@ def clean(value: Any) -> Any:
         return {k: clean(v) for k, v in value.items() if not k.startswith("_canon")}
     if isinstance(value, list):
         return [clean(v) for v in value]
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
     return value
 
 
