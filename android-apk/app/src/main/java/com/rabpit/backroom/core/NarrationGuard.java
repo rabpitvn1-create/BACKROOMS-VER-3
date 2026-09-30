@@ -32,6 +32,11 @@ public final class NarrationGuard {
   private static final Pattern EXPOSED_LEVEL = Pattern.compile("(?iu)\\bLevel\\s*\\d+\\b");
   private static final Pattern PERSISTENT_CHOICE = Pattern.compile(
       "(?iu)^(?:cao minh\\s+)?(?:đánh dấu|khắc|cào|vẽ|viết ký hiệu|đặt dấu mốc)\\b");
+  // A proposed action is not the only route to an invented permanent mark:
+  // the story body itself must not commit an untracked wall/floor modification.
+  private static final Pattern UNTRACKED_WORLD_EDIT = Pattern.compile(
+      "(?iu)(?:cao minh|hắn)\\s+(?:cào|khắc|vẽ|đánh dấu|viết)"
+          + ".{0,60}?(?:vết\\s+(?:xước|khắc)|ký hiệu|dấu mốc|lên\\s+(?:tường|sàn))");
   private static final Pattern MECHANICAL_END = Pattern.compile(
       "(?iu)(?:bạn|ngươi|cao minh)\\s+(?:sẽ|muốn|định)\\s+"
           + "(?:làm gì|chọn gì|đi đâu|hành động gì)(?:\\s+(?:tiếp|tiếp theo|bây giờ))?\\s*[?？!。.]?$");
@@ -105,6 +110,8 @@ public final class NarrationGuard {
     }
     if (UNSUPPORTED_SAFETY.matcher(reply).find())
       return "Narrator cannot certify absolute safety without a committed world fact.";
+    if (UNTRACKED_WORLD_EDIT.matcher(reply).find())
+      return "Narration claims a persistent world edit that Core did not commit.";
     if (state != null && state.optBoolean("perceptionShroud", false)
         && (EXPOSED_LEVEL.matcher(reply).find()
             || (!state.optString("location", "").isEmpty()

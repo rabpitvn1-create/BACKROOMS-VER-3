@@ -116,6 +116,13 @@ public class ChainNarrationFallbackTest {
     assertFalse(reply.contains("hành lang sâu"));
     assertFalse(reply.contains("điểm xuất phát"));
     assertFalse(reply.contains("cảnh vật quen thuộc"));
+    assertFalse("Fallback must not make Cao Minh wake again on every shrouded turn",
+        reply.contains("mở mắt"));
+    String listening = MainActivity.narrationFallback(hidden, "", "Tôi lắng nghe kỹ")
+        .getString("reply");
+    assertTrue(listening.contains("lắng nghe"));
+    assertFalse(listening.contains("Hui's Family"));
+    assertFalse(listening.equals(reply));
   }
 
   @Test public void selectedEmergentEventKeepsNarrativeLeadIn() throws Exception {

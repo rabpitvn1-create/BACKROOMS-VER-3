@@ -92,6 +92,12 @@ public class NarrationGuardTest {
     assertTrue(NarrationGuard.validate(narration(
         "Cao Minh chưa tìm thấy dấu hiệu rõ ràng nào chứng minh nơi này an toàn."),
         ordinary).isEmpty());
+    assertFalse(NarrationGuard.validate(narration(
+        "Cao Minh cào một vết xước lên tường làm dấu cho đường trở lại."),
+        ordinary).isEmpty());
+    assertTrue(NarrationGuard.validate(narration(
+        "Cao Minh nhận thấy một vết xước cũ trên bức tường trước mắt."),
+        ordinary).isEmpty());
     String scene = "Một tiếng động ngắt quãng vang lên từ phía góc phòng còn khuất.";
     assertFalse(NarrationGuard.validate(narration(scene,
         "Đánh dấu đường cũ trước khi bước tiếp"), ordinary).isEmpty());

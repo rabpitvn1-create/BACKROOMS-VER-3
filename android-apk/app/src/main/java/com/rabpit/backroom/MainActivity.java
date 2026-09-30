@@ -1104,10 +1104,23 @@ public class MainActivity extends Activity {
       // Provider timeout must not reveal the actual location after defeat.
       // Do not override the real location: this is purely a presentation veil.
       if (state != null && state.optBoolean("perceptionShroud", false)) {
-        reply = "Cao Minh mở mắt giữa một khoảng sáng chập chờn. "
-            + "Không khí mang theo mùi ẩm lạnh; những âm thanh rời rạc "
-            + "không đủ để anh nhận ra nơi mình đang đứng. "
-            + "Anh có thể quan sát kỹ hơn để định hướng.";
+        // The restart operation already narrated waking up. Do not make
+        // Cao Minh wake again on every provider-fallback turn while shrouded.
+        String actual = action == null ? "" : action.toLowerCase(java.util.Locale.ROOT);
+        if (actual.contains("lắng nghe") || actual.contains("nghe ") || actual.contains("âm thanh")) {
+          reply = "Cao Minh lắng nghe tiếng điện rè vọng từ phía trên. "
+              + "Âm thanh đứt quãng giữa khoảng không trước mặt không đủ "
+              + "để anh nhận ra mình đã đến đây bằng cách nào.";
+        } else if (actual.contains("ngồi") || actual.contains("đứng yên")
+            || actual.contains("không di chuyển")) {
+          reply = "Cao Minh giữ nguyên vị trí, cảm nhận hơi lạnh ngấm qua mặt sàn. "
+              + "Những nhịp đèn không đều khiến việc nhận dạng cảnh vật "
+              + "bằng ánh nhìn lúc này trở nên khó khăn.";
+        } else {
+          reply = "Cao Minh quan sát khoảng sáng nhợt nhạt trước mắt. "
+              + "Không khí mang theo mùi ẩm lạnh; những dấu hiệu rời rạc "
+              + "chưa đủ để anh xác định lại phương hướng.";
+        }
       }
       JSONObject emergent = state == null ? null : state.optJSONObject("emergent");
       JSONObject selection = emergent == null ? null : emergent.optJSONObject("lastSelection");
