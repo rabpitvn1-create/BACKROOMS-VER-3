@@ -63,6 +63,13 @@ public final class GmNarrativePacket {
         + NarrativeContinuityPacket.build(state) + "\n"
         + "RECENT CONTEXT (chỉ giữ continuity, không lặp nguyên văn):\n" + recent + "\n"
         + "READ-ONLY STATE: " + promptState.toString() + "\n"
+        + (state != null && state.optBoolean("perceptionShroud", false)
+            ? "PERCEPTION SHROUD AFTER DEFEAT: Cao Minh remains at his actual location, "
+              + "but does not recognize it. Do not mention familiar doors, prior landmarks, "
+              + "the precise location or route name. Describe only limited sensory details. "
+              + "Do not fabricate a new location or contradict observable world facts. "
+              + "If the player explicitly investigates, reveal real clues gradually.\\n"
+            : "")
         + "PLAYER ACTION: " + safe(action) + "\n"
         + "TRƯỚC KHI XUẤT: tự kiểm tra thầm reply đang kể sự việc cụ thể thay vì báo cáo state; "
         + "không tự điều khiển Cao Minh, không lộ kiến thức chưa thể biết; gợi ý là một hành động "
