@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
   private final AtomicLong prefetchGeneration = new AtomicLong();
   private final AtomicBoolean turnInFlight = new AtomicBoolean();
   private volatile PrefetchCache prefetchCache;
+  private volatile HiddenNarrativeChain hiddenChain;
   private volatile String activePrefetchKey;
   private volatile boolean destroyed;
   private GameCoreFacade gameCore;
@@ -715,6 +716,122 @@ public class MainActivity extends Activity {
         recentContext(state), state, action, gmStyleExamplesContext(), canon.promptText());
   }
 
+
+  private static JSONArray initialNarrativeChoices(JSONObject state) throws Exception {
+    JSONArray log = state.optJSONArray("log");
+    JSONObject entry = log == null || log.length() == 0 ? null
+        : log.optJSONObject(lastGmLogIndexStatic(state));
+    JSONArray current = entry == null ? null : entry.optJSONArray("choices");
+    if (current != null && current.length() == 2) return current;
+    // The shipped prologue predates generated choices. Match its WebView fallback.
+    if (state.optInt("turn", 1) == 1) return new JSONArray()
+        .put(new JSONObject().put("text", "Tiếp tục khám phá dãy tường vàng"))
+        .put(new JSONObject().put("text", "Lần theo những âm thanh xa lạ"));
+    return current == null ? new JSONArray() : current;
+  }
+
+  private static int lastGmLogIndexStatic(JSONObject state) {
+    JSONArray log = state == null ? null : state.optJSONArray("log");
+    if (log == null) return -1;
+    for (int i = log.length() - 1; i >= 0; i--) {
+      JSONObject row = log.optJSONObject(i);
+      if (row != null && !"player".equals(row.optString("role", ""))) return i;
+    }
+    return -1;
+  }
+
+  /**
+   * An entirely speculative operation. The live Core is unchanged; an invalidated
+   * batch never becomes authoritative, even if Gemini returns after an input event.
+   */
+  private synchronized void prefetchNarrativeChain(String sourceJson, String choicesJson) {
+    if (destroyed || turnInFlight.get()) return;
+    final String fullHash = gameCore.currentStateHash();
+    final String worldHash = gameCore.currentNarrativeWorldHash();
+    final JSONObject source;
+    final JSONArray choices;
+    try {
+      source = new JSONObject(sourceJson);
+      choices = GmChoiceContract.sanitizeChoices(new JSONArray(choicesJson));
+      if (choices.length() != 2) return;
+      JSONObject live = new JSONObject(gameCore.currentCoreState());
+      int index = lastGmLogIndexStatic(source);
+      int liveIndex = lastGmLogIndexStatic(live);
+      if (index < 0 || index != liveIndex || source.optInt("turn", -1) != live.optInt("turn", -2)
+          || !source.getJSONArray("log").getJSONObject(index).optString("text", "")
+              .equals(live.getJSONArray("log").getJSONObject(liveIndex).optString("text", "")))
+        return;
+      if (hiddenChain != null && hiddenChain.current(worldHash, choices) != null) return;
+    } catch (Exception ignored) { return; }
+    String key = fullHash + "|" + choices.toString();
+    if (key.equals(activePrefetchKey)) return;
+    final long generation = prefetchGeneration.incrementAndGet();
+    activePrefetchKey = key;
+    try {
+      prefetchIo.execute(() -> {
+        try {
+          String firstAction = choices.getJSONObject(0).getString("action");
+          JSONObject forecast = new JSONObject(
+              gameCore.previewNarrativeChain(firstAction, 3, fullHash));
+          JSONArray predicted = forecast.optJSONArray("steps");
+          if (!forecast.optBoolean("handled", false) || predicted == null
+              || predicted.length() == 0 || generation != prefetchGeneration.get()
+              || !fullHash.equals(gameCore.currentStateHash())) return;
+
+          StringBuilder prompt = new StringBuilder(
+              "HIDDEN NARRATIVE CHAIN: You are planning exactly " + predicted.length()
+              + " FUTURE narrative beats in ONE response. Java Core has already computed every"
+              + " mandatory result for each beat. NEVER modify the result, Level, Entity,"
+              + " chest, loot, party or survivor state. Each beat has TWO distinct ways"
+              + " of experiencing the EXACT SAME world outcome. The two approaches must"
+              + " differ in actions, emotional tone, sensory focus and causal narration,"
+              + " not simply synonyms. Do not reveal convergence, hidden plans, RNG,"
+              + " status reports or location knowledge unavailable to Cao Minh. "
+              + " No new entity or inventory events. All player-facing text in natural Vietnamese."
+              + " For beat 0, the two displayed actions are supplied below."
+              + " For beat N+1, its two actions MUST be the previous beat's nextChoices."
+              + " Invent 2 concrete, meaningfully different nextChoices per beat."
+              + " Keep each reply under 1400 characters. If the same destination recurs,"
+              + " vary sensory focus and narrative structure instead of repeatedly"
+              + " depicting a corridor folding or teleportation."
+              + " Return ONLY JSON: {\\\"steps\\\":[{\\\"replyA\\\":\\\"...\\\","
+              + "\\\"replyB\\\":\\\"...\\\",\\\"nextChoices\\\":[{\\\"text\\\":\\\"...\\\"},"
+              + "{\\\"text\\\":\\\"...\\\"}]}]}."
+              + " Output exactly one entry per supplied beat.\n");
+          for (int i = 0; i < predicted.length(); i++) {
+            JSONObject beat = predicted.getJSONObject(i);
+            JSONObject target = beat.getJSONObject("state");
+            prompt.append("\n=== CANONICAL BEAT ").append(i).append(" ===\n");
+            if (i == 0) prompt.append("VISIBLE CHOICES: ").append(choices).append('\n');
+            prompt.append("HIDDEN CORE ACTION (never narrate as if player selected it): ")
+                .append(beat.optString("canonicalAction", "")).append('\n')
+                .append("MANDATORY RESULT: location=")
+                .append(target.optString("location", ""))
+                .append("; Level=").append(target.optString("currentLevelKey", ""))
+                .append("; route=").append(target.optJSONObject("levelRoute"))
+                .append("; selected=").append(target.optJSONObject("emergent") == null ? "NONE"
+                    : target.getJSONObject("emergent").optJSONObject("lastSelection"))
+                .append("; replyHint=").append(beat.optString("replyHint", "")).append("\n")
+                .append(narrationPrompt(target, beat.getString("canonicalAction"))).append("\n");
+          }
+          if (BuildConfig.DEBUG) Log.d(TAG, "HIDDEN_CHAIN_BATCH prompt_chars=" + prompt.length()
+              + " beats=" + predicted.length());
+          JSONObject generated = awaitNarration(narrationIo,
+              () -> parseModelJson(generateText(prompt.toString())),
+              TimeUnit.SECONDS.toMillis(NARRATION_DEADLINE_SECONDS));
+          HiddenNarrativeChain chain = HiddenNarrativeChain.parse(forecast, generated, choices);
+          synchronized (MainActivity.this) {
+            if (!destroyed && generation == prefetchGeneration.get() && !turnInFlight.get()
+                && fullHash.equals(gameCore.currentStateHash())) hiddenChain = chain;
+          }
+        } catch (Exception error) {
+          Log.w(TAG, "Hidden narrative prefetch unavailable; ordinary narration remains available: "
+              + providerErrorSummary(error));
+        }
+      });
+    } catch (java.util.concurrent.RejectedExecutionException ignored) {}
+  }
+
   private static final class PrefetchBranch {
     final String action, outcomeHash;
     final JSONObject narration;
@@ -910,6 +1027,10 @@ public class MainActivity extends Activity {
   }
 
   private class GameBridge {
+    @JavascriptInterface public void prefetchNarrativeChain(String sourceJson, String choicesJson) {
+      MainActivity.this.prefetchNarrativeChain(sourceJson, choicesJson);
+    }
+
     @JavascriptInterface public void prefetchChoices(String sourceJson, String choicesJson) {
       MainActivity.this.prefetchChoices(sourceJson, choicesJson);
     }
