@@ -87,7 +87,7 @@ public class FullGameplay200TurnSimulationTest {
               Object left = expectedState.opt(key);
               Object right = actualState.opt(key);
               if (left instanceof JSONObject && right instanceof JSONObject) {
-                if (!((JSONObject) left).similar(right)) changed.add(key);
+                if (!((JSONObject) left).toString().equals(((JSONObject) right).toString())) changed.add(key);
               } else if (!java.util.Objects.equals(String.valueOf(left), String.valueOf(right))) {
                 changed.add(key);
               }
@@ -107,7 +107,7 @@ public class FullGameplay200TurnSimulationTest {
                 Object left = expectedEmergent.opt(key);
                 Object right = liveEmergent.opt(key);
                 if (left instanceof JSONObject && right instanceof JSONObject
-                    ? !((JSONObject) left).similar(right)
+                    ? !((JSONObject) left).toString().equals(((JSONObject) right).toString())
                     : !java.util.Objects.equals(String.valueOf(left), String.valueOf(right)))
                   differences.add(key);
               }
