@@ -51,6 +51,25 @@ public class FullGameplay200TurnSimulationTest {
       JSONObject before = new JSONObject(core.normalizeState(initial.toString()));
       String actualLocation = before.getString("location");
       int routeStreak = before.getJSONObject("levelRoute").optInt("streak");
+      String deathHash = core.currentStateHash();
+
+      JSONObject blocked = new JSONObject(
+          core.processRule(core.currentCoreState(), "Tiếp tục khám phá"));
+      assertFalse("A defeated player cannot advance the world before choosing TỈNH LẠI",
+          blocked.optBoolean("handled", true));
+      assertEquals("death_restart_required", blocked.getString("reason"));
+      assertEquals("Rejected post-defeat action must not mutate Core", deathHash,
+          core.currentStateHash());
+
+      JSONObject preview = new JSONObject(
+          core.previewTurn("Tiếp tục khám phá", core.currentStateHash()));
+      assertFalse("Post-defeat turn preview must remain locked",
+          preview.optBoolean("handled", true));
+      JSONObject chainPreview = new JSONObject(
+          core.previewNarrativeChain("Tiếp tục khám phá", 3, core.currentStateHash()));
+      assertFalse("Post-defeat hidden chain must remain locked",
+          chainPreview.optBoolean("handled", true));
+
       JSONObject result = new JSONObject(core.restartAfterDeath());
       assertTrue("Restart must commit an authoritative Core event: "
               + result.optString("error"), result.optBoolean("handled", false));
