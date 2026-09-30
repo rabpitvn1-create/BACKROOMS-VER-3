@@ -63,16 +63,24 @@ public class GmBranchBatchTest {
     assertFalse(cached.containsKey("B"));
   }
 
-  @Test public void narrationAndChoicesUseDifferentQualityRules() throws Exception {
+  @Test public void narrationStyleStaysSoftWhileChoiceShapeRemainsStructural() throws Exception {
     JSONObject state = new JSONObject();
-    assertFalse(NarrationGuard.validate(narration("Tiến độ tìm lối ra bắt đầu lại."), state).isEmpty());
+
+    // Literary tone is not a deterministic gate. Only hard authority/shape violations are.
+    assertTrue(NarrationGuard.validate(
+        narration("Tiến độ tìm lối ra bắt đầu lại."), state).isEmpty());
+
     JSONObject duplicate = narration("Bóng đèn kêu lách tách.")
         .put("choices", new JSONArray().put(new JSONObject().put("text", "Kiểm tra cửa"))
             .put(new JSONObject().put("text", "Kiểm tra cửa")));
     assertFalse(NarrationGuard.validate(duplicate, state).isEmpty());
-    JSONObject repeat = narration("Bóng đèn kêu lách tách.")
+
+    JSONObject repeatedPlayerAction = narration("Bóng đèn kêu lách tách.")
         .put("choices", new JSONArray().put(new JSONObject().put("text", "Kiểm tra cửa")));
-    assertFalse(NarrationGuard.validate(repeat, state, "Kiểm tra cửa").isEmpty());
-    assertTrue(NarrationGuard.validate(narration("Bóng đèn kêu lách tách."), state).isEmpty());
+    assertTrue(NarrationGuard.validate(
+        repeatedPlayerAction, state, "Kiểm tra cửa").isEmpty());
+
+    assertFalse(NarrationGuard.validate(
+        narration("DEBUG: stateDelta=1"), state).isEmpty());
   }
 }
