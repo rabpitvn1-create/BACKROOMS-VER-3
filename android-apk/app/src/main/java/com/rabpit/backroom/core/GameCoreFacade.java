@@ -299,8 +299,18 @@ public final class GameCoreFacade implements AutoCloseable {
       emergentTurnEngine.normalizeState(current);
       emergentTurnEngine.catchUpProjections(current);
       JSONArray steps = new JSONArray();
+      // The first freshness hash belongs to the actual persisted world, not
+      // a normalized speculative copy. Every later precondition is exactly the
+      // preceding predicted post-commit hash.
+      String expectedWorldHash = narrativeWorldHash(persisted);
       int limit = Math.max(1, Math.min(4, requestedSteps));
       for (int index = 0; index < limit; index++) {
+        if (index > 0) {
+          // Real processRule normalizes again between separate player turns.
+          normalizeCoreState(current);
+          emergentTurnEngine.normalizeState(current);
+          emergentTurnEngine.catchUpProjections(current);
+        }
         JSONObject flags = current.optJSONObject("flags");
         if (CombatChoiceEngine.isActive(current) || !encounterKey(current).isEmpty()
             || (flags != null && flags.optBoolean("chestPresent", false))) break;
@@ -308,7 +318,7 @@ public final class GameCoreFacade implements AutoCloseable {
             : current.optJSONObject("levelRoute") != null
                 && current.getJSONObject("levelRoute").optBoolean("exitAvailable", false)
                 ? "Đi qua lối ra" : "Tiếp tục khám phá";
-        String beforeWorldHash = narrativeWorldHash(current);
+        String beforeWorldHash = expectedWorldHash;
         PreparedTurn attempt = prepareExplorerTurnData(current, action);
         JSONObject predicted = finishWorkingTurn(current, attempt, new JSONObject());
         projectBeforePersist(predicted);
@@ -317,15 +327,17 @@ public final class GameCoreFacade implements AutoCloseable {
         String kind = attempt.selected.optString("kind", "NONE");
         // Forecast only ordinary exploration turns. Real encounters interrupt the chain.
         if ("ENTITY".equals(kind) || "CHARACTER".equals(kind) || "CHEST".equals(kind)) break;
+        String afterWorldHash = narrativeWorldHash(predicted);
         steps.put(new JSONObject()
             .put("index", index).put("canonicalAction", action)
             .put("turnId", attempt.turnId)
             .put("beforeWorldHash", beforeWorldHash)
-            .put("afterWorldHash", narrativeWorldHash(predicted))
+            .put("afterWorldHash", afterWorldHash)
             .put("replyHint", attempt.replyHint)
             .put("selectedKind", kind)
             .put("state", clientSafeState(predicted)));
         current = predicted;
+        expectedWorldHash = afterWorldHash;
       }
       return new JSONObject().put("handled", steps.length() > 0)
           .put("baseHash", expectedBaseHash).put("steps", steps).toString();
