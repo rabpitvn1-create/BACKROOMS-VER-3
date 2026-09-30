@@ -8,7 +8,7 @@ Android/WebView game. V3 builds directly from checked-in source; there is no run
 - `android-apk/app/src/main/java/com/rabpit/backroom/MainActivity.java`: Android bridge + lightweight GM provider orchestration.
 - `android-apk/app/src/main/java/com/rabpit/backroom/core/`: Java game state, save, inventory, party, physiology, combat and narrative runtime.
 - Android gameplay/runtime source under `android-apk/app/src/main/java/` is Java-only; the project no longer applies the Kotlin Android plugin.
-- GitHub Actions workflows are intentionally absent from `main`.
+- `.github/workflows/branch-cleanup.yml`: Agent Ponytail branch audit/cleanup; push runs audit-only, the weekly schedule prunes old branches already merged into `main`, and manual runs can opt into deletion.
 
 Old Python patch scripts and character-specific Legacy systems are intentionally excluded from V3. Git history remains the recovery source if any old behavior is needed later.
 
