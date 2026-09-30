@@ -141,8 +141,8 @@ public class FullGameplay200TurnSimulationTest {
 
 
   /**
-   * Compare 200 independent, real Core-seeded states. This is a convergence
-   * experiment, not a claim that Gemini prose or a 200-step chain is validated.
+   * Check every qualifying multi-beat forecast across a deterministic seed sample.
+   * This validates Core forecast/commit convergence, not live provider prose.
    * The existing full gameplay simulation separately exercises 200 live actions.
    */
 
@@ -152,6 +152,7 @@ public class FullGameplay200TurnSimulationTest {
     String knowledge = asset("knowledge/level_knowledge.json");
     String registry = asset("knowledge/entity_encounters.json");
 
+    int verifiedForecasts = 0;
     for (int seedIndex = 0; seedIndex < 20; seedIndex++) {
       JSONObject initial = GameCoreFacade.newGameState(new JSONObject())
           .put("emergent", new JSONObject().put("saveId", "chain-forecast-" + seedIndex));
@@ -185,10 +186,11 @@ public class FullGameplay200TurnSimulationTest {
           state.put("log", log);
           core.commitNarration(state.toString(), false, true);
         }
-        return;
+        verifiedForecasts++;
       }
     }
-    fail("Expected at least one deterministic multi-beat ordinary-exploration forecast");
+    assertTrue("Expected at least one deterministic multi-beat ordinary-exploration forecast",
+        verifiedForecasts > 0);
   }
 
   private static Result play(String seed, boolean establishedParty, int targetActions) throws Exception {
