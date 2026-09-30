@@ -328,7 +328,7 @@ public final class GameCoreFacade implements AutoCloseable {
       return new JSONObject().put("handled", steps.length() > 0)
           .put("baseHash", expectedBaseHash).put("steps", steps).toString();
     } catch (Exception e) {
-      return "{\\"handled\\":false,\\"reason\\":\\"preview_unavailable\\"}";
+      return "{\"handled\":false,\"reason\":\"preview_unavailable\"}";
     }
   }
 
