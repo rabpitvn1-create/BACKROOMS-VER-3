@@ -829,7 +829,9 @@ public class MainActivity extends Activity {
     try {
       prefetchIo.execute(() -> {
         try {
-          String firstAction = choices.getJSONObject(0).getString("action");
+          JSONArray authorized = initialNarrativeChoices(new JSONObject(gameCore.currentCoreState()));
+          String firstAction = authorized.getJSONObject(0).optString("action",
+              authorized.getJSONObject(0).getString("text"));
           JSONObject forecast = new JSONObject(
               gameCore.previewNarrativeChain(firstAction, 3, fullHash));
           JSONArray predicted = forecast.optJSONArray("steps");
@@ -1179,8 +1181,8 @@ public class MainActivity extends Activity {
           if (choiceId != null && visibleChoices.length() == 2) {
             int slot = "A".equals(choiceId) ? 0 : "B".equals(choiceId) ? 1 : -1;
             if (slot < 0 || !actualAction.equals(
-                GmChoiceContract.sanitizeChoices(visibleChoices)
-                    .getJSONObject(slot).getString("action"))) {
+                visibleChoices.getJSONObject(slot).optString("action",
+                    visibleChoices.getJSONObject(slot).getString("text")))) {
               throw new Exception("Lựa chọn không khớp với nội dung đã hiển thị.");
             }
           }
@@ -1192,8 +1194,8 @@ public class MainActivity extends Activity {
           if (!mechanical) {
             if (beat != null) canonicalAction = beat.canonicalAction;
             else if (visibleChoices.length() == 2) {
-              canonicalAction = GmChoiceContract.sanitizeChoices(visibleChoices)
-                  .getJSONObject(0).getString("action");
+              canonicalAction = visibleChoices.getJSONObject(0).optString("action",
+                  visibleChoices.getJSONObject(0).getString("text"));
             }
           }
 
