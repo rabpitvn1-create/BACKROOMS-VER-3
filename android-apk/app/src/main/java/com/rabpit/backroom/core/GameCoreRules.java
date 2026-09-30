@@ -66,6 +66,11 @@ final class GameCoreRules {
     return !text.isEmpty() && ROUTE_EXPLORATION.matcher(text).find();
   }
 
+  static boolean isRestAction(String action) {
+    String text = action == null ? "" : action.trim();
+    return LONG_REST.matcher(text).find() || REST.matcher(text).find();
+  }
+
   static int estimateMinutes(String action) {
     String text = action == null ? "" : action.trim();
     if (text.isEmpty()) return 0;

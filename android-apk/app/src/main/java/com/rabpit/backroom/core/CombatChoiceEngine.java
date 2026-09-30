@@ -1671,13 +1671,15 @@ static int entitySkillProcRoll(int seed,int round,int actorIndex,int skillIndex)
       JSONArray log = state.optJSONArray("log");
       if (log == null) log = new JSONArray();
       log.put(new JSONObject().put("role", "gm")
-          .put("text", "Backrooms nuốt chửng lấy bạn khi bạn ngã xuống."));
+          .put("text", "Backrooms đã nuốt chửng lấy bạn."));
       state.put("log", log);
 
       CharacterProgressionCore progression = new CharacterProgressionCore();
       progression.applyCaoMinhDeathPenalty(state);
       state.put(LevelCore.LEVEL_KEY, targetLevelKey);
-      LevelCore.returnToCurrentLevelStart(state);
+      // Experimental: a failed encounter cannot move the underlying world.
+      state.put("location", targetLocation);
+      state.put("perceptionShroud", true);
       combat.put("deathRestartAnchorLocation", targetLocation)
           .put("deathRestartLevelKey", targetLevelKey)
           .put("deathRestartPending", true)

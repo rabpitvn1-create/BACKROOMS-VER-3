@@ -38,16 +38,16 @@ public final class GmNarrativePacket {
         + GmNarratorContract.caoMinhNarrativeCard() + "\n"
         + "VAI TRÒ GM: thế giới và kết quả cơ học của lượt này ĐÃ ĐƯỢC JAVA CORE COMMIT. "
         + "Bạn chỉ kể lại đúng kết quả đã commit và viết thoại/mô tả tự nhiên; không được quyết thêm sự kiện, outcome, spawn, loot, Party, Level hay vị trí authoritative. "
-        + "Không có cốt truyện, chương hay diễn biến định sẵn cần bám theo. Không ép người chơi quay về một tuyến cố định.\n"
+        + "Trong chế độ thường, không tự tạo chương hoặc diễn biến định sẵn. Khi có HIDDEN NARRATIVE CHAIN, chỉ thay đổi cách kể mà không thay đổi kết quả Core đã chuẩn bị.\n"
         + "NGÔN NGỮ HIỂN THỊ: reply, choices và encounterDialogue phải là tiếng Việt tự nhiên. "
         + "Chỉ giữ tiếng Anh cho tên riêng/tên chính thức cần thiết. Mỗi choices[].text phải viết hoàn toàn bằng tiếng Việt; "
         + "không trộn động từ, chỉ hướng hoặc mô tả môi trường tiếng Anh vào câu lựa chọn.\n"
         + style + "\n"
         + "CORE-OWNED: Java Core sở hữu toàn bộ world outcome: Level/route, Entity spawn, Loot, Inventory, Party, Survival, Progression, Combat, Fact và Thread. "
-        + "Chỉ kể Level và vị trí đã commit. Nếu Core context không xác nhận một sự kiện, không được kể nó như đã xảy ra.\n"
+        + "Chỉ kể Level và vị trí đã commit. Nếu Core context không xác nhận một sự kiện, không được kể nó như đã xảy ra. Không tuyên bố một khu vực hoàn toàn an toàn chỉ vì Core không tạo encounter mới. Không kể tên Level như tri thức của Cao Minh khi nhân vật chưa được xác nhận đã biết. Không bịa các vết đánh dấu, vật thể hoặc thay đổi môi trường tồn tại lâu dài mà Core không ghi nhận.\n"
         + "EPISTEMIC: READ-ONLY STATE đã được lọc theo góc nhìn Cao Minh. Belief confidence=CONFIRMED chỉ có nghĩa actor tin chắc; "
         + "không tự coi belief là objective truth nếu không có confirmedFactId/fact tương ứng. Không suy ra hidden state bị thiếu khỏi context.\n"
-        + "EXPLORER CHOICES: ngoài khi đối đầu Entity, luôn trả đúng 1 gợi ý hành động ngắn, cụ thể và phù hợp với tình huống hiện tại; "
+        + "EXPLORER CHOICES: ngoài khi đối đầu Entity, luôn trả đúng 2 gợi ý khác nhau về cách tiếp cận, ngắn, cụ thể và phù hợp với tình huống hiện tại; "
         + "mỗi lựa chọn là một hành động khác biệt, có mục tiêu/hướng rõ, không phải lời kể, outcome, "
         + "thông tin Cao Minh chưa biết hay cách nói chung chung như khám phá Level. "
         + "Không nhắc lại gần nguyên văn PLAYER ACTION. Đây là gợi ý của GM, không phải nhánh kịch bản cố định. "
@@ -63,12 +63,19 @@ public final class GmNarrativePacket {
         + NarrativeContinuityPacket.build(state) + "\n"
         + "RECENT CONTEXT (chỉ giữ continuity, không lặp nguyên văn):\n" + recent + "\n"
         + "READ-ONLY STATE: " + promptState.toString() + "\n"
+        + (state != null && state.optBoolean("perceptionShroud", false)
+            ? "PERCEPTION SHROUD AFTER DEFEAT: Cao Minh remains at his actual location, "
+              + "but does not recognize it. Do not mention familiar doors, prior landmarks, "
+              + "the precise location or route name. Describe only limited sensory details. "
+              + "Do not fabricate a new location or contradict observable world facts. "
+              + "If the player explicitly investigates, reveal real clues gradually.\\n"
+            : "")
         + "PLAYER ACTION: " + safe(action) + "\n"
         + "TRƯỚC KHI XUẤT: tự kiểm tra thầm reply đang kể sự việc cụ thể thay vì báo cáo state; "
         + "không tự điều khiển Cao Minh, không lộ kiến thức chưa thể biết; gợi ý là một hành động "
         + "ngắn và khác nhau. Sửa trong nội bộ trước khi trả lời, không xuất suy luận hay trường phân tích.\n"
         + "OUTPUT: chỉ JSON hợp lệ, không markdown. JSON không có quyền thay đổi state.\n"
-        + "{\"reply\":\"phản hồi Game Master\",\"choices\":[{\"text\":\"Gợi ý 1\"}],\"encounterDialogue\":[]}";
+        + "{\"reply\":\"phản hồi Game Master\",\"choices\":[{\"text\":\"Gợi ý 1\"},{\"text\":\"Gợi ý 2\"}],\"encounterDialogue\":[]}";
   }
 
   private static String situationContext(JSONObject state) {

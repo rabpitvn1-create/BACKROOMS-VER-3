@@ -205,7 +205,7 @@ final class LevelCore {
     return true;
   }
 
-  private static boolean hasTransitionIntent(String action) {
+  static boolean hasTransitionIntent(String action) {
     String value = action == null ? "" : action.trim().toLowerCase(Locale.ROOT);
     return value.contains("đi qua") || value.contains("bước qua") || value.contains("tiến vào")
         || value.contains("đi vào") || value.contains("sang ") || value.contains("vào level")

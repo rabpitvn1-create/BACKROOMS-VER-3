@@ -156,6 +156,8 @@ public final class GameCoreFacade implements AutoCloseable {
       } else {
         boolean transitioned = levelCore.applyPlayerTransitionIfRequested(working, text);
         if (transitioned) {
+          // A genuinely different Level ends the post-defeat perceptual shroud.
+          working.remove("perceptionShroud");
           String nextLevel = working.optString("currentLevelKey", "");
           replyHint = "Cao Minh đi qua lối ra và đặt chân đến "
               + working.optString("location", LevelCore.displayName(nextLevel)) + ".";
@@ -227,6 +229,27 @@ public final class GameCoreFacade implements AutoCloseable {
       return prepared;
   }
 
+  /** Explicit inventory and chest operations are never reduced to a narrative rewrite. */
+  public synchronized boolean isMechanicalAction(String action) {
+    String text = action == null ? "" : action.trim();
+    JSONObject state = parseState(liveStateJson);
+    JSONObject flags = state.optJSONObject("flags");
+    JSONObject route = state.optJSONObject("levelRoute");
+    String lower = text.toLowerCase(Locale.ROOT);
+    boolean explicitExit = LevelCore.hasTransitionIntent(text)
+        && ((route != null && route.optBoolean("exitAvailable", false))
+            || lower.contains("lối ra") || lower.contains("lối thoát")
+            || lower.matches(".*\\blevel\\s*[0-9]+.*"));
+    return text.startsWith("__loot:")
+        || GameCoreRules.isDirectPlayerPickupAction(text)
+        || GameCoreRules.isInventoryQuery(text)
+        || GameCoreRules.isPartyQuery(text)
+        || GameCoreRules.isRestAction(text)
+        || explicitExit
+        || (itemCore.isOpenChestAction(text)
+            && flags != null && flags.optBoolean("chestPresent", false));
+  }
+
   /** Returns a hypothetical post-turn state without writing preferences or retaining a turn attempt. */
   public synchronized String previewTurn(String action, String expectedBaseHash) {
     JSONObject base = parseState(liveStateJson);
@@ -255,6 +278,94 @@ public final class GameCoreFacade implements AutoCloseable {
     } catch (Exception e) {
       return response(false, base, safeMessage(e), "preview_unavailable", null);
     }
+  }
+
+
+  /**
+   * Experimental, read-only forecast for a small canonical story chain.
+   *
+   * The forecast is speculative: combat, chest and companion encounters stop the batch.
+   * A caller MUST compare the world hashes again before reusing any predicted narration.
+   * Log text and narrator-only continuity cooldowns do not change Core gameplay.
+   */
+  public synchronized String previewNarrativeChain(
+      String firstAction, int requestedSteps, String expectedBaseHash) {
+    JSONObject persisted = parseState(liveStateJson);
+    try {
+      String first = firstAction == null ? "" : firstAction.trim();
+      if (persisted.length() == 0 || first.isEmpty()
+          || !fingerprint(persisted).equals(expectedBaseHash)
+          || CombatChoiceEngine.isActive(persisted)
+          || !encounterKey(persisted).isEmpty()
+          || GameCoreRules.isDirectPlayerPickupAction(first)
+          || GameCoreRules.isInventoryQuery(first)
+          || GameCoreRules.isPartyQuery(first)) {
+        return new JSONObject().put("handled", false)
+            .put("reason", "preview_unavailable").toString();
+      }
+      JSONObject current = deepCopy(persisted);
+      normalizeCoreState(current);
+      emergentTurnEngine.normalizeState(current);
+      emergentTurnEngine.catchUpProjections(current);
+      JSONArray steps = new JSONArray();
+      // The first freshness hash belongs to the actual persisted world, not
+      // a normalized speculative copy. Every later precondition is exactly the
+      // preceding predicted post-commit hash.
+      String expectedWorldHash = narrativeWorldHash(persisted);
+      int limit = Math.max(1, Math.min(4, requestedSteps));
+      for (int index = 0; index < limit; index++) {
+        if (index > 0) {
+          // Real processRule normalizes again between separate player turns.
+          normalizeCoreState(current);
+          emergentTurnEngine.normalizeState(current);
+          emergentTurnEngine.catchUpProjections(current);
+        }
+        JSONObject flags = current.optJSONObject("flags");
+        if (CombatChoiceEngine.isActive(current) || !encounterKey(current).isEmpty()
+            || (flags != null && flags.optBoolean("chestPresent", false))) break;
+        String action = index == 0 ? first
+            : current.optJSONObject("levelRoute") != null
+                && current.getJSONObject("levelRoute").optBoolean("exitAvailable", false)
+                ? "Đi qua lối ra" : "Tiếp tục khám phá";
+        String beforeWorldHash = expectedWorldHash;
+        PreparedTurn attempt = prepareExplorerTurnData(current, action);
+        JSONObject predicted = finishWorkingTurn(current, attempt, new JSONObject());
+        projectBeforePersist(predicted);
+        emergentTurnEngine.catchUpProjections(predicted);
+        projectBeforePersist(predicted);
+        String kind = attempt.selected.optString("kind", "NONE");
+        // Forecast only ordinary exploration turns. Real encounters interrupt the chain.
+        if ("ENTITY".equals(kind) || "CHARACTER".equals(kind) || "CHEST".equals(kind)) break;
+        String afterWorldHash = narrativeWorldHash(predicted);
+        steps.put(new JSONObject()
+            .put("index", index).put("canonicalAction", action)
+            .put("turnId", attempt.turnId)
+            .put("beforeWorldHash", beforeWorldHash)
+            .put("afterWorldHash", afterWorldHash)
+            .put("replyHint", attempt.replyHint)
+            .put("selectedKind", kind)
+            .put("state", clientSafeState(predicted)));
+        current = predicted;
+        expectedWorldHash = afterWorldHash;
+      }
+      return new JSONObject().put("handled", steps.length() > 0)
+          .put("baseHash", expectedBaseHash).put("steps", steps).toString();
+    } catch (Exception e) {
+      return "{\"handled\":false,\"reason\":\"preview_unavailable\"}";
+    }
+  }
+
+  /** Excludes only presentation data from a forecast freshness check. */
+  public synchronized String currentNarrativeWorldHash() {
+    return narrativeWorldHash(parseState(liveStateJson));
+  }
+
+  private String narrativeWorldHash(JSONObject source) {
+    JSONObject copy = deepCopy(source);
+    copy.remove("log");
+    JSONObject emergent = copy.optJSONObject(EmergentTurnEngine.ROOT_KEY);
+    if (emergent != null) emergent.remove("continuitySurfaces");
+    return fingerprint(copy);
   }
 
   public synchronized String currentStateHash() {
@@ -611,23 +722,35 @@ public final class GameCoreFacade implements AutoCloseable {
       JSONObject working = deepCopy(persisted);
       JSONObject workingCombat = working.getJSONObject("combat");
       String turnId = emergentTurnEngine.nextTurnId(persisted, "death:restart");
-      LevelCore.returnToCurrentLevelStart(working);
+      // A defeat changes perception, never the actual position or route progress.
+      working.put("perceptionShroud", true);
       workingCombat.put("deathRestartPending", false).put("outcome", "");
       working.put("combat", workingCombat);
 
       JSONArray events = new JSONArray();
       events.put(emergentTurnEngine.event(turnId, events, "PLAYER_RESPAWNED", "LOCAL", "cao_minh",
           new JSONObject()
-              .put("factPredicate", "respawned_at_level_start")
+              .put("factPredicate", "respawned_in_place")
               .put("factValue", working.optString("location", ""))
               .put("causedBy", "system")
-              .put("observedByPlayer", true),
+              .put("observedByPlayer", false),
           null));
       emergentTurnEngine.validateBatch(turnId, events);
       emergentTurnEngine.commitAuthoritative(persisted, working, turnId, events, null);
       working.put("saveVersion", CURRENT_SAVE_VERSION);
       projectBeforePersist(working);
       emergentTurnEngine.catchUpProjections(working);
+      // Narrative concealment must not invent an interactable object or move Core position.
+      String[] reframes = {
+          "Cao Minh mở mắt trong tiếng điện rền khô khốc. Hơi lạnh ngấm qua lòng bàn tay đặt trên sàn. Không một dấu mốc nào đủ rõ để xác định phương hướng.",
+          "Nhịp đèn chập chờn cắt bóng Cao Minh thành những khoảng tối rời rạc. Không khí phảng phất mùi bụi ẩm. Những thứ ở xa vẫn khuất ngoài tầm mắt.",
+          "Một tiếng lách tách vô định kéo Cao Minh trở lại với cảm giác nơi đầu ngón tay. Trần nhà chìm trong ánh sáng nhợt nhạt; mọi dấu hiệu định hướng đều mờ đi."
+      };
+      JSONArray log = working.optJSONArray("log");
+      if (log == null) log = new JSONArray();
+      log.put(new JSONObject().put("role", "gm")
+          .put("text", reframes[Math.floorMod(turnId.hashCode(), reframes.length)]));
+      working.put("log", log);
       persist(working);
       return response(true, working, null, "death_restart_completed", null);
     } catch (Exception e) {

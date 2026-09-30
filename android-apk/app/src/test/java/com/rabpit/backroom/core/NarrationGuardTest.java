@@ -84,6 +84,39 @@ public class NarrationGuardTest {
         "Cao Minh quyết định quay lại hành lang."), state, "Quan sát cửa").isEmpty());
   }
 
+  @Test public void rejectsUnprovenSafetyAndUntrackedPermanentChoice() throws Exception {
+    JSONObject ordinary = new JSONObject();
+    assertFalse(NarrationGuard.validate(narration(
+        "Cao Minh nhận ra khu vực này hoàn toàn an toàn và không còn gì đáng ngại."),
+        ordinary).isEmpty());
+    assertTrue(NarrationGuard.validate(narration(
+        "Cao Minh chưa tìm thấy dấu hiệu rõ ràng nào chứng minh nơi này an toàn."),
+        ordinary).isEmpty());
+    assertFalse(NarrationGuard.validate(narration(
+        "Cao Minh cào một vết xước lên tường làm dấu cho đường trở lại."),
+        ordinary).isEmpty());
+    assertTrue(NarrationGuard.validate(narration(
+        "Cao Minh nhận thấy một vết xước cũ trên bức tường trước mắt."),
+        ordinary).isEmpty());
+    String scene = "Một tiếng động ngắt quãng vang lên từ phía góc phòng còn khuất.";
+    assertFalse(NarrationGuard.validate(narration(scene,
+        "Đánh dấu đường cũ trước khi bước tiếp"), ordinary).isEmpty());
+    assertTrue(NarrationGuard.validate(narration(scene,
+        "Quan sát lối đi vừa đi qua"), ordinary).isEmpty());
+  }
+
+  @Test public void postDefeatLocationMustRemainConcealed() throws Exception {
+    JSONObject hidden = new JSONObject().put("perceptionShroud", true)
+        .put("location", "Hành lang thực tế mà Cao Minh không nhận ra");
+    assertFalse(NarrationGuard.validate(narration(
+        "Cao Minh đã quay về Level 0 và nhận ra những thứ trước mắt."), hidden).isEmpty());
+    assertFalse(NarrationGuard.validate(narration(
+        "Cao Minh nhận ra Hành lang thực tế mà Cao Minh không nhận ra."), hidden).isEmpty());
+    assertTrue(NarrationGuard.validate(narration(
+        "Ánh đèn chập chờn nhưng không một dấu mốc nào đủ rõ để định hướng."),
+        hidden).isEmpty());
+  }
+
   @Test public void rejectsGenericDuplicateAndRepeatedActionChoices() throws Exception {
     String reply = "Cao Minh dừng dưới ánh đèn chập chờn, trước mặt là hai lối đi.";
     assertFalse(NarrationGuard.validate(narration(reply,
@@ -97,16 +130,18 @@ public class NarrationGuardTest {
         "Cao Minh mở cửa và phát hiện lối ra"), new JSONObject()).isEmpty());
   }
 
-  @Test public void acceptsOnlyOneShortActionAndSanitizesLegacySaves() throws Exception {
+  @Test public void acceptsTwoDistinctActionsAndSanitizesLegacySaves() throws Exception {
     String reply = "Ánh đèn rung nhẹ trên trần, còn vệt nước dưới chân tường kéo về phía ngã rẽ.";
     assertTrue(NarrationGuard.validate(narration(reply, "Lắng nghe phía sau bức tường"),
         new JSONObject(), "Đứng quan sát").isEmpty());
-    assertFalse(NarrationGuard.validate(narration(reply,
+    assertTrue(NarrationGuard.validate(narration(reply,
         "Kiểm tra vệt nước", "Rẽ vào hành lang bên trái"), new JSONObject()).isEmpty());
+    assertFalse(NarrationGuard.validate(narration(reply,
+        "Kiểm tra vệt nước", "Rẽ vào hành lang bên trái", "Lắng nghe tiếng đèn"), new JSONObject()).isEmpty());
     JSONArray previous = new JSONArray().put(new JSONObject().put("text", "Kiểm tra vệt nước"))
         .put(new JSONObject().put("text", "Lắng nghe tiếng đèn"))
         .put(new JSONObject().put("text", "Rẽ vào hành lang"));
-    assertEquals(1, GmChoiceContract.sanitizeChoices(previous).length());
+    assertEquals(2, GmChoiceContract.sanitizeChoices(previous).length());
   }
 
   @Test public void filtersInvalidPrefetchBranchIndependently() throws Exception {

@@ -28,6 +28,66 @@ public class FullGameplay200TurnSimulationTest {
   private static final int WORLD_ACTIONS = 200;
   private static final int COMBAT_HAND_LIMIT = 160;
 
+  @Test public void explicitFreeformMechanicsStayCoreOwnedEvenWithConvergentChoices()
+      throws Exception {
+    String graph = asset("level_graph.json");
+    String knowledge = asset("knowledge/level_knowledge.json");
+    String registry = asset("knowledge/entity_encounters.json");
+    JSONObject initial = GameCoreFacade.newGameState(new JSONObject())
+        .put("emergent", new JSONObject().put("saveId", "mechanical-freeform-fixture"));
+    try (GameCoreFacade core = new GameCoreFacade(
+        inMemoryPreferences(initial.toString()), LevelCore.withAssets(knowledge, graph),
+        new EntityCore(registry), false)) {
+      core.normalizeState(initial.toString());
+      assertTrue("Rest must keep original time and recovery rules",
+          core.isMechanicalAction("Tôi nghỉ một lúc"));
+      assertTrue(core.isMechanicalAction("Tôi ngủ trong góc phòng"));
+      assertTrue("An exit request must not silently become exploratory movement",
+          core.isMechanicalAction("Đi qua lối ra"));
+      assertFalse(core.isMechanicalAction("Chạy về phía có tiếng động"));
+    }
+  }
+
+  @Test public void restartingAfterDefeatReframesStoryWithoutTeleportingOrResettingRoute()
+      throws Exception {
+    String graph = asset("level_graph.json");
+    String knowledge = asset("knowledge/level_knowledge.json");
+    String registry = asset("knowledge/entity_encounters.json");
+    JSONObject initial = GameCoreFacade.newGameState(new JSONObject())
+        .put("emergent", new JSONObject().put("saveId", "death-in-place-fixture"))
+        .put("location", "Vị trí thật mà Cao Minh chưa nhận ra")
+        .put("perceptionShroud", true)
+        .put("levelRoute", new JSONObject()
+            .put("levelKey", "0").put("streak", 4).put("lastResult", "SUCCESS"))
+        .put("combat", new JSONObject()
+            .put("active", false).put("outcome", "defeat")
+            .put("deathRestartPending", true).put("deathRecoveryApplied", true)
+            .put("deathRestartLevelKey", "0")
+            .put("deathRestartAnchorLocation", "Vị trí thật mà Cao Minh chưa nhận ra"));
+    try (GameCoreFacade core = new GameCoreFacade(
+        inMemoryPreferences(initial.toString()), LevelCore.withAssets(knowledge, graph),
+        new EntityCore(registry), false)) {
+      JSONObject before = new JSONObject(core.normalizeState(initial.toString()));
+      String actualLocation = before.getString("location");
+      int routeStreak = before.getJSONObject("levelRoute").optInt("streak");
+      JSONObject result = new JSONObject(core.restartAfterDeath());
+      assertTrue("Restart must commit an authoritative Core event: "
+              + result.optString("error"), result.optBoolean("handled", false));
+      JSONObject after = result.getJSONObject("state");
+      assertEquals("Defeat cannot teleport Cao Minh", actualLocation, after.getString("location"));
+      assertEquals("Defeat cannot reset route progress", routeStreak,
+          after.getJSONObject("levelRoute").optInt("streak"));
+      assertTrue(after.getBoolean("perceptionShroud"));
+      assertFalse(after.getJSONObject("combat").optBoolean("deathRestartPending"));
+      JSONArray log = after.getJSONArray("log");
+      String description = log.getJSONObject(log.length() - 1).getString("text");
+      assertTrue("After defeat the GM must narrate rather than merely return state",
+          description.contains("Cao Minh"));
+      assertFalse("The reframe cannot reveal the actual location",
+          description.contains(actualLocation));
+    }
+  }
+
   @Test public void realGameFlowFor200ActionsWithCombatEncountersAndNarration() throws Exception {
     Result natural = play("full-natural-20260929", false, WORLD_ACTIONS);
     Result repeatPrefix = play("full-natural-20260929", false, 30);
@@ -46,6 +106,185 @@ public class FullGameplay200TurnSimulationTest {
         party.family.getOrDefault("RELATIONSHIP_BEAT", 0) > 0);
     assertTrue("Established-party profile must resolve real Poker Dice hands", party.combatHands > 0);
     System.out.println("FULL_GAMEPLAY_200_ESTABLISHED_PARTY " + party.report());
+  }
+
+  @Test public void readOnlyChainForecastMatchesActualCommittedTurnsWithNarration() throws Exception {
+    String graph = asset("level_graph.json");
+    String knowledge = asset("knowledge/level_knowledge.json");
+    String registry = asset("knowledge/entity_encounters.json");
+    boolean foundMultiBeat = false;
+
+    // Encounter interruptions are expected; find a deterministic ordinary-exploration batch.
+    for (int seedIndex = 0; seedIndex < 20 && !foundMultiBeat; seedIndex++) {
+      JSONObject initial = GameCoreFacade.newGameState(new JSONObject())
+          .put("emergent", new JSONObject().put("saveId", "chain-forecast-" + seedIndex));
+      try (GameCoreFacade core = new GameCoreFacade(
+          inMemoryPreferences(initial.toString()), LevelCore.withAssets(knowledge, graph),
+          new EntityCore(registry), false)) {
+        core.normalizeState(initial.toString());
+        JSONObject liveBeforeForecast = new JSONObject(core.currentCoreState());
+        String before = core.currentStateHash();
+        JSONObject forecast = new JSONObject(
+            core.previewNarrativeChain("Tiếp tục khám phá", 3, before));
+        JSONArray steps = forecast.optJSONArray("steps");
+        assertEquals("Forecast must never mutate the live state", before, core.currentStateHash());
+        if (!forecast.optBoolean("handled", false) || steps == null || steps.length() < 2) continue;
+        foundMultiBeat = true;
+        for (int index = 0; index < steps.length(); index++) {
+          JSONObject beat = steps.getJSONObject(index);
+          String actualWorldHash = core.currentNarrativeWorldHash();
+          if (!beat.getString("beforeWorldHash").equals(actualWorldHash)) {
+            JSONObject expectedState = index == 0 ? liveBeforeForecast
+                : steps.getJSONObject(index - 1).getJSONObject("state");
+            JSONObject actualState = new JSONObject(core.currentCoreState());
+            java.util.TreeSet<String> keys = new java.util.TreeSet<>();
+            java.util.Iterator<String> expectedKeys = expectedState.keys();
+            while (expectedKeys.hasNext()) keys.add(expectedKeys.next());
+            java.util.Iterator<String> actualKeys = actualState.keys();
+            while (actualKeys.hasNext()) keys.add(actualKeys.next());
+            java.util.ArrayList<String> changed = new java.util.ArrayList<>();
+            for (String key : keys) {
+              Object left = expectedState.opt(key);
+              Object right = actualState.opt(key);
+              if (left instanceof JSONObject && right instanceof JSONObject) {
+                if (!((JSONObject) left).toString().equals(((JSONObject) right).toString())) changed.add(key);
+              } else if (!java.util.Objects.equals(String.valueOf(left), String.valueOf(right))) {
+                changed.add(key);
+              }
+            }
+            System.out.println("CHAIN_FORECAST_DIAGNOSTIC seed=" + seedIndex
+                + " step=" + index + " changedTopLevel=" + changed);
+            JSONObject expectedEmergent = expectedState.optJSONObject("emergent");
+            JSONObject liveEmergent = actualState.optJSONObject("emergent");
+            if (expectedEmergent != null && liveEmergent != null) {
+              java.util.TreeSet<String> emergentKeys = new java.util.TreeSet<>();
+              java.util.Iterator<String> it = expectedEmergent.keys();
+              while (it.hasNext()) emergentKeys.add(it.next());
+              it = liveEmergent.keys();
+              while (it.hasNext()) emergentKeys.add(it.next());
+              java.util.ArrayList<String> differences = new java.util.ArrayList<>();
+              for (String key : emergentKeys) {
+                Object left = expectedEmergent.opt(key);
+                Object right = liveEmergent.opt(key);
+                if (left instanceof JSONObject && right instanceof JSONObject
+                    ? !((JSONObject) left).toString().equals(((JSONObject) right).toString())
+                    : !java.util.Objects.equals(String.valueOf(left), String.valueOf(right)))
+                  differences.add(key);
+              }
+              System.out.println("CHAIN_FORECAST_DIAGNOSTIC emergentFields=" + differences);
+            }
+          }
+          assertEquals("The next beat must start from the actual canonical world, beat " + index,
+              beat.getString("beforeWorldHash"), actualWorldHash);
+          String canonicalAction = beat.getString("canonicalAction");
+          JSONObject prepared = new JSONObject(core.processRule(core.currentCoreState(), canonicalAction));
+          assertEquals("turn_prepared", prepared.getString("reason"));
+          JSONObject committed = new JSONObject(
+              core.completePreparedTurn(prepared.getString("turnId"), "{}"));
+          assertTrue(committed.optString("error"), committed.optBoolean("handled", false));
+          assertEquals("Menu and free text must consume the same canonical Core outcome",
+              beat.getString("afterWorldHash"), core.currentNarrativeWorldHash());
+
+          // The real app persists player/GM narration before proceeding to the next beat.
+          JSONObject state = committed.getJSONObject("state");
+          JSONArray log = state.optJSONArray("log");
+          if (log == null) log = new JSONArray();
+          log.put(new JSONObject().put("role", "player").put("text", "Tự chọn đường vòng"));
+          log.put(new JSONObject().put("role", "gm")
+              .put("text", "Ánh sáng lay động phía cuối lối đi."));
+          state.put("log", log);
+          core.commitNarration(state.toString(), false, true);
+        }
+      }
+    }
+    assertTrue("At least one fixed-seed scenario should yield a multi-beat batch", foundMultiBeat);
+  }
+
+
+  /**
+   * Compare 200 independent, real Core-seeded states. This is a convergence
+   * experiment, not a claim that Gemini prose or a 200-step chain is validated.
+   * The existing full gameplay simulation separately exercises 200 live actions.
+   */
+  @Test public void hiddenNarrativeChoicesKeepSameWorldOutcomeAcross200SeededScenarios()
+      throws Exception {
+    LevelCore level = LevelCore.withAssets(
+        asset("knowledge/level_knowledge.json"), asset("level_graph.json"));
+    EntityCore entities = new EntityCore(asset("knowledge/entity_encounters.json"));
+    int eligible = 0;
+    int pausedBeforeEncounter = 0;
+    // Encounter interruption is normal gameplay, not a convergence failure.
+    // Gather 200 *eligible* independent seeds rather than demanding an
+    // arbitrary share of the first 200 seeds avoid a random encounter.
+    for (int scenario = 0; scenario < 2000 && eligible < 200; scenario++) {
+      JSONObject initial = GameCoreFacade.newGameState(new JSONObject())
+          .put("emergent", new JSONObject().put("saveId", "hidden-chain-scenario-" + scenario));
+      try (GameCoreFacade optionA = new GameCoreFacade(
+              inMemoryPreferences(initial.toString()), level, entities, false);
+           GameCoreFacade optionB = new GameCoreFacade(
+              inMemoryPreferences(initial.toString()), level, entities, false)) {
+        JSONObject baseA = new JSONObject(optionA.normalizeState(initial.toString()));
+        JSONObject baseB = new JSONObject(optionB.normalizeState(initial.toString()));
+        String originalHash = optionA.currentStateHash();
+        String originalWorld = optionA.currentNarrativeWorldHash();
+        assertEquals("Same seed must yield same starting world",
+            originalWorld, optionB.currentNarrativeWorldHash());
+
+        JSONObject forecast = new JSONObject(optionA.previewNarrativeChain(
+            "Tiếp tục khám phá", 3, originalHash));
+        assertEquals("Preview MUST NOT commit any game state", originalHash,
+            optionA.currentStateHash());
+        if (!forecast.optBoolean("handled", false)) {
+          pausedBeforeEncounter++;
+          continue;
+        }
+        JSONObject beat = forecast.getJSONArray("steps").getJSONObject(0);
+        assertEquals(originalWorld, beat.getString("beforeWorldHash"));
+        String canonicalAction = beat.getString("canonicalAction");
+        JSONObject preparedA = new JSONObject(
+            optionA.processRule(baseA.toString(), canonicalAction));
+        JSONObject preparedB = new JSONObject(
+            optionB.processRule(baseB.toString(), canonicalAction));
+        assertEquals("turn_prepared", preparedA.getString("reason"));
+        assertEquals(preparedA.getString("turnId"), preparedB.getString("turnId"));
+        JSONObject committedA = new JSONObject(
+            optionA.completePreparedTurn(preparedA.getString("turnId"), "{}"));
+        JSONObject committedB = new JSONObject(
+            optionB.completePreparedTurn(preparedB.getString("turnId"), "{}"));
+        assertTrue(committedA.optBoolean("handled"));
+        assertTrue(committedB.optBoolean("handled"));
+        assertEquals("Predicted Core outcome must equal actual Core commit",
+            beat.getString("afterWorldHash"), optionA.currentNarrativeWorldHash());
+        assertEquals(optionA.currentNarrativeWorldHash(), optionB.currentNarrativeWorldHash());
+
+        // The visible actions and prose diverge; no world event or reward may diverge.
+        JSONObject narratedA = committedA.getJSONObject("state");
+        JSONObject narratedB = committedB.getJSONObject("state");
+        JSONArray logA = narratedA.optJSONArray("log");
+        JSONArray logB = narratedB.optJSONArray("log");
+        if (logA == null) logA = new JSONArray();
+        if (logB == null) logB = new JSONArray();
+        logA.put(new JSONObject().put("role", "player").put("text", "Quan sát cẩn thận"))
+            .put(new JSONObject().put("role", "gm")
+                .put("text", "Cao Minh lần theo những dấu hiệu trước mắt."));
+        logB.put(new JSONObject().put("role", "player").put("text", "Quay đầu bỏ chạy"))
+            .put(new JSONObject().put("role", "gm")
+                .put("text", "Cao Minh vội rời xa vùng tối phía sau."));
+        narratedA.put("log", logA);
+        narratedB.put("log", logB);
+        optionA.commitNarration(narratedA.toString(), false, false);
+        optionB.commitNarration(narratedB.toString(), false, false);
+        assertEquals("Only narration may diverge in canonical convergence, seed=" + scenario,
+            optionA.currentNarrativeWorldHash(), optionB.currentNarrativeWorldHash());
+        eligible++;
+      }
+    }
+    assertEquals("Collect 200 actual comparisons while respecting random encounter pauses",
+        200, eligible);
+    System.out.println("HIDDEN_CHAIN_200_PROFILES eligible=" + eligible
+        + " pausedForLiveEncounter=" + pausedBeforeEncounter
+        + " sampledSeeds=" + (eligible + pausedBeforeEncounter)
+        + " worldHashMismatches=0");
   }
 
   private static Result play(String seed, boolean establishedParty, int targetActions) throws Exception {

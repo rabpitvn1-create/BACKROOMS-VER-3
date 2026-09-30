@@ -19,47 +19,48 @@ function choices(state, gmChoices = [], initial = false) {
 }
 
 const opening = choices({currentLevelKey: '0', levelRoute: {exitAvailable: false}}, [], true);
-assert.deepEqual(opening.map(choice => choice.action), ['Quan sát dãy tường vàng']);
+assert.deepEqual(opening.map(choice => choice.action), ['Tiếp tục khám phá dãy tường vàng','Lần theo những âm thanh xa lạ']);
 assert.deepEqual(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}).map(x => x.action),
-  ['Quan sát khu vực phía trước'], 'empty GM output must not end normal exploration');
+  ['Quan sát khu vực phía trước','Thử lần theo một lối đi ít dấu vết'], 'empty GM output must not end normal exploration');
 assert.equal(choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: false}}, [
   {text: 'Kiểm tra cửa', action: 'Kiểm tra cửa'}
-]).length, 1);
+]).length, 2);
 
 const open = choices({currentLevelKey: '0.1', levelRoute: {exitAvailable: true}}, [
   {text: 'A', action: 'A'}, {text: 'B', action: 'B'}, {text: 'C', action: 'C'}
 ]);
-assert.equal(open.length, 1);
-assert.deepEqual(open.map(choice => choice.id), ['A']);
+assert.equal(open.length, 2);
+assert.deepEqual(open.map(choice => choice.id), ['A','B']);
 assert.equal(open[0].action, 'Đi qua lối ra');
 assert.equal(open.some(choice => choice.action === 'Tiếp tục khám phá Level 0.1'), false);
 assert.deepEqual(choices({currentLevelKey: '1.2', levelRoute: {exitAvailable: true}})
-  .map(choice => choice.action), ['Đi qua lối ra']);
+  .map(choice => choice.action), ['Đi qua lối ra','Men theo mép lối ra rồi bước qua']);
 
 assert.deepEqual(choices({currentLevelKey:'0',levelRoute:{exitAvailable:false}},[
   {text:'Quan sát cửa',action:'Quan sát cửa'},
   {text:'Rẽ trái',action:'Rẽ trái'},
   {text:'Rẽ phải',action:'Rẽ phải'}
-]).map(choice=>choice.action), ['Quan sát cửa']);
+]).map(choice=>choice.action), ['Quan sát cửa','Rẽ trái']);
 const postFightEntry = {choices:[]};
 context.state = {turn:8,log:[{text:'prologue'},postFightEntry],
   combat:{active:false,outcome:'victory',logIndex:1},levelRoute:{exitAvailable:false}};
 assert.deepEqual(Array.from(context.displayedExplorerChoices(postFightEntry),x=>x.action),
-  ['Quan sát khu vực sau trận chiến']);
+  ['Quan sát khu vực sau trận chiến','Tìm một lối đi khác để tiếp tục']);
 const nextGm = {role:'gm', text:'Cao Minh vẫn đứng trong hành lang.', choices:[]};
 context.state.log.push({role:'player', text:'Quan sát khu vực sau trận chiến'}, nextGm);
 assert.deepEqual(Array.from(context.displayedExplorerChoices(nextGm), x => x.action),
-  ['Lắng nghe âm thanh trong khu vực hiện tại'],
+  ['Lắng nghe âm thanh trong khu vực hiện tại','Thử lần theo một lối đi ít dấu vết'],
   'the next GM entry still offers a suggestion after the post-combat action');
 const followingGm = {role:'gm', text:'Chưa nghe thấy tiếng động lạ.', choices:[]};
 context.state.log.push({role:'player', text:'Lắng nghe âm thanh trong khu vực hiện tại'}, followingGm);
 assert.deepEqual(Array.from(context.displayedExplorerChoices(followingGm), x => x.action),
-  ['Quan sát khu vực phía trước'],
+  ['Quan sát khu vực phía trước','Thử lần theo một lối đi ít dấu vết'],
   'suggestions continue on subsequent turns without repeating the last action');
 const freshChoice = {role:'gm', text:'Cánh cửa hiện ra.', choices:[{text:'Kiểm tra cánh cửa'}]};
 context.state.log.push({role:'player', text:'Đứng chờ'}, freshChoice);
 assert.deepEqual(Array.from(context.displayedExplorerChoices(freshChoice), x => x.text),
-  ['Kiểm tra cánh cửa'], 'real GM suggestions take priority over deterministic fallback');
+  ['Kiểm tra cánh cửa','Khảo sát những âm thanh khác thường gần đó'],
+  'older one-choice GM saves receive a safe second approach');
 context.state.flags = {entityEncounterKey:'hound'};
 assert.equal(context.displayedExplorerChoices({choices:[]}).length, 0,
   'do not offer explorer suggestions while an entity encounter is pending');
@@ -82,7 +83,7 @@ const calls = [];
 const bridge = {
   submitChoice: (...args) => calls.push({kind:'choice', args}),
   submitTurn: (...args) => calls.push({kind:'custom', args}),
-  prefetchChoices: (...args) => calls.push({kind:'prefetch', args})
+  prefetchNarrativeChain: (...args) => calls.push({kind:'prefetch', args})
 };
 const ui = {
   state: {turn:7, log:[entry], flags:{}}, busy:false, submit:{disabled:false},
@@ -116,13 +117,13 @@ const prefetchStart = source.indexOf('  window.backroomPrefetchChoices = functio
 const prefetchEnd = source.indexOf('\n  window.render();', prefetchStart);
 ui.busy = false;
 ui.displayedExplorerChoices = () => [
-  {id:'A',action:'A'}, {id:'B',action:'B'}, {id:'C',action:'C'}
+  {id:'A',action:'A'}, {id:'B',action:'B'}
 ];
 vm.runInNewContext(source.slice(prefetchStart, prefetchEnd), ui);
 ui.window.backroomPrefetchChoices();
 assert.equal(calls[2].kind, 'prefetch');
 assert.equal(JSON.parse(calls[2].args[0]).turn, 7);
-assert.deepEqual(JSON.parse(calls[2].args[1]).map(x => x.action), ['A','B','C']);
+assert.deepEqual(JSON.parse(calls[2].args[1]).map(x => x.action), ['A','B']);
 
 console.log('Choice origin, double tap, and batch source passed');
 
@@ -138,8 +139,8 @@ const turnUi = {
 vm.runInNewContext(turnHandler, turnUi);
 turnUi.window.backroomTurn(JSON.stringify({turn:8,log:[entry]}));
 assert.deepEqual(order, ['render'], 'actual turn renders without automatic speculative A/B/C');
-assert.equal(source.includes('  window.backroomPrefetchChoices();'), false,
-  'legacy prefetch hook must not run on initial render');
+assert.match(source, /setTimeout\(function\(\)\{ window\.backroomPrefetchChoices\(\); \}, 0\)/,
+  'new chain preparation starts after initial render');
 
 console.log('Current story render order passed');
 
