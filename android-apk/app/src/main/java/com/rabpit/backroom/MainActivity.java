@@ -53,6 +53,8 @@ public class MainActivity extends Activity {
   private final ExecutorService io = Executors.newSingleThreadExecutor();
   private final ExecutorService prefetchIo = Executors.newSingleThreadExecutor();
   private final ExecutorService narrationIo = Executors.newSingleThreadExecutor();
+  // Speculative provider requests must never block a real player turn.
+  private final ExecutorService prefetchNarrationIo = Executors.newSingleThreadExecutor();
   private final AtomicLong prefetchGeneration = new AtomicLong();
   // Debug-only quota observations; do not log keys, full prompts or model replies.
   private final AtomicLong providerHttpAttempts = new AtomicLong();
@@ -174,6 +176,7 @@ public class MainActivity extends Activity {
     prefetchGeneration.incrementAndGet();
     prefetchIo.shutdownNow();
     narrationIo.shutdownNow();
+    prefetchNarrationIo.shutdownNow();
     io.shutdownNow();
     if (webView != null) webView.destroy();
     super.onDestroy();
@@ -902,7 +905,7 @@ public class MainActivity extends Activity {
           if (BuildConfig.DEBUG) Log.d(TAG, "HIDDEN_CHAIN_BATCH prompt_chars=" + prompt.length()
               + " beats=" + predicted.length());
           long requestsBeforeBatch = providerHttpAttempts.get();
-          JSONObject generated = awaitNarration(narrationIo,
+          JSONObject generated = awaitNarration(prefetchNarrationIo,
               () -> parseModelJson(generateText(prompt.toString())),
               TimeUnit.SECONDS.toMillis(NARRATION_DEADLINE_SECONDS));
           if (BuildConfig.DEBUG) Log.d(TAG, "HIDDEN_CHAIN_BATCH_API"
@@ -1084,9 +1087,18 @@ public class MainActivity extends Activity {
               + " về hướng anh có thể tìm hiểu tiếp.";
         }
       }
+      // Provider timeout must not reveal the actual location after defeat.
+      // Do not override the real location: this is purely a presentation veil.
+      if (state != null && state.optBoolean("perceptionShroud", false)) {
+        reply = "Cao Minh mở mắt giữa một khoảng sáng chập chờn. "
+            + "Không khí mang theo mùi ẩm lạnh; những âm thanh rời rạc "
+            + "không đủ để anh nhận ra nơi mình đang đứng. "
+            + "Anh có thể quan sát kỹ hơn để định hướng.";
+      }
       JSONObject emergent = state == null ? null : state.optJSONObject("emergent");
       JSONObject selection = emergent == null ? null : emergent.optJSONObject("lastSelection");
-      if (selection != null && !selection.optBoolean("selectedNone", false)) {
+      if ((state == null || !state.optBoolean("perceptionShroud", false))
+          && selection != null && !selection.optBoolean("selectedNone", false)) {
         String committedSummary = selection.optString("publicSummary", "").trim();
         if (!committedSummary.isEmpty() && !reply.contains(committedSummary)) {
           reply += "\n\n" + committedSummary;
