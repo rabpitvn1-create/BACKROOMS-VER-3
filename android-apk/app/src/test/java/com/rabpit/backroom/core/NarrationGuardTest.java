@@ -52,13 +52,24 @@ public class NarrationGuardTest {
 
   @Test public void postDefeatLocationRemainsConcealed() throws Exception {
     JSONObject state = new JSONObject().put("perceptionShroud", true)
-        .put("location", "Hành lang sâu bí mật");
+        .put("currentLevel", 0).put("currentLevelKey", "hua_1900_0")
+        .put("location", "Hui's Family Level 1 / hành lang sâu bí mật");
     assertFalse(NarrationGuard.validate(
-        narration("Cao Minh nhận ra Hành lang sâu bí mật."), state).isEmpty());
+        narration("Cao Minh nhận ra Hui's Family Level 1 / hành lang sâu bí mật."), state).isEmpty());
     assertFalse(NarrationGuard.validate(
         narration("Cao Minh biết mình vẫn ở Level 0."), state).isEmpty());
+    assertFalse("A partial location fragment must not bypass the shroud",
+        NarrationGuard.validate(narration("Phía trước vẫn là hành lang sâu bí mật."), state).isEmpty());
+    assertFalse("A choice cannot reveal the hidden location either",
+        NarrationGuard.validate(narration("Ánh đèn chập chờn.",
+            "Quay lại Hui's Family", "Lắng nghe tiếng điện"), state).isEmpty());
     assertTrue(NarrationGuard.validate(
         narration("Ánh đèn chập chờn không cho Cao Minh một dấu mốc rõ ràng."), state).isEmpty());
+
+    JSONObject projected = GmNarrativePacket.projectState(state);
+    assertFalse(projected.has("currentLevel"));
+    assertFalse(projected.has("currentLevelKey"));
+    assertFalse(projected.has("location"));
   }
 
   @Test public void proseAndChoiceStyleRemainSoft() throws Exception {
