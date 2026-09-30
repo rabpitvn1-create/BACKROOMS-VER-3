@@ -1,8 +1,7 @@
 Backroom 1.1.64 Debug
 
-- Baseline gameplay/canon giữ nguyên từ Backroom 1.1.64.
-- Game Master dùng pool 5 Gemini API key làm provider chính.
-- Khi toàn bộ Gemini pool không khả dụng, Game Master fallback sang Haiku qua HAIKU_API_KEY, HAIKU_MODEL và HAIKU_BASE_URL.
-- Haiku hỗ trợ endpoint Anthropic Messages và OpenAI-compatible Chat Completions; HAIKU_BASE_URL bắt buộc HTTPS.
-- Đã loại bỏ LiteRT intent classifier và toàn bộ pipeline train/model liên quan; intent không chắc chắn đi thẳng sang GM fallback.
-- Không khôi phục Luna provider.
+- Source runtime is Java-only; Kotlin source and the Kotlin Android Gradle plugin are not used.
+- Preserves the current restored pre-Hui/Hua's Family gameplay state while publishing it as version 1.1.64 (versionCode 66).
+- Android/WebView bridge, gameplay Core, save/inventory/party/combat runtime and tests build from checked-in Java source.
+- Game Master uses the existing Gemini/Haiku provider configuration.
+- GitHub Actions workflows remain absent from main after the rollback cleanup.

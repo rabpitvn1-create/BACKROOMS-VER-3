@@ -1,6 +1,5 @@
 plugins {
   id 'com.android.application'
-  id 'org.jetbrains.kotlin.android'
 }
 
 def secret = { name ->
@@ -24,6 +23,7 @@ android {
     buildConfigField "String", "GEMINI_API_KEY_4", "\"" + secret("GEMINI_API_KEY_4") + "\""
     buildConfigField "String", "GEMINI_API_KEY_5", "\"" + secret("GEMINI_API_KEY_5") + "\""
     buildConfigField "String", "HAIKU_API_KEY", "\"" + secret("HAIKU_API_KEY") + "\""
+    buildConfigField "String", "HAIKU_API", "\"" + (secret("HAIKU_API") ?: secret("HAIKU_API_KEY")) + "\""
     buildConfigField "String", "HAIKU_MODEL", "\"" + secret("HAIKU_MODEL") + "\""
     buildConfigField "String", "HAIKU_BASE_URL", "\"" + secret("HAIKU_BASE_URL") + "\""
   }
@@ -39,10 +39,6 @@ android {
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_17
     targetCompatibility JavaVersion.VERSION_17
-  }
-
-  kotlinOptions {
-    jvmTarget = '17'
   }
 
   testOptions { unitTests.returnDefaultValues = true }

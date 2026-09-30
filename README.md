@@ -1,20 +1,22 @@
 # BACKROOMS Android Text Game
 
-Game chạy độc lập trong APK Android. Giao diện WebView, canon, ảnh Level, character data, Game State Core và save đều được đóng gói hoặc lưu cục bộ trên thiết bị; dự án không còn runtime web/Next.js.
+Android/WebView game. V3 builds directly from checked-in source; there is no runtime patch chain.
 
-## Runtime chính
+## Runtime
 
-- `android-apk/app/src/main/assets/index.html`: giao diện text game.
-- `android-apk/app/src/main/java/com/rabpit/backroom/MainActivity.java`: Android/WebView bridge và AI orchestration.
-- `android-apk/app/src/main/java/com/rabpit/backroom/core/`: Game State Core, inventory, party, continuity và save migration.
-- `android-apk/app/src/main/assets/knowledge/knowledge_db.json`: knowledge database có provenance từ nguồn Drive.
-- `.github/workflows/build-backroom-apk.yml`: test, build, emulator launch smoke test và phát hành APK.
+- `android-apk/app/src/main/assets/index.html`: WebView UI.
+- `android-apk/app/src/main/java/com/rabpit/backroom/MainActivity.java`: Android bridge + lightweight GM provider orchestration.
+- `android-apk/app/src/main/java/com/rabpit/backroom/core/`: Java game state, save, inventory, party, physiology, combat and narrative runtime.
+- Android gameplay/runtime source under `android-apk/app/src/main/java/` is Java-only; the project no longer applies the Kotlin Android plugin.
+- GitHub Actions workflows are intentionally absent from `main`.
 
-## Build cục bộ
+Old Python patch scripts and character-specific Legacy systems are intentionally excluded from V3. Git history remains the recovery source if any old behavior is needed later.
+
+## Build
 
 ```bash
 cd android-apk
 gradle :app:testDebugUnitTest :app:assembleDebug --no-daemon
 ```
 
-APK được tạo tại `android-apk/app/build/outputs/apk/debug/app-debug.apk`.
+APK: `android-apk/app/build/outputs/apk/debug/app-debug.apk`.
