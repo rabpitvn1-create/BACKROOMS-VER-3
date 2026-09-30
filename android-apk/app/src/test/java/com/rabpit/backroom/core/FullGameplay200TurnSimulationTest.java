@@ -71,8 +71,8 @@ public class FullGameplay200TurnSimulationTest {
       String actualLocation = before.getString("location");
       int routeStreak = before.getJSONObject("levelRoute").optInt("streak");
       JSONObject result = new JSONObject(core.restartAfterDeath());
-      assertTrue("Restart must commit an authoritative Core event",
-          result.optString("error"), result.optBoolean("handled", false));
+      assertTrue("Restart must commit an authoritative Core event: "
+              + result.optString("error"), result.optBoolean("handled", false));
       JSONObject after = result.getJSONObject("state");
       assertEquals("Defeat cannot teleport Cao Minh", actualLocation, after.getString("location"));
       assertEquals("Defeat cannot reset route progress", routeStreak,
