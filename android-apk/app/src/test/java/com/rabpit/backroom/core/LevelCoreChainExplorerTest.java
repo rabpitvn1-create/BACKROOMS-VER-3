@@ -173,4 +173,10 @@ public class LevelCoreChainExplorerTest {
     assertFalse(GmNarrativePacket.build(core.promptContext(state), "", "", "", "", state,
         "Quan sát", "").contains("transitionTarget"));
   }
+  @Test public void negatedExitIntentDoesNotTransition() throws Exception {
+    assertFalse(LevelCore.hasTransitionIntent("Tôi ngồi yên và không đi qua lối ra"));
+    assertFalse(LevelCore.hasTransitionIntent("Tôi từ chối bước qua lối thoát"));
+    assertTrue(LevelCore.hasTransitionIntent("Tôi đi qua lối ra"));
+  }
+
 }

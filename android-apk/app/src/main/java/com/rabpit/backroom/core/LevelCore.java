@@ -207,6 +207,8 @@ final class LevelCore {
 
   static boolean hasTransitionIntent(String action) {
     String value = action == null ? "" : action.trim().toLowerCase(Locale.ROOT);
+    if (value.matches(".*(?:không|chưa|từ chối)\\s+(?:đi qua|bước qua|tiến vào|đi vào|vào level).*")
+        || value.matches(".*(?:do not|don't|refuse to)\\s+(?:enter|go through|cross).*")) return false;
     return value.contains("đi qua") || value.contains("bước qua") || value.contains("tiến vào")
         || value.contains("đi vào") || value.contains("sang ") || value.contains("vào level")
         || value.contains("enter") || value.contains("go through") || value.contains("cross");
