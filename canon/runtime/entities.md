@@ -2365,21 +2365,21 @@
         }
       ],
       "_canon": {
-        "id": "entity.jane_the_killer.legacy",
+        "id": "entity.jane_the_killer.legacy_foundation",
         "owner": "world:entity:jane_the_killer",
         "type": "FOUNDATION",
-        "status": "LEGACY",
+        "status": "CURRENT",
         "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
         "revision": "legacy",
         "scope": [
           "entity:jane_the_killer"
         ],
-        "knownBy": "SYSTEM",
+        "knownBy": "SCENE",
         "sourceKind": "external",
         "sourceAvailability": "EXTERNAL_SNAPSHOT",
         "refs": [],
         "requires": [],
-        "core": false
+        "core": true
       }
     },
     {
@@ -2404,21 +2404,21 @@
         }
       ],
       "_canon": {
-        "id": "entity.slenderman.legacy",
+        "id": "entity.slenderman.legacy_foundation",
         "owner": "world:entity:slenderman",
         "type": "FOUNDATION",
-        "status": "LEGACY",
+        "status": "CURRENT",
         "sourceRef": "01_WORLD/entity.md — BACKROOMS-ENTITY-R4 CURRENT / PROJECT CANON",
         "revision": "legacy",
         "scope": [
           "entity:slenderman"
         ],
-        "knownBy": "SYSTEM",
+        "knownBy": "SCENE",
         "sourceKind": "external",
         "sourceAvailability": "EXTERNAL_SNAPSHOT",
         "refs": [],
         "requires": [],
-        "core": false
+        "core": true
       }
     }
   ]
