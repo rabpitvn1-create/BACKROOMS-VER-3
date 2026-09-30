@@ -1,25 +1,39 @@
 # BACKROOMS Android Text Game
 
-Android/WebView game. V3 builds directly from checked-in source; there is no runtime patch chain.
+Android/WebView text game. V3 builds directly from checked-in source; there is no runtime patch chain.
 
-## Runtime
+## Runtime architecture
 
-- `android-apk/app/src/main/assets/index.html`: WebView UI.
-- `android-apk/app/src/main/java/com/rabpit/backroom/MainActivity.java`: Android bridge + lightweight GM provider orchestration.
-- `android-apk/app/src/main/java/com/rabpit/backroom/core/`: typed Kotlin state, save, inventory, party, physiology and combat adapters.
-- `android-apk/app/src/main/java/com/rabpit/backroom/core/gameplay/`: gameplay rules rebuilt from V2: stats/progression, items/equipment, skills/entities, Poker Dice, level routing and deterministic RNG.
-- `.github/workflows/build-backroom-apk.yml`: direct test/build/release pipeline.
+- `android-apk/app/src/main/assets/index.html` and adjacent JS/CSS assets implement the WebView UI.
+- `android-apk/app/src/main/java/com/rabpit/backroom/MainActivity.java` owns the Android bridge, narrative prefetch/chain orchestration and GM-provider calls.
+- `android-apk/app/src/main/java/com/rabpit/backroom/core/` is Java 17 Core code for authoritative state transitions, save migration, levels, character/entity encounters, items, Poker Dice combat, beliefs/evidence and narration contracts.
+- Core commits gameplay outcomes first. AI narration receives read-only context and cannot decide damage, proc, spawn, loot, Party membership, Level transitions or other authoritative outcomes.
+- `canon/` is the editable repository canon source. `tools/canon.py` validates stable IDs and provenance, then generates the runtime canon/knowledge projections under `android-apk/app/src/main/assets/`.
+- `CanonRetriever` loads generated `assets/canon/canon_index.json`, resolves stable-ID dependencies for the committed scene and applies per-item knowledge gates before canon reaches narration.
+- `EpistemicView` plus the existing belief/evidence state remain the dynamic actor-knowledge source.
+- `LevelCore`, `EntityCore` and related Core components consume generated JSON projections from the same root canon source. Generated assets are not editing authorities.
 
-Old Python patch scripts and character-specific Legacy systems are intentionally excluded from V3. Git history remains the recovery source if any old behavior is needed later.
+Authoring, conflict and migration rules are documented in [`canon/README.md`](canon/README.md). Resolved and unresolved source conflicts are recorded in [`canon/CONFLICTS.md`](canon/CONFLICTS.md).
 
-## Build
+## Canon validation and build
+
+From the repository root:
 
 ```bash
+python3 tools/canon.py check
+node android-apk/app/src/test/js/gm-choice-ui.test.cjs
 cd android-apk
 gradle :app:testDebugUnitTest :app:assembleDebug --no-daemon
 ```
 
-APK: `android-apk/app/build/outputs/apk/debug/app-debug.apk`.
+After editing canon source, regenerate projections before checking/building:
+
+```bash
+python3 tools/canon.py generate
+python3 tools/canon.py check
+```
+
+The debug APK is written to `android-apk/app/build/outputs/apk/debug/app-debug.apk`. CI uses Java 17 and Gradle 8.10.2 in `.github/workflows/v3-emergent-validation.yml`; release builds use `.github/workflows/build-backroom-apk.yml`.
 
 ## Hidden narrative chain
 
