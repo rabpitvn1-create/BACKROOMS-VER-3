@@ -1,0 +1,41 @@
+name: TEMP Remove newer releases
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const tags = ['v1.1.65','v1.1.66','v1.1.67','v1.1.68','v1.1.69','v1.1.70','v1.1.71'];
+            for (const tag of tags) {
+              try {
+                const rel = await github.rest.repos.getReleaseByTag({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag
+                });
+                await github.rest.repos.deleteRelease({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: rel.data.id
+                });
+              } catch (e) {
+                if (e.status !== 404) throw e;
+              }
+              try {
+                await github.rest.git.deleteRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: 'tags/' + tag
+                });
+              } catch (e) {
+                if (e.status !== 422 && e.status !== 404) throw e;
+              }
+            }
