@@ -156,6 +156,8 @@ public final class GameCoreFacade implements AutoCloseable {
       } else {
         boolean transitioned = levelCore.applyPlayerTransitionIfRequested(working, text);
         if (transitioned) {
+          // A genuinely different Level ends the post-defeat perceptual shroud.
+          working.remove("perceptionShroud");
           String nextLevel = working.optString("currentLevelKey", "");
           replyHint = "Cao Minh đi qua lối ra và đặt chân đến "
               + working.optString("location", LevelCore.displayName(nextLevel)) + ".";
